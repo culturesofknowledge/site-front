@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /advanced
+Disallow: /advanced/
+Disallow: /forms/
+Disallow: /profile/person/
+Disallow: /profile/work/
+Disallow: /profile/institution/
+Disallow: /profile/image/
+Disallow: /profile/location/

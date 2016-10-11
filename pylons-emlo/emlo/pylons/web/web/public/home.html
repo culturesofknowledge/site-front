@@ -1,0 +1,391 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" title="cofk" href="css/style-cofk.css" />
+<link rel="alternate stylesheet" type="text/css" title="desk" href="css/style-desk.css" />
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" title="cofk" href="css/style-cofk-ie.css" />
+	<link rel="alternate stylesheet" type="text/css" title="desk" href="css/style-desk-ie.css" />
+<![endif]-->
+<script type="text/javascript" src="/sources/pages/top.js"></script>
+</head>
+<body>
+<br/>
+<div id="wrapper">
+
+<div id="letter">
+
+	<div id="head">
+		<img src="files/Copy of 0808-0710-1617-3136.png" style="float:left;height:90px" />
+		<h1>Cultures of Knowledge</h1>
+		
+		<div id="nav">
+			<ul>
+				<li class="selected"><a href="home.html">Home</a></li>
+				<li><a href="advanced.html">Search</a></li>
+				<li><a href="#">Browse</a></li>
+				<li><a href="#">Contribute</a></li>
+				<li><a href="#">Technical</a></li>
+				<li><a href="#">About</a></li>
+			</ul>
+			<form id="quicksearch">
+				<label><input type="button" value="Search" onclick="javascript:document.location='results.html'"/></label>
+				<input class="text" type="text" value="everything" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);"/>
+			</form>
+		</div>
+	</div><!--id:head-->
+
+	<div id="main">
+		<div id="left">
+			<div class="box">
+				<h2>About</h2>
+				<div class="content">
+					<p>Search on the Intellectual Geography of the Seventeenth-Century Republic of Letters.</p>
+				</div><!--class:content-->
+			</div><!--class:box-->
+			
+			<div class="box">
+				<h2>News</h2>
+				<div class="content">
+					<ol>
+						<li><p> <strong>Seminar 8: Peiresc’s Mediterranean Merchant Network</strong> (12-08)</p>
+						<img src="files/Marseille.png" width="269"/>
+						</li>
+						<li><p><strong>Universal Reformation: Booking Now Open!</strong> (16-07) </p></li>
+						<li><p> <strong>CofK at DH2010 and the Royal Society.</strong> (14-07)</p></li>
+					</ol>
+					<p class="textright"><a href="#">See all...</a></p>
+				</div><!--class:content-->
+			</div><!--class:box-->
+
+			<div class="box">
+				<h2>Stats</h2>
+				<div class="content">
+					<p>Spanning Jan 1605 to Nov 1686 we have:</p>
+					<ul>
+						<!--<li>[repositories, institutions, collections, and projects participating/available within the catalogue]</li>-->
+						<li><strong>7</strong> <a href="#">repositories</a></li>
+						<li><strong>5</strong> <a href="#">institutions</a></li>
+						<li><strong>10</strong> <a href="#">collections</a></li>
+						<li><strong>3</strong> <a href="#">projects</a></li>
+					</ul>
+				</div><!--class:content-->
+			</div><!--class:box-->
+		</div><!--id:left-->
+
+		<div id="right">
+		
+			<div class="box">
+				<h2>Search</h2>
+				<div class="content">
+					<form id="search">
+						<ol>
+							<li class="less">
+								<label>People</label>
+								<input type="text" value="all people" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);" title="Search for people in Author, Sender, Recipent or People Mentioned."/>
+								<img class="help" src="files/1276096842_help.png"/>
+								<div class="helptext">Search for people in Author, Sender, Recipent or People Mentioned.</div>
+							</li>
+							<li class="more">
+								<fieldset>
+									<legend>People</legend>
+									<ol>
+										<li>
+											<label>Author</label>
+											<input type="text" value="all people" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);" title="Search for people by either Author or Sender."/>
+											<img class="help" src="files/1276096842_help.png"/>
+											<div class="helptext">Search for people by either Author or Sender.</div>
+										</li>	
+										<li>
+											<label>Recipient</label>
+											<input type="text" value="all people" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);" title="Search for people by Recipent."/>
+											<img class="help" src="files/1276096842_help.png"/>
+											<div class="helptext">Search for people by Recipent.</div>
+										</li>
+									</ol>
+								</fieldset>
+							</li>
+							<li class="less">
+								<label>Years</label>
+								<select title="Select year">
+									<option class="default">no start</option>
+									<script type="text/javascript">
+										for( var i = 1600; i < 1800; i++ )
+											document.write( "<option>" + i + "</option>" );
+									</script>
+								</select>
+								<select title="Select year">
+									<option class="default">no end</option>
+									<script type="text/javascript">
+										for( var i = 1600; i < 1800; i++ )
+											document.write( "<option>" + i + "</option>" );
+									</script>
+								</select>
+								<img class="help" src="files/1276096842_help.png"/>
+								<div class="helptext">Search between, after or before years.</div>
+							</li>
+							<li class="more">
+								<fieldset>
+									<legend>Dates</legend>
+									<ol>
+										<li>
+											<label>From</label>
+											<select title="Select year">
+												<option class="default">all years</option>
+												<script type="text/javascript">
+													for( var i = 1600; i < 1800; i++ )
+														document.write( "<option>" + i + "</option>" );
+												</script>
+											</select>
+											<select title="Select month">
+												<option class="default">all months</option>
+												<option>January</option>
+												<option>February</option>
+												<option>March</option>
+												<option>April</option>
+												<option>May</option>
+												<option>June</option>
+												<option>July</option>
+												<option>August</option>
+												<option>September</option>
+												<option>October</option>
+												<option>November</option>
+												<option>December</option>
+											</select>
+											<select title="Select date">
+												<option class="default">all dates</option>
+												<script type="text/javascript">
+													for( var i = 1; i <= 31; i++ )
+														document.write( "<option>" + i + "</option>" );
+												</script>
+											</select>
+											<img class="help" src="files/1276096842_help.png"/>
+											<div class="helptext">Search by year, month, day or a combination.</div>
+										</li>
+	
+										<li>
+											<label>To</label>
+											<select title="Select year">
+												<option class="default">all years</option>
+												<script type="text/javascript">
+													for( var i = 1600; i < 1800; i++ )
+														document.write( "<option>" + i + "</option>" );
+												</script>
+											</select>
+											<select title="Select month">
+												<option class="default">all months</option>
+												<option>January</option>
+												<option>February</option>
+												<option>March</option>
+												<option>April</option>
+												<option>May</option>
+												<option>June</option>
+												<option>July</option>
+												<option>August</option>
+												<option>September</option>
+												<option>October</option>
+												<option>November</option>
+												<option>December</option>
+											</select>
+											<select title="Select date">
+												<option class="default">all dates</option>
+												<script type="text/javascript">
+													for( var i = 1; i <= 31; i++ )
+														document.write( "<option>" + i + "</option>" );
+												</script>
+											</select>
+											<img class="help" src="files/1276096842_help.png"/>
+											<div class="helptext">Search by year, month, day or a combination.</div>
+										</li>
+									</ol>
+								</fieldset>
+							</li>
+							<li class="less">
+								<label>Places</label> 
+								<input type="text" value="all places" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);" title="Search in the place / region that was sent from or sent to."/>
+								<img class="help" src="files/1276096842_help.png"/>
+								<div class="helptext">Search in the place / region that was sent from or sent to.</div>
+							</li>
+							<li class="more">
+								<fieldset>
+									<legend>Places</legend>
+									<ol>
+										<li>
+										<label>Sent from</label> 
+										<input type="text" value="all places" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);" title="Search in the place / region that was sent from."/>
+										<img class="help" src="files/1276096842_help.png"/>
+										<div class="helptext">Search in the place / region that was sent from.</div>
+										</li>
+									
+										<li>
+										<label>Sent to</label> 
+										<input type="text" value="all places" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);" title="Search in the place / region that was sent to."/>
+										<img class="help" src="files/1276096842_help.png"/>
+										<div class="helptext">Search in the place / region that was sent to.</div>
+										</li>
+									</ol>
+								</fieldset>
+							</li>
+							<li>
+								<label>Content</label>
+								<input type="text" value="all content" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);" title="Search for text in Abstract, Keywords, Notes, Incipit, Excipit, Enclosures, and Transcriptions."/>
+								<img class="help" src="files/1276096842_help.png"/>
+								<div class="helptext">Search for text in Abstract, Keywords, Notes, Incipit, Excipit, Enclosures, and Transcriptions.</div>
+							</li>
+							<li>
+								<label>Repository</label>
+								<select title="Select an individual repository to search in.">
+									<option class="default">all respositories</option>
+									<option>respository 1</option>
+									<option>respository 2</option>
+									<option>respository 3</option>
+								</select>
+								 <img class="help" src="files/1276096842_help.png"/>
+								<div class="helptext">Select an individual repository to search in.</div>
+							</li>
+							<li class="more">
+								<label>Collection</label>
+								<select title="Select an individual collection to search in.">
+									<option class="default">all collections</option>
+									<option>Lhwyd</option>
+									<option>Comenius</option>
+									<option>Hartlib</option>
+								</select>
+								 <img class="help" src="files/1276096842_help.png"/>
+								<div class="helptext">Select an individual collection to search in.</div>
+							</li>
+						</ol>
+						<input class="button submit" type="button" value="Search" onclick="javascript:document.location='results.html'"/>
+						<input class="button" type="button" value="More options" onclick="javascript:moreOrLessSearch(this);"/>
+						<input class="button" type="button" value="Show all help" onclick="javascript:showHideAllHelp(this);"/>
+					</form>
+				</div><!--class:content-->
+			</div><!--class:box-->
+
+			<div class="box">
+				<h2>Random Record</h2>
+				<div class="content">
+					<blockquote style="font-size:12; border: 1 solid #777;padding: 5px;">"Lister reported that he had not seen an edition of Langius, but would like to peruse one. He mentioned that he was languishing of a cough and shortness of breath.  He mentioned he had talked to Dr. Bason, and to the Bishop of Oxford on Lhwyd's behalf. Lister complained about his own work being satirized and the Newtonian physicians who base all their work on mathematics."</blockquote>
+					
+					<p style="text-align:center">A <a href="#">letter</a> to <a href="#">Frances Jessop</a> from <a href="#">John Ray</a>.</p>
+				</div><!--class:content-->
+			</div><!--class:box-->
+			
+		</div><!--id:right-->
+		
+		<br class="clearboth"/><!-- important for id:main size -->
+		
+	</div><!--id:main-->
+
+	<div id="footer">
+		<p>
+			<a href="#">Home</a> | 
+			<a href="#">Search</a> | 
+			<a href="#">Advanced Search</a> | 
+			<a href="#">Contribute</a> | 
+			<a href="#">Technical</a> |  
+			<a href="#">About</a>
+		</p>
+		<p>Project <a href="#">Credits</a>. &copy; Cultures of Knowledge 2009-10</p>
+		<img src="files/footerlatestcopy.png" width="790" height="78" border="0" alt=""/>
+
+	</div><!--id:footer-->
+	
+</div><!--id:letter-->
+
+</div><!--id:wrapper-->
+
+</body>
+<foot>
+	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+	<!--script type="text/javascript" src="js/jquery-ui-1.8.4.custom.min.js"></script-->
+	<script type="text/javascript" src="js/input.control.js"></script>
+
+	<script type="text/javascript">
+	$( function () {
+		/* onload */
+		$(".hideshow" ).click( function () { showHideContent( this ); } );
+		/*(".box h2" ).click( function () { showHideContent( this ); } );*/
+		$("img.help" ).toggle( function () { showHideHelp( this, true ); },function () { showHideHelp( this, false ); }  )
+		$(".more").hide();
+		
+		/*$(".box").draggable( {
+			containment: 'parent'
+		});*/
+		/*$("#main #left").droppable({
+			activeClass: 'droppable-highlight',
+			drop: function(event, ui) {
+				$(this).addClass('droppable-highlight');
+			}
+		});
+		$("#main #right").droppable({
+			activeClass: 'droppable-highlight',
+			drop: function(event, ui) {
+				$(this).addClass('droppable-highlight');
+			}
+		});*/
+	})
+	
+	function moreOrLessSearch( that )
+	{
+		jqThis = $(that);
+		if( jqThis.val() == "More options" )
+		{
+			jqThis.val( "Less options" );
+			
+			$("li.less").fadeOut( 500, function() { $("li.more").fadeIn( 500 ); } );
+		}
+		else			
+		{
+			jqThis.val( "More options" );
+			$("li.more").fadeOut( 500, function() { $("li.less").fadeIn( 500 ); }  );
+		}
+	}
+	
+	function showHideHelp( that, show )
+	{
+		var jqThis = $(that)
+		var parent = jqThis.parent();
+		var text = parent.children(".helptext");
+		if( show )
+			text.slideDown( 100 );
+		else
+			text.slideUp( 100 );
+	}
+	
+	function showHideAllHelp(that)
+	{		
+		jqThis = $(that);
+		if( jqThis.val() == "Show all help" )
+		{
+			jqThis.val( "Hide all help" );
+			$(".helptext").slideDown( 200 );
+		}
+		else
+		{
+			jqThis.val( "Show all help" );
+			$(".helptext").slideUp( 200 );
+		}
+	}
+
+	function showHideContent( that )
+	{
+		var jqThis = $(that)
+		var parent = jqThis.parent();
+
+		if( parent.hasClass( "mini" ) )
+		{
+			parent.removeClass( "mini" );
+			parent.children(".content").show( 100 );
+			parent.children(".hideshow").attr( "src", "files/minus.png" );
+		}
+		else
+		{
+			parent.addClass( "mini" );
+			parent.children(".content").hide( 100 );
+			parent.children(".hideshow").attr( "src", "files/plus.png" );
+		}
+	}
+	</script>
+</foot>
+</html>

@@ -1,0 +1,3 @@
+include web/config/deployment.ini_tmpl
+recursive-include web/public *
+recursive-include web/templates *

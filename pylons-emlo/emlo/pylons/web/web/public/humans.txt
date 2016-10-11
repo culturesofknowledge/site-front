@@ -1,0 +1,45 @@
+.-. .-')  _ .-') _              .-')     .-')    
+\  ( OO )( (  OO) )            ( OO ).  ( OO ).  
+ ;-----.\ \     .'_  ,--.     (_)---\_)(_)---\_) 
+ | .-.  | ,`'--..._) |  |.-') /    _ | /    _ |  
+ | '-' /_)|  |  \  ' |  | OO )\  :` `. \  :` `.  
+ | .-. `. |  |   ' | |  |`-' | '..`''.) '..`''.) 
+ | |  \  ||  |   / :(|  '---.'.-._)   \.-._)   \ 
+ | '--'  /|  '--'  / |      | \       /\       / 
+ `------' `-------'  `------'  `-----'  `-----'  
+ 
+/* Bodleian Digital Library Systems and Services */
+
+/* TEAM */
+
+    Software Engineer (UX/UI Master): Monica Messaggi Kaya
+    Twitter: @monicams
+    Contact: monica at monicams dot com
+    Site: http://monicams.com
+    From: Oxford, UK
+
+    Software Engineer (King of Code): Matthew Wilcoxson
+    Twitter: @mwilcoxson
+    Contact: matthew dot wilcoxson at bodleian dot ox dot ac dot uk
+    Site: http://www.akademy.co.uk
+    From: Oxford, UK
+
+    More from BDLSS: http://www.culturesofknowledge.org/?page_id=5/#technologists
+    
+    
+/* PARTICIPANTS */
+    
+    Coordination and project management: Dr Elizabeth Williamson, Dr James Brown, Dr Kim McLean-Fiander, Erin Cooper, and Dr Christine Madsen
+    Director: Professor Howard Hotson
+    Expert editor: Miranda Lewis
+    Site: http://emlo-stage.bodleian.ox.ac.uk/about#credits
+    
+    
+/* SITE */
+
+    Last update: 2015/01/07     
+    Standards: HTML, CSS, humantxt.org
+    Components: python, jQuery, supervisor
+    Software: SublimeText 3, Photoshop, Illustrator
+    Icons: IconMonster, SomeRandomDude (http://somerandomdude.com/work/iconic)
+    

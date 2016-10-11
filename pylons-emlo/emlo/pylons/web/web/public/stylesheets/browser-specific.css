@@ -1,0 +1,14 @@
+#nav li a {
+   -moz-border-radius: 5px 5px 0 0;
+}
+
+.box h2 {
+   -moz-border-radius: 10px 0 0;
+}
+.box.mini h2 {
+   -moz-border-radius: 10px 0 0 10px;
+}
+         
+form ol li {
+   -moz-border-radius: 10px;
+}

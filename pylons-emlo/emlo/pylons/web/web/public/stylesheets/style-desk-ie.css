@@ -1,0 +1,103 @@
+/* IE Overrides. */
+
+#head {
+}
+
+#body{font-size:14px !important;}
+#wrapper {
+	margin: 10 auto 0; 
+	min-width:960px !important;
+}
+
+#nav {
+    height: 30px;
+    padding:5px 7px 5px;
+    position:absolute;
+    left:265px;
+    top:140px;
+    width:100%;
+}
+#nav li { display: inline; }
+#head ul#nav li { display: inline; }
+
+#main {
+	background-image: none;
+}
+
+.box {
+   *margin-bottom: 45px; /* IE7 only hack */
+}
+#left div:first-child {
+   margin-bottom: 20px;
+}
+
+#right div:first-child {
+   margin-bottom: 20px;
+}
+form select, ol li input{
+	font: normal 80% "coustard", serif;
+}
+form ol li label {
+	display:inline;
+}
+
+form input.button {
+   width: 130px;
+}
+form ol li fieldset label {
+   margin-left:5px;
+}
+
+form ol li fieldset legend {
+   padding: 0 20px;
+}
+         
+form ol li fieldset fieldset {
+   border-top: 0;
+}
+form ol li fieldset fieldset legend {
+	padding: 0 5px;
+}
+
+   .news img {
+      width: 200px;
+   }
+
+   .pagination a,
+   .pagination span {
+      width: 28px;
+   }
+   
+   .pagination span.wide,
+   .pagination a.wide {
+      width: 40px;
+   }
+  
+   #head img {
+      float: none;
+      margin-right: 20px;
+      margin-top: 20px;
+      position: absolute;
+      right: 0px;
+   }
+   
+   #head h1 img {
+      position: relative;
+   }
+.tweak{top:-120px;}
+
+#nav #quicksearch{
+    
+width: 255px !important;
+
+}
+#nav #quicksearch input.text {
+
+  width:33% !important;
+
+}
+#warning{
+margin-top:-25px !important;
+padding-bottom:10px;
+}
+.font-normal{font-size: 80% !important;}

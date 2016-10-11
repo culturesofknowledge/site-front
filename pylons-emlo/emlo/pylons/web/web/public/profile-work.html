@@ -1,0 +1,266 @@
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" title="cofk" href="css/style-cofk.css" />
+<link rel="alternate stylesheet" type="text/css" title="desk" href="css/style-desk.css" />
+<!--[if IE]>
+	<link rel="stylesheet" type="text/css" title="cofk" href="css/style-cofk-ie.css" />
+	<link rel="alternate stylesheet" type="text/css" title="desk" href="css/style-desk-ie.css" />
+<![endif]-->
+<style>
+	.box.wide .content {
+		margin-left: 0px;
+	}
+	
+	
+	
+	dl {
+		float: left;
+		margin: 10px 50px 10px 10px;
+		
+		width: 300px;
+		
+	}
+	dt {
+		font-weight: bold;
+		border-top: 1px dotted black;
+		padding-top: 3px;
+	}
+	dd { 
+		margin-left: 40px;
+		margin-bottom: 20px;
+	}
+</style>
+<script type="text/javascript" src="/sources/pages/top.js"></script>
+</head>
+<body>
+<br/>
+<div id="wrapper">
+
+<div id="letter">
+
+	<div id="head">
+		<img src="files/Copy of 0808-0710-1617-3136.png" style="float:left;height:90px" />
+		<h1>Cultures of Knowledge</h1>
+		
+		<div id="nav">
+			<ul>
+				<li><a href="home.html">Home</a></li>
+				<li><a href="advanced.html">Search</a></li>
+				<li><a href="#">Browse</a></li>
+				<li><a href="#">Contribute</a></li>
+				<li><a href="#">Technical</a></li>
+				<li><a href="#">About</a></li>
+			</ul>
+			<form id="quicksearch">
+				<label><input type="button" value="Search" onclick="javascript:document.location='results.html'"/></label>
+				<input class="text" type="text" value="everything" onfocus="javascript:textClear(this);" onblur="javascript:textFill(this);"/>
+			</form>
+		</div>
+	</div><!--id:head-->
+
+	<div id="main">
+			<div class="box wide">
+				<h2>Works Profile</h2>
+				
+				<div class="content">
+					<h3 style="margin:10px 10px 20px;font-size: 30px; font-weight:bold;">Martin Lister correspondance</h3>
+
+					<dl>
+						<dt>Image:</dt>
+							<dd><a href="files/bxy0049.jpg"><img src="files/bxy0049.jpg" width="200px"></a></dd>
+						<dt>From:</dt>
+							<dd><a href="">Martin Lister</a></dd>
+						<dt>Addressed to:</dt>
+							<dd><a href="">John Ray</a></dd>
+						<dt>Dated:</dt>
+							<dd>19th December 1668 <br/>(XIV Calend. Januar 166?)</dd>
+						<dt>Destination:</dt>
+							<dd>Unknown</dd>
+						<dt>Origin:</dt>
+							<dd>Unknown</dd>
+						<dt>Language:</dt>
+							<dd>Latin</dd>
+					</dl>
+					
+					<h4 style="font-size: 20px;">Description</h4>
+					<p>19 Dec 1668: Lister, Martin, 1639-1712 to Ray, John, 1627-1705</p>
+					
+					<h4 style="font-size: 20px;">Abstract</h4>
+					<p>Lister asserted that he definitely could say that spiders exercise the power of flight "not only for pleasure" but to catch gnats and other tiny creatures.</p>
+					
+					<h4 style="font-size: 20px;">Manifestations</h4>	
+					<ul style="list-style-position:inside; margin-bottom: 18px;">
+						<li><a href="#">Letter</a> (MS Lister 3, 003-004)</li>
+						<li><a href="#">Draft</a> (6K12, 346)</li>
+					</ul>
+					
+					
+					<br class="clearboth"/>
+				</div><!--class:content-->
+			<br class="clearboth"/><!-- important (hack) for class:box size -->
+			</div><!--class:box-->
+		<p id="back-top"><a href="#top"><span></span>Back to Top</a></p>
+		<br class="clearboth"/><!-- important (hack) for id:main size -->
+		
+	</div><!--id:main-->
+
+	<div id="footer">
+		<p>
+			<a href="#">Home</a> | 
+			<a href="#">Search</a> | 
+			<a href="#">Advanced Search</a> | 
+			<a href="#">Contribute</a> | 
+			<a href="#">Technical</a> |  
+			<a href="#">About</a> |  
+			<a href="#">Edit</a>
+		</p>
+		<p>Project <a href="#">Credits</a>. &copy; Cultures of Knowledge 2009-10</p>
+		<img src="files/footerlatestcopy.png" width="790" height="78" border="0" alt=""/>
+
+	</div><!--id:footer-->
+	
+</div><!--id:letter-->
+
+</div><!--id:wrapper-->
+
+</body>
+<foot>
+	<script type="text/javascript" src="files/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="files/input.control.js"></script>
+
+	<link type="text/css" href="css/smoothness/jquery-ui-1.8.2.custom.css" rel="stylesheet" />
+	<style>
+		/* OVERWRITES */
+		.ui-accordion .ui-accordion-content {
+			padding: 10px;
+		}
+		#accordion h4 {
+				padding-left: 30px; /* Fix for accordion */
+			}
+	</style>	
+	<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.2.custom.min.js"></script>
+
+	<script type="text/javascript">
+	$( function () {
+		/* onload */
+		//$(".hideshow" ).click( function () { showHideContent( this ); } );
+		//$(".box h2" ).click( function () { showHideContent( this ); } );
+		$("img.help" ).toggle( function () { showHideHelp( this, true ); },function () { showHideHelp( this, false ); }  )
+
+		//searchSectionHideShow( "collections" );
+
+		// Accordion
+		/*$("#accordion").accordion( {
+				header: "h4", 
+				autoHeight: false,
+				active: 5,
+				change: function( event, ui )
+					{
+						searchSectionHideShow( ui.newHeader.text() )
+					}
+			} );
+		
+		//hover states on the static widgets
+		$('#dialog_link, ul#icons li').hover(
+			function() { $(this).addClass('ui-state-hover'); }, 
+			function() { $(this).removeClass('ui-state-hover'); }
+		);*/
+	})
+	
+	function searchSectionHideShow( title )
+	{
+		var col , let, peo, pla, dat;
+		
+		if( title == "Show All" )
+		{
+			col = let = peo = pla = dat = true;
+		}
+		else
+		{
+			col = let = peo = pla = dat = false;
+		
+			if( title == "Add Collections" )
+				col = true;
+			else if( title == "Add Letters" )
+				let = true;
+			else if( title == "Add People" )
+				peo = true;
+			else if( title == "Add Places" )
+				pla = true;
+			else //if( title == "Add Dates" )
+				dat = true;
+
+		}
+
+		col ? $("#collections").show() : $("#collections").hide();
+		let ? $("#letters").show() : $("#letters").hide();
+		peo ? $("#people").show() : $("#people").hide();
+		pla ? $("#places").show() : $("#places").hide();
+		dat ? $("#dates").show() : $("#dates").hide();
+	}
+	
+	function moreOrLessSearch( that )
+	{
+		jqThis = $(that);
+		if( jqThis.val() == "More options" )
+		{
+			jqThis.val( "Less options" );
+			
+			$("li.less").fadeOut( 500, function() { $("li.more").fadeIn( 500 ); } );
+		}
+		else			
+		{
+			jqThis.val( "More options" );
+			$("li.more").fadeOut( 500, function() { $("li.less").fadeIn( 500 ); }  );
+		}
+	}
+	
+	function showHideHelp( that, show )
+	{
+		var jqThis = $(that)
+		var parent = jqThis.parent();
+		var text = parent.children(".helptext");
+		if( show )
+			text.slideDown( 100 );
+		else
+			text.slideUp( 100 );
+	}
+	
+	function showHideAllHelp(that)
+	{		
+		jqThis = $(that);
+		if( jqThis.val() == "Show all help" )
+		{
+			jqThis.val( "Hide all help" );
+			$(".helptext").slideDown( 200 );
+		}
+		else
+		{
+			jqThis.val( "Show all help" );
+			$(".helptext").slideUp( 200 );
+		}
+	}
+
+	/*function showHideContent( that )
+	{
+		var jqThis = $(that)
+		var parent = jqThis.parent();
+
+		if( parent.hasClass( "mini" ) )
+		{
+			parent.removeClass( "mini" );
+			parent.children(".content").show( 100 );
+			parent.children(".hideshow").attr( "src", "/files/minus.png" );
+		}
+		else
+		{
+			parent.addClass( "mini" );
+			parent.children(".content").hide( 100 );
+			parent.children(".hideshow").attr( "src", "/files/plus.png" );
+		}
+	}*/
+	</script>
+</foot>
+</html>
