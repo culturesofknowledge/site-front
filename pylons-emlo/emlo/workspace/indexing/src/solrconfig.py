@@ -6,7 +6,7 @@ Created on 27 Aug 2010
 solr configurations
 '''
 
-solr_base_url = "http://localhost:8983/solr/"
+solr_base_url = "http://solr:8983/solr/"
 
 solr_urls = {
     'all' : solr_base_url + 'all',
