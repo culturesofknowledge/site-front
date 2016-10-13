@@ -7,7 +7,7 @@ Set up values for use with redis.
 
 '''
 
-host = "localhost"
+host = "redis"
 port = 6379
 
 # Databases we are using
