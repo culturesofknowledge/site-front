@@ -30,15 +30,15 @@ common = {
 
 # The list of lists of csv files. (You can comment out lines to only debug specific ones)
 csv_files = {
-             'relationships'    : [ 'union/cofk_union_relationship.csv' ],
-             'locations'        : [ 'union/cofk_union_location.csv' ],
-             'comments'         : [ 'union/cofk_union_comment.csv' ],
-             'images'           : [ 'union/cofk_union_image.csv' ],
-             'people'           : [ 'union/cofk_union_person.csv' ],
-             'works'            : [ 'union/cofk_union_work.csv' ],
-             'manifestations'   : [ 'union/cofk_union_manifestation.csv' ],
-             'institutions'     : [ 'union/cofk_union_institution.csv' ],
-             'resources'        : [ 'union/cofk_union_resource.csv' ]
+             'relationships'    : [ 'relationship.csv' ],
+             'locations'        : [ 'location.csv' ],
+             'comments'         : [ 'comment.csv' ],
+             'images'           : [ 'image.csv' ],
+             'people'           : [ 'person.csv' ],
+             'works'            : [ 'work.csv' ],
+             'manifestations'   : [ 'manifestation.csv' ],
+             'institutions'     : [ 'institution.csv' ],
+             'resources'        : [ 'resource.csv' ]
 }
 
 # The list of lists of csv files. (You can comment out lines to only debug specific ones)
