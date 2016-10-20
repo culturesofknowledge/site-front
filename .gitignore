@@ -9,13 +9,13 @@ solr-emlo/solr/home/comments/data
 solr-emlo/solr/home/people/data
 solr-emlo/solr/home/resources/data
 solr-emlo/solr/home/works/data
-solr-emlo/solr/home/manifestations-stage/data
-solr-emlo/solr/home/locations-stage/data
-solr-emlo/solr/home/all-stage/data
-solr-emlo/solr/home/images-stage/data
-solr-emlo/solr/home/institutions-stage/data
-solr-emlo/solr/home/comments-stage/data
-solr-emlo/solr/home/people-stage/data
-solr-emlo/solr/home/resources-stage/data
-solr-emlo/solr/home/works-stage/data
+solr-emlo/solr/home/manifestations_stage/data
+solr-emlo/solr/home/locations_stage/data
+solr-emlo/solr/home/all_stage/data
+solr-emlo/solr/home/images_stage/data
+solr-emlo/solr/home/institutions_stage/data
+solr-emlo/solr/home/comments_stage/data
+solr-emlo/solr/home/people_stage/data
+solr-emlo/solr/home/resources_stage/data
+solr-emlo/solr/home/works_stage/data
 
