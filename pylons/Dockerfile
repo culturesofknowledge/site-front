@@ -2,10 +2,12 @@
 # Create a pylons server
 #
 # Perhaps with commands:
-#     docker build -t pylons:v.v.v .
-#     docker run --name pylons-emlo -p 5000:5000 -d pylons:v.v.v
+#     docker build -t pylons:0.1.3 .
+#     docker run --name pylons-emlo -p 5000:5000 -d pylons:0.1.3
 FROM python:2.7
 MAINTAINER matthew
+
+ABEL version="0.1.3"
 
 # Install pylons
 RUN pip install Pylons==1.0 repoze.who==2.0a4 repoze.who-friendlyform==1.0.8

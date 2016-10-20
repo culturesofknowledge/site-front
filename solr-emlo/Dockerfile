@@ -2,13 +2,15 @@
 # Tweak the solr server
 #
 # Perhaps with commands:
-#     docker build -t solr-emlo:v.v.v .
+#     docker build -t solr-emlo:0.3.2 .
 #     production:
-#     docker run --name solr-emlo-1 -p8983:8983 solr-emlo:v.v.v
+#     docker run --name solr-emlo -p8983:8983 -d solr-emlo:0.3.2
 #     developing:
-#     docker run --name solr-emlo-dev-1 -v $(pwd)/solr/home:/opt/solr/server/solr/home -p8983:8983 solr-emlo:0.1.0
+#     docker run --name solr-emlo-dev -v $(pwd)/solr/home:/opt/solr/server/solr/home -p8983:8983 solr-emlo:0.3.2
 FROM solr:6.2
 MAINTAINER matthew
+
+LABEL version="0.3.2"
 
 # Tweak the config with more heap
 RUN sed -i "s/SOLR_HEAP=\".*\"/SOLR_HEAP=\"1024m\"/" /opt/solr/bin/solr.in.sh
