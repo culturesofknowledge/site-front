@@ -75,7 +75,10 @@ class HomeController(BaseController):
        sol_people = solr.SolrConnection( solrconfig.solr_urls["people"] )
        
        facet_fields = get_is_organisation_fieldname()
-       sol_people_response = sol_people.query( "frbr\:creatorOf-work:[* TO *] OR mail\:recipientOf-work:[* TO *] OR dcterms\:isReferencedBy-work:[* TO *]", rows=0,  fl="-", score=False, \
+       sol_people_response = sol_people.query( get_works_created_fieldname() + ":[* TO *] " +
+                                               "OR " + get_letters_received_fieldname() + ":[* TO *] " +
+                                               "OR " + get_works_in_which_mentioned_fieldname() + ":[* TO *]",
+                                               rows=0,  fl="-", score=False,
                                           facet='true', facet_field=facet_fields)
        sol_people.close()
        

@@ -13,14 +13,14 @@ def get_all_main_displayable_fields():
   # and are used if there is only space to show one field's worth of data about a record.
 
   displayfields = {
-    "work" :          { "display":"Description", "value": get_work_description_fieldname()},
-    "manifestation" : { "display":"Type" ,       "value": get_manifestation_type_fieldname()},
-    "person" :        { "display":'Name',        "value": get_person_name_fieldname()},
-    "location" :      { "display":'Name',        "value": get_location_name_fieldname()},
-    "institution" :   { "display":'Name' ,       "value": get_repository_name_fieldname()},
-    "resource" :      { "display":"Name" ,       "value": get_resource_title_fieldname()},
-    "comment" :       { "display":'Comment',     "value": get_comments_fieldname()},
-    "image" :         { "display":'Image',       "value": get_image_source_fieldname()}
+    "work" :          { "display": "Description", "value": get_work_description_fieldname()},
+    "manifestation" : { "display": "Type" ,       "value": get_manifestation_type_fieldname()},
+    "person" :        { "display": 'Name',        "value": get_person_name_fieldname()},
+    "location" :      { "display": 'Name',        "value": get_location_name_fieldname()},
+    "institution" :   { "display": 'Name' ,       "value": get_repository_name_fieldname()},
+    "resource" :      { "display": "Name" ,       "value": get_resource_title_fieldname()},
+    "comment" :       { "display": 'Comment',     "value": get_comments_fieldname()},
+    "image" :         { "display": 'Image',       "value": get_image_source_fieldname()}
   }
   return displayfields
   
@@ -29,7 +29,7 @@ def get_all_main_displayable_fields():
 
 def get_core_id_fieldname():
   
-  return 'dcterms:identifier'
+  return 'dcterms_identifier'
   
 
 #--------------------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ def get_id_fieldname( object_type = 'work', get_integer_version = False ):
   suffix = get_normal_id_value_prefix()
  
   if object_type == 'work' or object_type == 'person':
-    if get_integer_version == True :
+    if get_integer_version :
       suffix = get_integer_id_value_prefix()
     #endif
   #endif
@@ -58,23 +58,23 @@ def get_integer_id_fieldname( object_type = 'work' ):
 def get_integer_id_value_prefix():
   
   # Gets prefixed to the actual value of the field, as well as being a suffix to the name.
-  # For example the field 'dcterms:identifier-editi:' with a value from the editing
-  # interface of '123456' would return the value 'editi:123456' from Solr. 
+  # For example the field 'dcterms_identifier-editi_' with a value from the editing
+  # interface of '123456' would return the value 'editi_123456' from Solr.
   # Don't know why this is considered necessary but I suppose we'd better keep it for now.
 
-  return 'editi:'
+  return 'editi_'
 
 #--------------------------------------------------------------------------------------------------
 def get_normal_id_value_prefix():
   
   # Gets prefixed to the actual value of the field, as well as being a suffix to the name.
-  return 'edit:'
+  return 'edit_'
 
 #--------------------------------------------------------------------------------------------------
 def get_shelfmark_value_prefix():
   
   # Gets prefixed to the actual value of the field, as well as being a suffix to the name.
-  return 'shelf:'
+  return 'shelf_'
 
 #--------------------------------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ def get_shelfmark_fieldname():
 def get_uri_value_prefix():
 
   # Gets prefixed to the actual value of the field, as well as being a suffix to the name.
-  return 'uri:'
+  return 'uri_'
 
 #--------------------------------------------------------------------------------------------------
 
@@ -104,7 +104,7 @@ def get_uri_fieldname():
 def get_uuid_value_prefix():
 
   # Gets prefixed to the actual value of the field, as well as being a suffix to the name.
-  return 'uuid:'
+  return 'uuid_'
 
 #--------------------------------------------------------------------------------------------------
 
@@ -126,75 +126,79 @@ def get_main_displayable_fieldname( object_type = 'work' ):
 
 #--------------------------------------------------------------------------------------------------
 def get_work_description_fieldname():
-  return 'dcterms:description' 
+  return 'dcterms_description'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_work_fieldname():
-  return 'frbr:Work-work' 
+  return 'frbr_Work-work'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_manifestation_fieldname():
-  return 'frbr:Manifestation-manifestation' 
+  return 'frbr_Manifestation-manifestation'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_image_fieldname():
-  return 'frbr:Image-image' 
+  return 'frbr_Image-image'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_resource_fieldname():
-  return 'rdfs:seeAlso-resource' 
+  return 'rdfs_seeAlso-resource'
 
 #--------------------------------------------------------------------------------------------------
 def get_work_related_to_resource_fieldname():
-  return 'rdfs:seeAlso-work' 
+  return 'rdfs_seeAlso-work'
 
 #--------------------------------------------------------------------------------------------------
 def get_person_related_to_resource_fieldname():
-  return 'rdfs:seeAlso-person' 
+  return 'rdfs_seeAlso-person'
 
 #--------------------------------------------------------------------------------------------------
 def get_place_related_to_resource_fieldname():
-  return 'rdfs:seeAlso-location' 
+  return 'rdfs_seeAlso-location'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_people_mentioned_fieldname():
-  return 'dcterms:references-person' 
+  return 'dcterms_references-person'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_places_mentioned_fieldname():
-  return 'dcterms:references-location' 
+  return 'dcterms_references-location'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_works_mentioned_fieldname():
-  return 'dcterms:references-work' 
+  return 'dcterms_references-work'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_comments_fieldname():
-  return 'ox:isAnnotatedBy-comment' 
+  return 'ox_isAnnotatedBy-comment'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_comments_on_author_fieldname():
-  return 'ox:authorAnnotate-comment' 
+  return 'ox_authorAnnotate-comment'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_comments_on_addressee_fieldname():
-  return 'ox:addresseeAnnotate-comment' 
+  return 'ox_addresseeAnnotate-comment'
 
 #--------------------------------------------------------------------------------------------------
 def get_relations_to_comments_on_date_fieldname():
-  return 'ox:dateAnnotate-comment' 
+  return 'ox_dateAnnotate-comment'
 
 #--------------------------------------------------------------------------------------------------
 def get_catalogue_fieldname():
-  return 'cito:Catalog' 
+  return 'cito_Catalog'
 
 #--------------------------------------------------------------------------------------------------
 def get_as_marked_fieldname_end():
-  return 'rdf:value' 
+  return 'rdf_value'
+
+#--------------------------------------------------------------------------------------------------
+def get_type_fieldname():
+  return 'rdf_type'
 
 #--------------------------------------------------------------------------------------------------
 def get_author_uri_fieldname():
-  return 'frbr:creator-person' 
+  return 'frbr_creator-person'
 
 #--------------------------------------------------------------------------------------------------
 def get_person_with_author_role_fieldname():
@@ -214,7 +218,7 @@ def get_author_roles_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_authors_fieldname_start():
-  return 'mail:authors' 
+  return 'mail_authors'
 
 #--------------------------------------------------------------------------------------------------
 def get_author_as_marked_fieldname():
@@ -222,7 +226,7 @@ def get_author_as_marked_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_addressee_uri_fieldname():
-  return 'mail:recipient-person' 
+  return 'mail_recipient-person'
 
 #--------------------------------------------------------------------------------------------------
 def get_person_with_addressee_role_fieldname():
@@ -242,7 +246,7 @@ def get_addressee_roles_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_addressees_fieldname_start():
-  return 'mail:addressees' 
+  return 'mail_addressees'
 
 #--------------------------------------------------------------------------------------------------
 def get_addressee_as_marked_fieldname():
@@ -266,7 +270,7 @@ def get_agent_mentioned_roles_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_origin_fieldname_start():
-  return 'mail:origin' 
+  return 'mail_origin'
 
 #--------------------------------------------------------------------------------------------------
 def get_origin_uri_fieldname():
@@ -286,7 +290,7 @@ def get_origin_as_marked_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_destination_fieldname_start():
-  return 'mail:destination' 
+  return 'mail_destination'
 
 #--------------------------------------------------------------------------------------------------
 def get_destination_uri_fieldname():
@@ -314,23 +318,23 @@ def get_alternate_placename_mentioned_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_day_fieldname():
-  return 'ox:day' 
+  return 'ox_day'
 
 #--------------------------------------------------------------------------------------------------
 def get_month_fieldname():
-  return 'ox:month' 
+  return 'ox_month'
 
 #--------------------------------------------------------------------------------------------------
 def get_year_fieldname():
-  return 'ox:year' 
+  return 'ox_year'
 
 #--------------------------------------------------------------------------------------------------
 def get_period_start_fieldname():
-  return 'ox:started' 
+  return 'ox_started'
 
 #--------------------------------------------------------------------------------------------------
 def get_period_end_fieldname():
-  return 'ox:completed' 
+  return 'ox_completed'
 
 #--------------------------------------------------------------------------------------------------
 def get_start_day_fieldname():
@@ -358,67 +362,67 @@ def get_end_year_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_date_range_fieldname():
-  return 'ox:dateIsRange' 
+  return 'ox_dateIsRange'
 
 #--------------------------------------------------------------------------------------------------
 def get_original_calendar_fieldname():
-  return 'ox:originalCalendar' 
+  return 'ox_originalCalendar'
 
 #--------------------------------------------------------------------------------------------------
 def get_date_as_marked_fieldname():
-  return 'ox:dateMarked' 
+  return 'ox_dateMarked'
 
 #--------------------------------------------------------------------------------------------------
 def get_incipit_fieldname():
-  return 'ox:incipit' 
+  return 'ox_incipit'
 
 #--------------------------------------------------------------------------------------------------
 def get_excipit_fieldname():
-  return 'ox:excipit' 
+  return 'ox_excipit'
 
 #--------------------------------------------------------------------------------------------------
 def get_postscript_fieldname():
-  return 'mail:postScript' 
+  return 'mail_postScript'
 
 #--------------------------------------------------------------------------------------------------
 def get_editors_notes_fieldname():
-  return 'ox:editorNotes' 
+  return 'ox_editorNotes'
 
 #--------------------------------------------------------------------------------------------------
 def get_date_added_fieldname():
-  return 'ox:internalAdded' 
+  return 'ox_internalAdded'
 
 #--------------------------------------------------------------------------------------------------
 def get_date_created_fieldname():
-  return 'ox:internalCreated' 
+  return 'ox_internalCreated'
 
 #--------------------------------------------------------------------------------------------------
 def get_created_by_user_fieldname():
-  return 'ox:internalCreatedByUser' 
+  return 'ox_internalCreatedByUser'
 
 #--------------------------------------------------------------------------------------------------
 def get_date_changed_fieldname():
-  return 'ox:internalModified' 
+  return 'ox_internalModified'
 
 #--------------------------------------------------------------------------------------------------
 def get_changed_by_user_fieldname():
-  return 'ox:internalModifiedByUser' 
+  return 'ox_internalModifiedByUser'
 
 #--------------------------------------------------------------------------------------------------
 def get_language_fieldname():
-  return 'dcterms:language' 
+  return 'dcterms_language'
 
 #--------------------------------------------------------------------------------------------------
 def get_keywords_fieldname():
-  return 'ox:keywords' 
+  return 'ox_keywords'
 
 #--------------------------------------------------------------------------------------------------
 def get_edit_status_fieldname():
-  return 'ox:editStatus' 
+  return 'ox_editStatus'
 
 #--------------------------------------------------------------------------------------------------
 def get_uncertainty_flag():
-  return 'indef:'
+  return 'indef_'
 
 #--------------------------------------------------------------------------------------------------
 def get_uncertainty_flag_uncertain():
@@ -498,7 +502,7 @@ def get_date_approx_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_creation_date_fieldname():
-  return 'dcterms:created' 
+  return 'dcterms_created'
 
 #--------------------------------------------------------------------------------------------------
 def get_creation_date_year_fieldname():
@@ -530,67 +534,67 @@ def get_creation_date_approx_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_manifestation_address_fieldname():
-  return 'mail:destination' 
+  return 'mail_destination'
 
 #--------------------------------------------------------------------------------------------------
 def get_image_source_fieldname():
-  return 'dcterms:source' 
+  return 'dcterms_source'
 
 #--------------------------------------------------------------------------------------------------
 def get_image_credits_fieldname():
-  return 'ox:imageCredits' 
+  return 'ox_imageCredits'
 
 #--------------------------------------------------------------------------------------------------
 def get_image_display_order_fieldname():
-  return 'ox:imageDisplayOrder' 
+  return 'ox_imageDisplayOrder'
 
 #--------------------------------------------------------------------------------------------------
 def get_thumbnail_fieldname():
-  return 'foaf:thumbnail' 
+  return 'foaf_thumbnail'
 
 #--------------------------------------------------------------------------------------------------
 def get_comments_fieldname():
-  return 'bibo:Note' 
+  return 'bibo_Note'
 
 #----------------------------------------------------------------------------------------------
 def get_work_commented_on_fieldname():
-  return 'bibo:annotates-work' 
+  return 'bibo_annotates-work'
 
 #----------------------------------------------------------------------------------------------
 def get_work_with_comment_on_date_fieldname():
-  return 'ox:annotatesDate-work' 
+  return 'ox_annotatesDate-work'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_with_comment_on_date_fieldname():
-  return 'ox:annotatesDate-manifestation' 
+  return 'ox_annotatesDate-manifestation'
 
 #----------------------------------------------------------------------------------------------
 def get_work_with_comment_on_author_fieldname():
-  return 'ox:annotatesAuthor-work' 
+  return 'ox_annotatesAuthor-work'
 
 #----------------------------------------------------------------------------------------------
 def get_work_with_comment_on_addressee_fieldname():
-  return 'ox:annotatesAddressee-work' 
+  return 'ox_annotatesAddressee-work'
 
 #----------------------------------------------------------------------------------------------
 def get_person_commented_on_fieldname():
-  return 'bibo:annotates-person' 
+  return 'bibo_annotates-person'
 
 #----------------------------------------------------------------------------------------------
 def get_manifestation_commented_on_fieldname():
-  return 'bibo:annotates-manifestation' 
+  return 'bibo_annotates-manifestation'
 
 #----------------------------------------------------------------------------------------------
 def get_place_commented_on_fieldname():
-  return 'bibo:annotates-location' 
+  return 'bibo_annotates-location'
 
 #----------------------------------------------------------------------------------------------
 def get_person_name_fieldname():
-  return 'foaf:name' 
+  return 'foaf_name'
 
 #----------------------------------------------------------------------------------------------
 def get_person_further_reading_fieldname():
-  return 'ox:furtherReading' 
+  return 'ox_furtherReading'
 
 #----------------------------------------------------------------------------------------------
 def get_person_name_first_letter_fieldname():
@@ -598,74 +602,74 @@ def get_person_name_first_letter_fieldname():
 
 #----------------------------------------------------------------------------------------------
 def get_location_name_fieldname():
-  return 'geonames:name' 
+  return 'geonames_name'
 
 #----------------------------------------------------------------------------------------------
 def get_location_synonyms_fieldname():
-  ## return 'geonames:alternateName' -- Unfortunately this is already in use for repository 
-  return 'ox:locationAlternateName' 
+  ## return 'geonames_alternateName' -- Unfortunately this is already in use for repository
+  return 'ox_locationAlternateName'
 
 #----------------------------------------------------------------------------------------------
 def get_repository_fieldname():
-  return 'ox:resourceAt-institution' 
+  return 'ox_resourceAt-institution'
 
 #--------------------------------------------------------------------------------------------------
 def get_repository_contents_fieldname():
-  return 'ox:hasResource-manifestation' 
+  return 'ox_hasResource-manifestation'
 
 #--------------------------------------------------------------------------------------------------
 def get_repository_name_fieldname():
-  return 'geonames:officialName'  
+  return 'geonames_officialName'
 
 #----------------------------------------------------------------------------------------------
 def get_repository_alternate_name_fieldname():
-  return 'geonames:alternateName' 
+  return 'geonames_alternateName'
 
 #--------------------------------------------------------------------------------------------------
 def get_repository_city_fieldname():
-  return 'geonames:locatedIn' 
+  return 'geonames_locatedIn'
 
 #--------------------------------------------------------------------------------------------------
 def get_repository_alternate_city_fieldname():
-  return 'ox:locatedInAlternate' 
+  return 'ox_locatedInAlternate'
 
 #--------------------------------------------------------------------------------------------------
 def get_repository_country_fieldname():
-  return 'geonames:inCountry' 
+  return 'geonames_inCountry'
 
 #--------------------------------------------------------------------------------------------------
 def get_repository_alternate_country_fieldname():
-  return 'ox:inCountryAlternate' 
+  return 'ox_inCountryAlternate'
 
 #--------------------------------------------------------------------------------------------------
 def get_manifestation_type_fieldname():
-  return 'dcterms:type' 
+  return 'dcterms_type'
 
 #----------------------------------------------------------------------------------------------
 def get_resource_title_fieldname():
-  ## return 'dcterms:title'  # we will reserve this for Work title (used by IMPAcT)
-  return 'ox:titleOfResource' 
+  ## return 'dcterms_title'  # we will reserve this for Work title (used by IMPAcT)
+  return 'ox_titleOfResource'
 
 #----------------------------------------------------------------------------------------------
 def get_resource_details_fieldname():
-  ## return 'dcterms:description'  # we will reserve this for Work description (used by CofK)
-  return 'ox:detailsOfResource' 
+  ## return 'dcterms_description'  # we will reserve this for Work description (used by CofK)
+  return 'ox_detailsOfResource'
 
 #----------------------------------------------------------------------------------------------
 def get_resource_url_fieldname():
-  return 'dcterms:relation' 
+  return 'dcterms_relation'
 
 #----------------------------------------------------------------------------------------------
 def get_abstract_fieldname():
-  return 'dcterms:abstract' 
+  return 'dcterms_abstract'
 
 #----------------------------------------------------------------------------------------------
 def get_alias_fieldname():
-  return 'skos:altLabel' 
+  return 'skos_altLabel'
 
 #----------------------------------------------------------------------------------------------
 def get_birth_fieldname():
-  return 'bio:Birth' 
+  return 'bio_Birth'
 
 #----------------------------------------------------------------------------------------------
 def get_birth_year_fieldname():
@@ -697,7 +701,7 @@ def get_birth_date_approx_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_death_fieldname():
-  return 'bio:Death' 
+  return 'bio_Death'
 
 #----------------------------------------------------------------------------------------------
 def get_death_year_fieldname():
@@ -729,104 +733,104 @@ def get_death_date_approx_fieldname():
 
 #--------------------------------------------------------------------------------------------------
 def get_latitude_fieldname():
-  return 'geo:lat' 
+  return 'geo_lat'
 
 #----------------------------------------------------------------------------------------------
 def get_longitude_fieldname():
-  return 'geo:long' 
+  return 'geo_long'
 
 #----------------------------------------------------------------------------------------------
 def get_works_created_fieldname():
-  return 'frbr:creatorOf-work' 
+  return 'frbr_creatorOf-work'
 
 #----------------------------------------------------------------------------------------------
 def get_letters_received_fieldname():
-  return 'mail:recipientOf-work' 
-
-#----------------------------------------------------------------------------------------------
-def get_is_organisation_fieldname():
-  return 'ox:isOrganisation' 
-
-#----------------------------------------------------------------------------------------------
-def get_orgs_of_which_member_fieldname():
-  return 'ox:memberOf-person' 
-
-#----------------------------------------------------------------------------------------------
-def get_members_of_org_fieldname():
-  return 'foaf:member-person' 
+  return 'mail_recipientOf-work'
 
 #----------------------------------------------------------------------------------------------
 def get_works_in_which_mentioned_fieldname():
-  return 'dcterms:isReferencedBy-work' 
+  return 'dcterms_isReferencedBy-work'
+
+#----------------------------------------------------------------------------------------------
+def get_is_organisation_fieldname():
+  return 'ox_isOrganisation'
+
+#----------------------------------------------------------------------------------------------
+def get_orgs_of_which_member_fieldname():
+  return 'ox_memberOf-person'
+
+#----------------------------------------------------------------------------------------------
+def get_members_of_org_fieldname():
+  return 'foaf_member-person'
 
 #----------------------------------------------------------------------------------------------
 def get_gender_fieldname():
-  return 'foaf:gender' 
+  return 'foaf_gender'
 
 #----------------------------------------------------------------------------------------------
 def get_paper_size_fieldname():
-  return 'mail:paperSize' 
+  return 'mail_paperSize'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_paper_size_fieldname():            # fieldname when copied into the 'work' core
   return 'manifestation-paper_size'              
 #----------------------------------------------------------------------------------------------
 def get_paper_type_fieldname():
-  return 'mail:paper' 
+  return 'mail_paper'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_paper_type_fieldname():            # fieldname when copied into the 'work' core
   return 'manifestation-paper_type'              
 #----------------------------------------------------------------------------------------------
 def get_number_of_pages_of_document_fieldname():
-  return 'bibo:numPages'
+  return 'bibo_numPages'
 
 #----------------------------------------------------------------------------------------------
 def get_number_of_pages_of_text_fieldname():
-  return 'ox:numPageText' 
+  return 'ox_numPageText'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_numpages_fieldname():              # fieldname when copied into the 'work' core
   return 'manifestation-pages_number'            
 #----------------------------------------------------------------------------------------------
 def get_seal_fieldname():
-  return 'mail:seal' 
+  return 'mail_seal'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_seal_fieldname():                  # fieldname when copied into the 'work' core
   return 'manifestation-seal'                    
 #----------------------------------------------------------------------------------------------
 def get_endorsements_fieldname():
-  return 'ox:endorsements' 
+  return 'ox_endorsements'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_endorsements_fieldname():          # fieldname when copied into the 'work' core
   return 'manifestation-endorsements'            
 #----------------------------------------------------------------------------------------------
 def get_non_letter_enclosures_fieldname():
-  return 'ox:nonLetterEnclosures' 
+  return 'ox_nonLetterEnclosures'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_non_letter_enclosures_fieldname(): # fieldname when copied into the 'work' core
   return 'manifestation-non_letter_enclosures'   
 #----------------------------------------------------------------------------------------------
 def get_postage_mark_fieldname():
-  return 'mail:postageMark' 
+  return 'mail_postageMark'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_postage_mark_fieldname():          # fieldname when copied into the 'work' core
   return 'manifestation-postage_mark'            
 #----------------------------------------------------------------------------------------------
 def get_printed_edition_details_fieldname():
-  return 'ox:printedEditionDetails' 
+  return 'ox_printedEditionDetails'
 
 #----------------------------------------------------------------------------------------------
 def get_enclosing_fieldname():
-  return 'mail:enclosedBy-manifestation' 
+  return 'mail_enclosedBy-manifestation'
 
 #----------------------------------------------------------------------------------------------
 def get_enclosed_fieldname():
-  return 'mail:enclosureOf-manifestation' 
+  return 'mail_enclosureOf-manifestation'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_enclosed_fieldname():  # fieldname when copied into the 'work' core
@@ -838,11 +842,11 @@ def get_manif_with_enclosure_fieldname(): # fieldname when copied into the 'work
 
 #----------------------------------------------------------------------------------------------
 def get_works_with_origin_fieldname():
-  return 'mail:originOf-work' 
+  return 'mail_originOf-work'
 
 #----------------------------------------------------------------------------------------------
 def get_works_with_destination_fieldname():
-  return 'mail:destinationOf-work' 
+  return 'mail_destinationOf-work'
 
 #----------------------------------------------------------------------------------------------
 def get_related_works_fieldname():
@@ -861,19 +865,19 @@ def get_related_places_fieldname():
 
 #----------------------------------------------------------------------------------------------
 def get_person_titles_or_roles_fieldname():
-  return 'ox:titlesRolesOccupations' 
+  return 'ox_titlesRolesOccupations'
 
 #----------------------------------------------------------------------------------------------
 def get_reply_to_fieldname():
-  return 'mail:replyTo-work'
+  return 'mail_replyTo-work'
 
 #----------------------------------------------------------------------------------------------
 def get_answered_by_fieldname():
-  return 'mail:hasReply-work'
+  return 'mail_hasReply-work'
 
 #----------------------------------------------------------------------------------------------
 def get_matches_fieldname():
-  return 'owl:sameAs-work'
+  return 'owl_sameAs-work'
 
 #----------------------------------------------------------------------------------------------
 def get_manif_has_image_fieldname():
@@ -897,115 +901,115 @@ def get_manif_printed_edition_fieldname():
 
 #----------------------------------------------------------------------------------------------
 def get_is_translation_fieldname():
-  return 'ox:isTranslation'
+  return 'ox_isTranslation'
 
 #----------------------------------------------------------------------------------------------
 def get_manifs_owned_fieldname():
-  return 'ox:previouslyOwned-manifestation'
+  return 'ox_previouslyOwned-manifestation'
 
 #----------------------------------------------------------------------------------------------
 def get_former_owner_fieldname():
-  return 'ox:previouslyOwnedBy-person'
+  return 'ox_previouslyOwnedBy-person'
 
 #----------------------------------------------------------------------------------------------
 def get_handwrote_fieldname():
-  return 'mail:handwrote-manifestation'
+  return 'mail_handwrote-manifestation'
 
 #----------------------------------------------------------------------------------------------
 def get_handwritten_by_fieldname():
-  return 'mail:handwroteBy-person'
+  return 'mail_handwroteBy-person'
 
 #----------------------------------------------------------------------------------------------
 def get_is_parent_of_fieldname():
-  return 'rel:parentOf-person'
+  return 'rel_parentOf-person'
 
 #----------------------------------------------------------------------------------------------
 def get_is_child_of_fieldname():
-  return 'rel:childOf-person'
+  return 'rel_childOf-person'
 
 #----------------------------------------------------------------------------------------------
 def get_is_spouse_of_fieldname():
-  return 'rel:spouseOf-person'
+  return 'rel_spouseOf-person'
 
 #----------------------------------------------------------------------------------------------
 def get_is_sibling_of_fieldname():
-  return 'rel:siblingOf-person'
+  return 'rel_siblingOf-person'
 
 #----------------------------------------------------------------------------------------------
 def get_is_relative_of_fieldname():
-  return 'rel:relativeOf-person'
+  return 'rel_relativeOf-person'
 
 #----------------------------------------------------------------------------------------------
 def get_unspecified_relationship_with_fieldname():
-  return 'ox:unspecifiedRelationshipWith-person'
+  return 'ox_unspecifiedRelationshipWith-person'
 
 #----------------------------------------------------------------------------------------------
 def get_place_where_born_fieldname():
-  return 'ox:wasBornIn-location'
+  return 'ox_wasBornIn-location'
 
 #----------------------------------------------------------------------------------------------
 def get_people_born_at_place_fieldname():
-  return 'rel:wasBirthplaceOf-person'
+  return 'rel_wasBirthplaceOf-person'
 
 #----------------------------------------------------------------------------------------------
 def get_place_where_died_fieldname():
-  return 'ox:diedAt-location'
+  return 'ox_diedAt-location'
 
 #----------------------------------------------------------------------------------------------
 def get_people_who_died_at_place_fieldname():
-  return 'rel:wasPlaceOfDeathOf-person'
+  return 'rel_wasPlaceOfDeathOf-person'
 
 #----------------------------------------------------------------------------------------------
 def get_place_visited_fieldname():
-  return 'ox:wasAt-location'
+  return 'ox_wasAt-location'
 
 #----------------------------------------------------------------------------------------------
 def get_people_who_visited_place_fieldname():
-  return 'rel:wasVisitedBy-person'
+  return 'rel_wasVisitedBy-person'
 
 #----------------------------------------------------------------------------------------------
 def get_works_with_comments_on_people_mentioned_fieldname():
-  return 'ox:annotatesAgentsReferenced-work'
+  return 'ox_annotatesAgentsReferenced-work'
 
 #----------------------------------------------------------------------------------------------
 def get_comments_on_people_mentioned_in_work_fieldname():
-  return 'ox:agentsReferencedAnnotatedBy-comment'
+  return 'ox_agentsReferencedAnnotatedBy-comment'
 
 #----------------------------------------------------------------------------------------------
 def get_source_of_data_fieldname():
-  return 'ox:sourceOfData'
+  return 'ox_sourceOfData'
 
 #----------------------------------------------------------------------------------------------
 def get_total_works_written_by_agent_fieldname():
-  return 'ox:totalWorksByAgent'
+  return 'ox_totalWorksByAgent'
 
 #----------------------------------------------------------------------------------------------
 def get_total_works_recd_by_agent_fieldname():
-  return 'ox:totalWorksAddressedToAgent'
+  return 'ox_totalWorksAddressedToAgent'
 
 #----------------------------------------------------------------------------------------------
 def get_total_works_mentioning_agent_fieldname():
-  return 'ox:totalWorksMentioningAgent'
+  return 'ox_totalWorksMentioningAgent'
 
 #----------------------------------------------------------------------------------------------
 def get_total_works_sent_from_place_fieldname():  
-  return 'ox:totalWorksSentFromPlace'
+  return 'ox_totalWorksSentFromPlace'
 
 #----------------------------------------------------------------------------------------------
 def get_total_works_sent_to_place_fieldname():
-  return 'ox:totalWorksSentToPlace'
+  return 'ox_totalWorksSentToPlace'
 
 #----------------------------------------------------------------------------------------------
 def get_total_works_mentioning_place_fieldname():
-  return 'ox:totalWorksMentioningPlace'
+  return 'ox_totalWorksMentioningPlace'
 
 #----------------------------------------------------------------------------------------------
 def get_total_docs_in_repos_fieldname():
-  return 'ox:totalDocsInRepository'
+  return 'ox_totalDocsInRepository'
 
 #----------------------------------------------------------------------------------------------
 def get_transcription_url_fieldname():
-  return 'ox:urlOfTranscription'
+  return 'ox_urlOfTranscription'
 
 #----------------------------------------------------------------------------------------------
 

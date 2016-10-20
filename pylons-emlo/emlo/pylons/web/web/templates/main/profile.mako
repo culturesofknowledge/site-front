@@ -815,10 +815,10 @@
       <% 
       self.display_images( field, listall )
       %>
-
     % else :  # not an image
       <ul>
       % for obj in c.further_relations[field].values():
+
         <%
         object_type = obj[ 'object_type' ]
         display_fieldname = h.get_main_displayable_fieldname( object_type )

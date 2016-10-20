@@ -709,14 +709,14 @@ def query_url(baseurl,fields_list,add='',remove=''): #{
       
 def uuid_from_uri( uri, full=False ): #{
    if full:
-      return "uuid:" + uri.split("/")[-1]
+      return "uuid_" + uri.split("/")[-1]
    else:
       return uri.split("/")[-1]
 #}
 #-----------------------------------------------------------------------------------------------------
       
 def uuid_from_id( id ): #{
-   return id.split(':')[-1]
+   return id.split('_')[-1]
 #}
 #-----------------------------------------------------------------------------------------------------
 
@@ -735,7 +735,7 @@ def strip_value_prefix( full_string, prefix = '' ): #{  # could be used for UUID
   # Or strip off everything up to and including the first colon
   else: #{
     if ':' in full_string: #{
-      parts = full_string.split( ':' )
+      parts = full_string.split( '_' )
       plength = len( parts[ 0 ] ) + 1
       retval = full_string[ plength : ]
     #}
@@ -839,13 +839,15 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
             #   id = "uuid\:" + is_split[-1]
             
             if uid != '':
-               id = "id:uuid\:" + uid.split("/")[-1].split(":")[-1]
+               id = "id:uuid_" + uid.split("/")[-1].split("_")[-1]
                
                ids.add( id )
-         
+
          ids_diff = ids.difference(ids_all)
          q = " OR ".join(ids_diff)
-         
+
+         print q
+
          if q != '' :
             res = sol.query( q, score=False, rows=len(ids_diff), start=0, fields=selected_fields )
          
@@ -865,7 +867,7 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
       
 def profile_url_from_uri( uri_profile ): #{
 
-   uri = uri_profile.replace( "uri:http://localhost", "/profile" )
+   uri = uri_profile.replace( "uri_http://localhost", "/profile" )
    uri = uri.replace( "http://localhost", "/profile" )
    
    return uri
