@@ -416,80 +416,80 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- work_id -->
-  <field name="dcterms:identifier-editi:"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- work_id -->
+  <field name="dcterms_identifier-editi_"  type="string"  indexed="true"  stored="true"  required="true"  />
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="ox:originalCalendar"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:dateMarked"  type="text"  indexed="true"  stored="true"  />
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="ox_originalCalendar"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_dateMarked"  type="text"  indexed="true"  stored="true"  />
   <field name="started_date_sort"  type="date"  indexed="true"  stored="true"  />
   <field name="started_date_gregorian_sort"  type="date"  indexed="true"  stored="true"  />
-  <field name="ox:started-ox:year"  type="tint"  indexed="true"  stored="true"  />
-  <field name="ox:started-ox:month"  type="tint"  indexed="true"  stored="true"  />
-  <field name="ox:started-ox:day"  type="tint"  indexed="true"  stored="true"  />
-  <field name="ox:started-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="ox:started-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="ox:started-indef:approximate"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="ox:completed-ox:year"  type="tint"  indexed="true"  stored="true"  />
-  <field name="ox:completed-ox:month"  type="tint"  indexed="true"  stored="true"  />
-  <field name="ox:completed-ox:day"  type="tint"  indexed="true"  stored="true"  />
-  <field name="ox:dateIsRange"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:authors-rdf:value"  type="text"  indexed="true"  stored="true"  />
-  <field name="mail:authors-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:authors-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:addressees-rdf:value"  type="text"  indexed="true"  stored="true"  />
-  <field name="mail:addressees-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:addressees-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:destination-rdf:value"  type="text"  indexed="true"  stored="true"  />
-  <field name="mail:destination-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:destination-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:origin-rdf:value"  type="text"  indexed="true"  stored="true"  />
-  <field name="mail:origin-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="mail:origin-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="dcterms:description"  type="text"  indexed="true"  stored="true"  />
-  <field name="dcterms:abstract"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:keywords"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:incipit"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:excipit"  type="text"  indexed="true"  stored="true"  />
-  <field name="mail:postScript"  type="text"  indexed="true"  stored="true"  />
-  <field name="dcterms:language"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:isTranslation"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="cito:Catalog"  type="string"  indexed="true"  stored="true"  required="false"  />
-  <field name="ox:sourceOfData"  type="string"  indexed="false"  stored="true"  /> <!-- accession_code -->
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="ox_started-ox_year"  type="tint"  indexed="true"  stored="true"  />
+  <field name="ox_started-ox_month"  type="tint"  indexed="true"  stored="true"  />
+  <field name="ox_started-ox_day"  type="tint"  indexed="true"  stored="true"  />
+  <field name="ox_started-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="ox_started-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="ox_started-indef_approximate"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="ox_completed-ox_year"  type="tint"  indexed="true"  stored="true"  />
+  <field name="ox_completed-ox_month"  type="tint"  indexed="true"  stored="true"  />
+  <field name="ox_completed-ox_day"  type="tint"  indexed="true"  stored="true"  />
+  <field name="ox_dateIsRange"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_authors-rdf_value"  type="text"  indexed="true"  stored="true"  />
+  <field name="mail_authors-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_authors-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_addressees-rdf_value"  type="text"  indexed="true"  stored="true"  />
+  <field name="mail_addressees-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_addressees-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_destination-rdf_value"  type="text"  indexed="true"  stored="true"  />
+  <field name="mail_destination-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_destination-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_origin-rdf_value"  type="text"  indexed="true"  stored="true"  />
+  <field name="mail_origin-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="mail_origin-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="dcterms_description"  type="text"  indexed="true"  stored="true"  />
+  <field name="dcterms_abstract"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_keywords"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_incipit"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_excipit"  type="text"  indexed="true"  stored="true"  />
+  <field name="mail_postScript"  type="text"  indexed="true"  stored="true"  />
+  <field name="dcterms_language"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_isTranslation"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="cito_Catalog"  type="string"  indexed="true"  stored="true"  required="false"  />
+  <field name="ox_sourceOfData"  type="string"  indexed="false"  stored="true"  /> <!-- accession_code -->
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
 <!--                  -->
 <!-- Links from works -->
 <!--                  --> 
 
-  <field name="frbr:creator-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-created -->
-  <field name="frbr:Manifestation-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_manifestation_of -->
-  <field name="rdfs:seeAlso-resource"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
-  <field name="ox:isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
-  <field name="ox:addresseeAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_addressee -->
-  <field name="ox:authorAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
-  <field name="ox:dateAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
-  <field name="ox:agentsReferencedAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
-  <field name="mail:recipient-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
-  <field name="mail:origin-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
-  <field name="mail:destination-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
+  <field name="frbr_creator-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-created -->
+  <field name="frbr_Manifestation-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_manifestation_of -->
+  <field name="rdfs_seeAlso-resource"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+  <field name="ox_isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
+  <field name="ox_addresseeAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_addressee -->
+  <field name="ox_authorAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
+  <field name="ox_dateAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+  <field name="ox_agentsReferencedAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
+  <field name="mail_recipient-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
+  <field name="mail_origin-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
+  <field name="mail_destination-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
 
-  <field name="mail:replyTo-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
-  <field name="mail:hasReply-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
-  <field name="owl:sameAs-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-match -->
+  <field name="mail_replyTo-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
+  <field name="mail_hasReply-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
+  <field name="owl_sameAs-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-match -->
 
-  <field name="dcterms:references-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions -->
-  <field name="dcterms:references-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions_place -->
-  <field name="dcterms:references-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions_work -->
-  <field name="dcterms:isReferencedBy-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!--  type-mentions_work  -->
+  <field name="dcterms_references-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions -->
+  <field name="dcterms_references-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions_place -->
+  <field name="dcterms_references-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions_work -->
+  <field name="dcterms_isReferencedBy-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!--  type-mentions_work  -->
 
 <!-- end CofK: links from works -->
 
@@ -553,7 +553,7 @@
   <field name="location-origin"  type="text"  indexed="true"  stored="false"  multiValued="true"  />
   <field name="location-destination"  type="text"  indexed="true"  stored="false"  multiValued="true"  />
   <field name="location-mentioned"  type="text"  indexed="true"  stored="false"  multiValued="true"  />
-  <field name="ox:urlOfTranscription"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="ox_urlOfTranscription"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
 
 
 <!--            -->
@@ -622,7 +622,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>dcterms:identifier-uuid:</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -638,36 +638,36 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <copyField source="dcterms:identifier-uuid:" dest="id"/>
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="ox:dateMarked" dest="default_search_field"/>
-  <copyField source="mail:authors-rdf:value" dest="default_search_field"/>
-  <copyField source="mail:addressees-rdf:value" dest="default_search_field"/>
-  <copyField source="mail:destination-rdf:value" dest="default_search_field"/>
-  <copyField source="mail:origin-rdf:value" dest="default_search_field"/>
-  <copyField source="dcterms:description" dest="default_search_field"/>
-  <copyField source="dcterms:abstract" dest="default_search_field"/>
-  <copyField source="ox:keywords" dest="default_search_field"/>
-  <copyField source="ox:incipit" dest="default_search_field"/>
-  <copyField source="ox:excipit" dest="default_search_field"/>
-  <copyField source="mail:postScript" dest="default_search_field"/>
+  <copyField source="ox_dateMarked" dest="default_search_field"/>
+  <copyField source="mail_authors-rdf_value" dest="default_search_field"/>
+  <copyField source="mail_addressees-rdf_value" dest="default_search_field"/>
+  <copyField source="mail_destination-rdf_value" dest="default_search_field"/>
+  <copyField source="mail_origin-rdf_value" dest="default_search_field"/>
+  <copyField source="dcterms_description" dest="default_search_field"/>
+  <copyField source="dcterms_abstract" dest="default_search_field"/>
+  <copyField source="ox_keywords" dest="default_search_field"/>
+  <copyField source="ox_incipit" dest="default_search_field"/>
+  <copyField source="ox_excipit" dest="default_search_field"/>
+  <copyField source="mail_postScript" dest="default_search_field"/>
 
 
 <!--                                              -->
 <!-- copy relations so we can facet them together -->
 <!--                                              --> 
 
-  <copyField source="frbr:creator-person" dest="people"/>
-  <copyField source="mail:recipient-person" dest="people"/>
+  <copyField source="frbr_creator-person" dest="people"/>
+  <copyField source="mail_recipient-person" dest="people"/>
 
-  <copyField source="frbr:Manifestation-manifestation" dest="manifestations"/>
-  <copyField source="rdfs:seeAlso-resource" dest="resources"/>
-  <copyField source="ox:isAnnotatedBy-comment" dest="comments"/>
-  <copyField source="ox:addresseeAnnotate-comment" dest="comments"/>
-  <copyField source="ox:authorAnnotate-comment" dest="comments"/>
-  <copyField source="ox:dateAnnotate-comment" dest="comments"/>
-  <copyField source="mail:origin-location" dest="locations"/>
-  <copyField source="mail:destination-location" dest="locations"/>
+  <copyField source="frbr_Manifestation-manifestation" dest="manifestations"/>
+  <copyField source="rdfs_seeAlso-resource" dest="resources"/>
+  <copyField source="ox_isAnnotatedBy-comment" dest="comments"/>
+  <copyField source="ox_addresseeAnnotate-comment" dest="comments"/>
+  <copyField source="ox_authorAnnotate-comment" dest="comments"/>
+  <copyField source="ox_dateAnnotate-comment" dest="comments"/>
+  <copyField source="mail_origin-location" dest="locations"/>
+  <copyField source="mail_destination-location" dest="locations"/>
 
    
    <!-- Above, multiple source fields are copied to the [text] field. 

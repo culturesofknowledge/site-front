@@ -415,31 +415,31 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- institution_id -->
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- institution_id -->
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="geonames:officialName"  type="text"  indexed="true"  stored="true"  /> <!-- institution_name -->
-  <field name="geonames:alternateName"  type="text"  indexed="true"  stored="true"  /> <!-- institution_synonyms -->
-  <field name="geonames:locatedIn"  type="string"  indexed="true"  stored="true"  /> <!-- institution_city -->
-  <field name="ox:locatedInAlternate"  type="string"  indexed="true"  stored="true"  /> <!-- institution_city_synonyms -->
-  <field name="geonames:inCountry"  type="string"  indexed="true"  stored="true"  /> <!-- institution_country -->
-  <field name="ox:inCountryAlternate"  type="string"  indexed="true"  stored="true"  /> <!-- institution_country_synonyms -->
-  <field name="ox:totalDocsInRepository"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="geonames_officialName"  type="text"  indexed="true"  stored="true"  /> <!-- institution_name -->
+  <field name="geonames_alternateName"  type="text"  indexed="true"  stored="true"  /> <!-- institution_synonyms -->
+  <field name="geonames_locatedIn"  type="string"  indexed="true"  stored="true"  /> <!-- institution_city -->
+  <field name="ox_locatedInAlternate"  type="string"  indexed="true"  stored="true"  /> <!-- institution_city_synonyms -->
+  <field name="geonames_inCountry"  type="string"  indexed="true"  stored="true"  /> <!-- institution_country -->
+  <field name="ox_inCountryAlternate"  type="string"  indexed="true"  stored="true"  /> <!-- institution_country_synonyms -->
+  <field name="ox_totalDocsInRepository"  type="int"  indexed="false"  stored="true"  />
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
 <!--                         -->
 <!-- Links from institutions -->
 <!--                         --> 
 
-  <field name="ox:hasResource-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-stored_in -->
+  <field name="ox_hasResource-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-stored_in -->
 
 <!-- end CofK: links from institutions -->
 
@@ -513,7 +513,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>id</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -529,15 +529,15 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <!-- copyField source="dcterms:identifier-uuid:" dest="id"/ -->
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="geonames:officialName" dest="default_search_field"/>
-  <copyField source="geonames:alternateName" dest="default_search_field"/>
-  <copyField source="geonames:locatedIn" dest="default_search_field"/>
-  <copyField source="ox:locatedInAlternate" dest="default_search_field"/>
-  <copyField source="geonames:inCountry" dest="default_search_field"/>
-  <copyField source="ox:inCountryAlternate" dest="default_search_field"/>
-  <copyField source="geonames:officialName" dest="browse"/>
+  <copyField source="geonames_officialName" dest="default_search_field"/>
+  <copyField source="geonames_alternateName" dest="default_search_field"/>
+  <copyField source="geonames_locatedIn" dest="default_search_field"/>
+  <copyField source="ox_locatedInAlternate" dest="default_search_field"/>
+  <copyField source="geonames_inCountry" dest="default_search_field"/>
+  <copyField source="ox_inCountryAlternate" dest="default_search_field"/>
+  <copyField source="geonames_officialName" dest="browse"/>
    
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 

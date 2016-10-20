@@ -416,38 +416,38 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- location_id -->
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- location_id -->
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="geonames:name"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:locationAlternateName"  type="text"  indexed="true"  stored="true"  />
-  <field name="geo:lat"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
-  <field name="geo:long"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
-  <field name="ox:totalWorksSentFromPlace"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox:totalWorksSentToPlace"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox:totalWorksMentioningPlace"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="geonames_name"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_locationAlternateName"  type="text"  indexed="true"  stored="true"  />
+  <field name="geo_lat"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
+  <field name="geo_long"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
+  <field name="ox_totalWorksSentFromPlace"  type="int"  indexed="false"  stored="true"  />
+  <field name="ox_totalWorksSentToPlace"  type="int"  indexed="false"  stored="true"  />
+  <field name="ox_totalWorksMentioningPlace"  type="int"  indexed="false"  stored="true"  />
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
 <!--                      -->
 <!-- Links from locations -->
 <!--                      --> 
 
-  <field name="mail:originOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
-  <field name="mail:destinationOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
-  <field name="rel:wasBirthplaceOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_born_in_location -->
-  <field name="rel:wasPlaceOfDeathOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
-  <field name="rel:wasVisitedBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
-  <field name="ox:isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
-  <field name="dcterms:isReferencedBy-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions_place -->
-  <field name="rdfs:seeAlso-resource"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+  <field name="mail_originOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
+  <field name="mail_destinationOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
+  <field name="rel_wasBirthplaceOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_born_in_location -->
+  <field name="rel_wasPlaceOfDeathOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="rel_wasVisitedBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="ox_isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="dcterms_isReferencedBy-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions_place -->
+  <field name="rdfs_seeAlso-resource"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
 
 <!-- end CofK: links from locations -->
 
@@ -521,7 +521,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>id</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -537,11 +537,11 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <!-- copyField source="dcterms:identifier-uuid:" dest="id"/ -->
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="geonames:name" dest="default_search_field"/>
-  <copyField source="ox:locationAlternateName" dest="default_search_field"/>
-  <copyField source="geonames:name" dest="browse"/>
+  <copyField source="geonames_name" dest="default_search_field"/>
+  <copyField source="ox_locationAlternateName" dest="default_search_field"/>
+  <copyField source="geonames_name" dest="browse"/>
    
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
