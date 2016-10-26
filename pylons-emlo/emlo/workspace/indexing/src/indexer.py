@@ -131,6 +131,9 @@ def GenerateIds( indexing, red_ids ):
             else:
                 errored = True
                 print "Error - Can't open file=" + csv_file_location
+
+        # Rest a while, you've worked hard enough
+        time.sleep(1)
     
     return errored
 
@@ -191,10 +194,12 @@ def StoreRelations( indexing, red_temp ):
             record_count = 0
             for num, record in enumerate( csv_records ):
                 record_count += 1
-            
+
                 if record_count % 10000 == 0:
                     print str(record_count / 10000),
-            
+                if record_count % 1000 == 0:
+                    time.sleep( 0.05 )
+
                 left_thing = record['left_table_name'].split('_')[-1]
                 right_thing = record['right_table_name'].split('_')[-1]
                 
@@ -297,9 +302,13 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     record_count_per_file += 1
                    
                     solr_item = {}
-                   
-                    if record_count_per_file % 1000 == 0:
-                        print str(record_count_per_file/1000),
+
+                    if record_count_per_file % 200 == 0:
+                        # rest a while, give something else a chance!
+                        time.sleep( 0.1 )
+
+                    if record_count_per_file % 5000 == 0:
+                        print str(record_count_per_file/5000),
                    
                     editid = record[id_field]
                    
@@ -324,9 +333,9 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                             'ox'      : 'http://vocab.ox.ac.uk/' 
                         })
                         
-                    add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(), \
+                    add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
                          uri, fieldmap.get_uri_value_prefix() )
-                    add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(), \
+                    add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
                          uid, fieldmap.get_uuid_value_prefix() )
                     add( entity, solr_item, uri, fieldmap.get_date_added_fieldname(), now )
                     property_count += 3
@@ -351,8 +360,12 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                             translation = translations[field]
                           
                             if translation and ( translation[csvtordf.predicate] or translation[csvtordf.solr] ):
-                              
-                                data = record[field].strip()
+                                data = ''
+                                if field in record :
+                                    data = record[field].strip()
+                                else :
+                                    print "Warning: '" + str(field) + "' not found in record. Record:" + str(record) + " . Skipping that particular field."
+
                                 if data != '' :
                                   
                                     # Convert data if a function present
