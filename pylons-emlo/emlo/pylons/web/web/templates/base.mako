@@ -27,7 +27,7 @@
 		## For emlo-stage.bodleian:
 		## <script src="//use.typekit.net/rdk6qkf.js"></script>
 		## For emlo.bodleian:
-		<script src="//use.typekit.net/axz4cgy.js"></script>
+		<!-- script src="//use.typekit.net/axz4cgy.js"></script -->
 
 		<script>try{Typekit.load();}catch(e){}</script>
 
@@ -95,7 +95,10 @@
 
   intermediate = []
   for one_image in raw_data_in_random_order:
-    sortvalue = one_image[ sortfield ]
+    if sortfield in one_image :
+      sortvalue = one_image[ sortfield ]
+    else :
+      sortvalue = ""
     intermediate.append( ( sortvalue, one_image ) )
   #endfor
 
@@ -634,6 +637,7 @@
 	  uri_fieldname = h.get_uri_fieldname()
 	  uri_for_search = c.profile[ uri_fieldname ]
 	  uri_for_search = h.strip_value_prefix( uri_for_search, h.get_uri_value_prefix())
+	  print uri_fieldname, uri_for_search
 
 	  if object_type == 'person':
 	    total_links = [ { 'field_for_link_text': h.get_total_works_written_by_agent_fieldname(),
@@ -661,6 +665,7 @@
 	    return
 
 	  print_divider = False
+	  print total_links
 	  %>
 
 	  % for one_total in total_links:
@@ -672,7 +677,11 @@
 
 	    <%
 	    field_for_link_text = one_total[ 'field_for_link_text' ]
-	    total_number = c.profile[ field_for_link_text ]
+	    if field_for_link_text in c.profile :
+	        total_number = c.profile[ field_for_link_text ]
+	    else:
+	        total_number = 0
+
 	    field_label = trans.translate( field_for_link_text )
 	    link_text = unicode( total_number ) + ' ' + field_label.lower()
 

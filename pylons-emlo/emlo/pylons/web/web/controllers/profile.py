@@ -209,7 +209,7 @@ class ProfileController(BaseController):
       if check_number_of_works: #{
          fields_to_get = [ 'id', 'object_type', check_field, field_for_search_on_redirect ]
 
-         sol_response = sol.query( "id:" + escaped_id_value, fields = fields_to_get, \
+         sol_response = sol.query( "id:" + escaped_id_value, fields = fields_to_get,
                                     score=False, rows=1, start=0)
          this_profile = sol_response.results[0]
  
@@ -226,8 +226,9 @@ class ProfileController(BaseController):
 
       else: #{
          # Proceed to populate fields as normal
-
-         sol_response = sol.query( "id:" + escaped_id_value, score=False, rows=1, start=0)
+         q = "id:" + escaped_id_value
+         print q
+         sol_response = sol.query( q, score=False, rows=1, start=0)
          if len(sol_response.results) == 0:
             c.tinyurl=''
             return None, [], {}, '/main/profiles/person.mako'

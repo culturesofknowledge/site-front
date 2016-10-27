@@ -490,9 +490,9 @@
 
   <%
   # Check we have a written, recieved or mentioned otherwise skip it.
-  have_written = False
-  have_received = False
-  have_mentioned = False
+  have_written = True
+  have_received = True
+  have_mentioned = True
 
   if len( item[ 'link_fields' ]) > 0:
 
@@ -500,11 +500,11 @@
 
       if link_field['fieldvalue'] > 0 :
 
-        if link_field['fieldname'] == 'ox:totalWorksByAgent' or link_field['fieldname'] == 'ox:totalWorksSentFromPlace':
+        if link_field['fieldname'] == h.get_total_works_written_by_agent_fieldname() or link_field['fieldname'] == get_total_works_sent_from_place_fieldname():
           have_written = True
-        elif link_field['fieldname'] == 'ox:totalWorksAddressedToAgent' or link_field['fieldname'] == 'ox:totalWorksSentToPlace':
+        elif link_field['fieldname'] == get_total_works_recd_by_agent_fieldname() or link_field['fieldname'] == get_total_works_sent_to_place_fieldname():
           have_received = True
-        elif link_field['fieldname'] == 'ox:totalWorksMentioningAgent' or link_field['fieldname'] == 'ox:totalWorksMentioningPlace':
+        elif link_field['fieldname'] == get_total_works_mentioning_agent_fieldname() or link_field['fieldname'] == get_total_works_mentioning_place_fieldname():
           have_mentioned = True
 
 

@@ -416,71 +416,71 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- person_id -->
-  <field name="dcterms:identifier-editi:"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- person_id -->
+  <field name="dcterms_identifier-editi_"  type="string"  indexed="true"  stored="true"  required="true"  />
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="foaf:name"  type="text"  indexed="true"  stored="true"  />
-  <field name="foaf:name-firstletter"  type="bucketFirstLetter"  indexed="true"  stored="true"  />
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="skos:altLabel"  type="string"  indexed="true"  stored="true"  />
-  <field name="ox:titlesRolesOccupations"  type="string"  indexed="true"  stored="true"  /> <!-- person_aliases -->
-  <field name="ox:furtherReading"  type="string"  indexed="false"  stored="true"  />
+  <field name="foaf_name"  type="text"  indexed="true"  stored="true"  />
+  <field name="foaf_name-firstletter"  type="bucketFirstLetter"  indexed="true"  stored="true"  />
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="skos_altLabel"  type="string"  indexed="true"  stored="true"  />
+  <field name="ox_titlesRolesOccupations"  type="string"  indexed="true"  stored="true"  /> <!-- person_aliases -->
+  <field name="ox_furtherReading"  type="string"  indexed="false"  stored="true"  />
 
 <!-- date of birth -->
-  <field name="bio:Birth-ox:year"  type="tint"  indexed="true"  stored="true"  />
-  <field name="bio:Birth-ox:month"  type="tint"  indexed="true"  stored="true"  />
-  <field name="bio:Birth-ox:day"  type="tint"  indexed="true"  stored="true"  />
-  <field name="bio:Birth-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="bio:Birth-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="bio:Birth-indef:approximate"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="bio_Birth-ox_year"  type="tint"  indexed="true"  stored="true"  />
+  <field name="bio_Birth-ox_month"  type="tint"  indexed="true"  stored="true"  />
+  <field name="bio_Birth-ox_day"  type="tint"  indexed="true"  stored="true"  />
+  <field name="bio_Birth-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="bio_Birth-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="bio_Birth-indef_approximate"  type="boolean"  indexed="true"  stored="true"  />
   <field name="date_of_birth_sort"  type="tdate"  indexed="true"  stored="true"  />
 
 <!-- date of death -->
-  <field name="bio:Death-ox:year"  type="tint"  indexed="true"  stored="true"  />
-  <field name="bio:Death-ox:month"  type="tint"  indexed="true"  stored="true"  />
-  <field name="bio:Death-ox:day"  type="tint"  indexed="true"  stored="true"  />
-  <field name="bio:Death-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="bio:Death-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="bio:Death-indef:approximate"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="bio_Death-ox_year"  type="tint"  indexed="true"  stored="true"  />
+  <field name="bio_Death-ox_month"  type="tint"  indexed="true"  stored="true"  />
+  <field name="bio_Death-ox_day"  type="tint"  indexed="true"  stored="true"  />
+  <field name="bio_Death-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="bio_Death-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="bio_Death-indef_approximate"  type="boolean"  indexed="true"  stored="true"  />
   <field name="date_of_death_sort"  type="tdate"  indexed="true"  stored="true"  />
 
-  <field name="foaf:gender"  type="string"  indexed="true"  stored="true"  default="unknown"  />
-  <field name="ox:isOrganisation"  type="boolean"  indexed="true"  stored="true"  default="false"  />
-  <field name="ox:totalWorksByAgent"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox:totalWorksAddressedToAgent"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox:totalWorksMentioningAgent"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="foaf_gender"  type="string"  indexed="true"  stored="true"  default="unknown"  />
+  <field name="ox_isOrganisation"  type="boolean"  indexed="true"  stored="true"  default="false"  />
+  <field name="ox_totalWorksByAgent"  type="int"  indexed="false"  stored="true"  />
+  <field name="ox_totalWorksAddressedToAgent"  type="int"  indexed="false"  stored="true"  />
+  <field name="ox_totalWorksMentioningAgent"  type="int"  indexed="false"  stored="true"  />
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
 <!--                   -->
 <!-- Links from people -->
 <!--                   --> 
 
-  <field name="frbr:creatorOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-created -->
-  <field name="ox:wasBornIn-location"  type="string"  indexed="true"  stored="true"  multiValued="false"  /> <!-- type-was_born_in_location -->
-  <field name="ox:diedAt-location"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
-  <field name="ox:wasAt-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
-  <field name="rel:parentOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-parent_of -->
-  <field name="rel:childOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-child_of -->
-  <field name="rel:spouseOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-spouse_of -->
-  <field name="rel:siblingOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-sibling_of -->
-  <field name="rel:relativeOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-sibling_of -->
-  <field name="ox:unspecifiedRelationshipWith-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
-  <field name="rdfs:seeAlso-resource"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
-  <field name="ox:memberOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-member_of -->
-  <field name="foaf:member-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-member_of -->
-  <field name="ox:isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
-  <field name="mail:recipientOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
-  <field name="dcterms:isReferencedBy-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions -->
-  <field name="mail:handwrote-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-handwrote -->
-  <field name="ox:previouslyOwned-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-formerly_owned -->
+  <field name="frbr_creatorOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-created -->
+  <field name="ox_wasBornIn-location"  type="string"  indexed="true"  stored="true"  multiValued="false"  /> <!-- type-was_born_in_location -->
+  <field name="ox_diedAt-location"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
+  <field name="ox_wasAt-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="rel_parentOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-parent_of -->
+  <field name="rel_childOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-child_of -->
+  <field name="rel_spouseOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-spouse_of -->
+  <field name="rel_siblingOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-sibling_of -->
+  <field name="rel_relativeOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-sibling_of -->
+  <field name="ox_unspecifiedRelationshipWith-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="rdfs_seeAlso-resource"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+  <field name="ox_memberOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-member_of -->
+  <field name="foaf_member-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-member_of -->
+  <field name="ox_isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
+  <field name="mail_recipientOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
+  <field name="dcterms_isReferencedBy-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions -->
+  <field name="mail_handwrote-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-handwrote -->
+  <field name="ox_previouslyOwned-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-formerly_owned -->
 
 <!-- end CofK: links from people -->
 
@@ -555,7 +555,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>id</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -571,17 +571,17 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <!-- copyField source="dcterms:identifier-uuid:" dest="id"/ -->
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="foaf:name" dest="default_search_field"/>
-  <copyField source="skos:altLabel" dest="default_search_field"/>
-  <copyField source="ox:titlesRolesOccupations" dest="default_search_field"/>
+  <copyField source="foaf_name" dest="default_search_field"/>
+  <copyField source="skos_altLabel" dest="default_search_field"/>
+  <copyField source="ox_titlesRolesOccupations" dest="default_search_field"/>
 
-  <copyField source="foaf:name" dest="browse"/>
+  <copyField source="foaf_name" dest="browse"/>
 
-  <copyField source="foaf:name" dest="name-strict"/>
+  <copyField source="foaf_name" dest="name-strict"/>
 
-  <copyField source="foaf:name" dest="foaf:name-firstletter"/>
+  <copyField source="foaf_name" dest="foaf_name-firstletter"/>
 
    
    <!-- Above, multiple source fields are copied to the [text] field. 

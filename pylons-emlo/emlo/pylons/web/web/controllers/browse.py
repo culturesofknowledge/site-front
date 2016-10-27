@@ -115,7 +115,12 @@ class BrowseController(BaseController):
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
     is_org_field = escape_colons( get_is_organisation_fieldname())
-    q = "%s:false AND browse:%s* AND (frbr\:creatorOf-work:[* TO *] OR mail\:recipientOf-work:[* TO *] OR dcterms\:isReferencedBy-work:[* TO *])"% ( is_org_field, letter )
+    q = "%s:false AND browse:%s* AND (" + \
+        get_works_created_fieldname() + ":[* TO *] OR " + \
+        get_letters_received_fieldname() + ":[* TO *] OR " + \
+        get_works_in_which_mentioned_fieldname() + ":[* TO *])"
+
+    q = q % ( is_org_field, letter )
     
     display_fields = self.get_browse_display_fields( 'people' )
 
@@ -231,8 +236,8 @@ class BrowseController(BaseController):
     # Can we strip off the accent before setting up the 'browse' field on import? Think about this one.
 
     # See how many rows we need to get
-    sol_response = sol.query( q.encode( 'utf-8' ), score=False, fields="-", rows=0 )  
-    numFound = sol_response.numFound
+    #sol_response = sol.query( q.encode( 'utf-8' ), score=False, fields="id", rows=0 )
+    #numFound = sol_response.numFound
 
     # Decide what to sort on
     if object == 'works':
@@ -240,14 +245,17 @@ class BrowseController(BaseController):
     else:
       sortfield = 'browse asc'
 
+    #print numFound, q
+
     # Get the data from Solr
     sol_response = sol.query( q.encode( 'utf-8' ), \
-                   score=False, fields=fields, rows=numFound, start=0, sort=sortfield )  
+                   score=False, fields=fields, rows=1000000, start=0, sort=sortfield )
     
     # Transfer the data from the Solr response into the results list
     results = []
     for result in sol_response.results : #{
 
+      print result
       # Identify the main descriptive fieldname e.g. person's name, placename, repository name
       main_displayable_fieldname = display_fields[0]
       link_fields = []
@@ -282,31 +290,29 @@ class BrowseController(BaseController):
       #}
 
       # Add a list of extra details to be displayed (these are without links)
-      if len( display_fields ) > 1: #{
+      if len( display_fields ) > 1:
         on_first_field = True
-        for fieldname in display_fields: #{
+
+        for fieldname in display_fields:
+
           if on_first_field:
             on_first_field = False
-          else: #{
-            if result.has_key( fieldname ): #{
+          else:
+            if result.has_key( fieldname ):
               fieldvalue = result[ fieldname ]
 
               extra_fields.append( { 'fieldname': fieldname,
                                      'fieldvalue': fieldvalue
                                    } )
-            #}
-          #}
-        #}
-      #}
 
       # Add a list of related resources, if any
       if result.has_key( get_relations_to_resource_fieldname() ): #{
         resource_uuids = []
         resource_dict = {}
         for resource_uri in result[ get_relations_to_resource_fieldname() ]: #{
-          resource_uuids.append( uuid_from_uri( resource_uri, True ));
+          resource_uuids.append( uuid_from_uri( resource_uri, True ) )
         #}
-        resource_results = get_records_from_solr( resource_uuids, \
+        resource_results = get_records_from_solr( resource_uuids,
                                                   selected_fields=[ get_resource_title_fieldname(),
                                                                     get_resource_url_fieldname(),
                                                                     get_resource_details_fieldname() ] )
@@ -323,7 +329,7 @@ class BrowseController(BaseController):
                         'extra_fields': extra_fields
                       } )
     #}
-
+    print results
     sol.close()
     return results
 #}
@@ -356,7 +362,7 @@ class BrowseController(BaseController):
     #--------------------------------------------------------
     sol_people = solr.SolrConnection( solrconfig.solr_urls["people"] )
 
-    sol_people_response = sol_people.query( "frbr\:creatorOf-work:[* TO *] OR mail\:recipientOf-work:[* TO *] OR dcterms\:isReferencedBy-work:[* TO *]", rows=0,  fl="-", score=False, \
+    sol_people_response = sol_people.query( get_works_created_fieldname() + ":[* TO *] OR " + get_letters_received_fieldname() + ":[* TO *] OR " + get_works_in_which_mentioned_fieldname() + ":[* TO *]", rows=0,  fl="-", score=False, \
                                             facet='true', facet_field=get_is_organisation_fieldname())
 
     is_org_facets = sol_people_response.facet_counts['facet_fields'][get_is_organisation_fieldname()]

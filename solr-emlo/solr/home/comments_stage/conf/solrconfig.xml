@@ -808,13 +808,6 @@
   <!--These useParams values are available in params.json-->
   <requestHandler name="/browse" class="solr.SearchHandler" useParams="query,facets,velocity,browse"/>
 
-
-  <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell,/browse">
-    <lst name="defaults">
-      <str name="df">_text_</str>
-    </lst>
-  </initParams>
-
   <initParams path="/update/**">
     <lst name="defaults">
       <str name="update.chain">files-update-processor</str>

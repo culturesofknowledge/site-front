@@ -417,59 +417,58 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- manifestation_id -->
-  <field name="dcterms:type"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- manifestation_type e.g. Draft, Scribal Copy -->
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- manifestation_id -->
+  <field name="dcterms_type"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- manifestation_type e.g. Draft, Scribal Copy -->
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="dcterms:identifier-shelf:"  type="textTight"  indexed="true"  stored="true"  />
-  <field name="mail:paperSize"  type="text"  indexed="true"  stored="true"  />
-  <field name="mail:paper"  type="string"  indexed="true"  stored="true"  />
-  <field name="bibo:numPages"  type="tint"  indexed="true"  stored="true"  />
-  <field name="ox:numPageText"  type="tint"  indexed="true"  stored="true"  />
-  <field name="mail:seal"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:endorsements"  type="string"  indexed="true"  stored="true"  />
-  <field name="ox:nonLetterEnclosures"  type="string"  indexed="true"  stored="true"  />
-  <field name="mail:postageMark"  type="textTight"  indexed="true"  stored="true"  />
-  <field name="ox:originalCalendar"  type="string"  indexed="true"  stored="true"  />
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="dcterms_identifier-shelf_"  type="textTight"  indexed="true"  stored="true"  />
+  <field name="mail_paperSize"  type="text"  indexed="true"  stored="true"  />
+  <field name="mail_paper"  type="string"  indexed="true"  stored="true"  />
+  <field name="bibo_numPages"  type="tint"  indexed="true"  stored="true"  />
+  <field name="ox_numPageText"  type="tint"  indexed="true"  stored="true"  />
+  <field name="mail_seal"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_endorsements"  type="string"  indexed="true"  stored="true"  />
+  <field name="ox_nonLetterEnclosures"  type="string"  indexed="true"  stored="true"  />
+  <field name="mail_postageMark"  type="textTight"  indexed="true"  stored="true"  />
+  <field name="ox_originalCalendar"  type="string"  indexed="true"  stored="true"  />
   <field name="creation_date_sort"  type="tdate"  indexed="true"  stored="true"  />
   <field name="creation_date_gregorian_sort"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="dcterms:created-ox:year"  type="tint"  indexed="true"  stored="true"  />
-  <field name="dcterms:created-ox:month"  type="tint"  indexed="true"  stored="true"  />
-  <field name="dcterms:created-ox:day"  type="tint"  indexed="true"  stored="true"  />
-  <field name="dcterms:created-indef:inferred"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="dcterms:created-indef:uncertain"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="dcterms:created-indef:approximate"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="ox:isTranslation"  type="boolean"  indexed="true"  stored="true"  />
-  <field name="dcterms:language"  type="text"  indexed="true"  stored="true"  multiValued="true"  />
-  <field name="mail:destination"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:printedEditionDetails"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:incipit"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:excipit"  type="text"  indexed="true"  stored="true"  />
-  <field name="mail:postScript"  type="text"  indexed="true"  stored="true"  />
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="dcterms_created-ox_year"  type="tint"  indexed="true"  stored="true"  />
+  <field name="dcterms_created-ox_month"  type="tint"  indexed="true"  stored="true"  />
+  <field name="dcterms_created-ox_day"  type="tint"  indexed="true"  stored="true"  />
+  <field name="dcterms_created-indef_inferred"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="dcterms_created-indef_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="dcterms_created-indef_approximate"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="ox_isTranslation"  type="boolean"  indexed="true"  stored="true"  />
+  <field name="dcterms_language"  type="text"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="mail_destination"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_printedEditionDetails"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_incipit"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_excipit"  type="text"  indexed="true"  stored="true"  />
+  <field name="mail_postScript"  type="text"  indexed="true"  stored="true"  />
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
 <!--                           -->
 <!-- Links from manifestations -->
 <!--                           --> 
 
-  <field name="mail:enclosedBy-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-enclosed_in -->
-  <field name="mail:enclosureOf-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-enclosed_in -->
-  <field name="frbr:Image-image"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-image_of -->
-  <field name="frbr:Work-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_manifestation_of -->
-  <field name="ox:resourceAt-institution"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-stored_in -->
-  <field name="mail:handwroteBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-handwrote -->
-  <field name="ox:isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
-  <field name="ox:dateAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
-  <field name="ox:previouslyOwnedBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-formerly_owned -->
-
+  <field name="mail_enclosedBy-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-enclosed_in -->
+  <field name="mail_enclosureOf-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-enclosed_in -->
+  <field name="frbr_Image-image"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-image_of -->
+  <field name="frbr_Work-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_manifestation_of -->
+  <field name="ox_resourceAt-institution"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-stored_in -->
+  <field name="mail_handwroteBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-handwrote -->
+  <field name="ox_isAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
+  <field name="ox_dateAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+  <field name="ox_previouslyOwnedBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-formerly_owned -->
 <!-- end CofK: links from manifestations -->
 
 
@@ -541,7 +540,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>id</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -557,17 +556,17 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <!-- copyField source="dcterms:identifier-uuid:" dest="id"/ -->
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="dcterms:type" dest="default_search_field"/>
-  <copyField source="mail:seal" dest="default_search_field"/>
-  <copyField source="mail:postageMark" dest="default_search_field"/>
-  <copyField source="mail:destination" dest="default_search_field"/>
-  <copyField source="ox:incipit" dest="default_search_field"/>
-  <copyField source="ox:excipit" dest="default_search_field"/>
-  <copyField source="mail:postScript" dest="default_search_field"/>
-  <copyField source="dcterms:identifier-shelf:" dest="default_search_field"/>
-   
+  <copyField source="dcterms_type" dest="default_search_field"/>
+  <copyField source="mail_seal" dest="default_search_field"/>
+  <copyField source="mail_postageMark" dest="default_search_field"/>
+  <copyField source="mail_destination" dest="default_search_field"/>
+  <copyField source="ox_incipit" dest="default_search_field"/>
+  <copyField source="ox_excipit" dest="default_search_field"/>
+  <copyField source="mail_postScript" dest="default_search_field"/>
+  <copyField source="dcterms_identifier-shelf_" dest="default_search_field"/>
+
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
 	  destination field is to use the dynamic field syntax. 

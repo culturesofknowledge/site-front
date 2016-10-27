@@ -415,28 +415,28 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- image_id -->
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- image_id -->
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="dcterms:source"  type="string"  indexed="true"  stored="true"  /> <!-- image_filename -->
-  <field name="ox:imageDisplayOrder"  type="string"  indexed="false"  stored="true"  /> <!-- display_order -->
-  <field name="ox:imageCredits"  type="string"  indexed="false"  stored="true"  /> <!-- credits -->
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
-  <field name="foaf:thumbnail"  type="string"  indexed="true"  stored="true"  />
+  <field name="dcterms_source"  type="string"  indexed="true"  stored="true"  /> <!-- image_filename -->
+  <field name="ox_imageDisplayOrder"  type="string"  indexed="false"  stored="true"  /> <!-- display_order -->
+  <field name="ox_imageCredits"  type="string"  indexed="false"  stored="true"  /> <!-- credits -->
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="foaf_thumbnail"  type="string"  indexed="true"  stored="true"  />
 
 
 <!--                   -->
 <!-- Links from images -->
 <!--                   --> 
 
-  <field name="frbr:Manifestation-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+  <field name="frbr_Manifestation-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
 
 <!-- end CofK: links from images -->
 
@@ -509,7 +509,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>id</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -525,9 +525,9 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <!-- copyField source="dcterms:identifier-uuid:" dest="id"/ -->
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="dcterms:source" dest="default_search_field"/>
+  <copyField source="dcterms_source" dest="default_search_field"/>
    
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 

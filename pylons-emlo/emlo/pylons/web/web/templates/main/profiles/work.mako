@@ -102,7 +102,8 @@
 
     ##============================== Image(s) ===================================
     ## MMK/MW commented below, email from James, Hartlib issue - We've put back now.
-    ${self.further_relations( image_relations_fieldname )} 
+	  <% print "here",image_relations_fieldname %>
+    ${self.further_relations( image_relations_fieldname )}
 
   ##=============================== Alternative records ===============================
   

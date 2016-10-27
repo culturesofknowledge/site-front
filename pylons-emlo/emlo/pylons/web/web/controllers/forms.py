@@ -12,7 +12,7 @@ from web.lib.helpers import get_records_from_solr, build_advanced_query, build_q
                             get_field_to_sort_by
 
 from web.lib.fieldmap import *
-from web.lib.helpers import escape_colons, get_content_fields
+from web.lib.helpers import escape_colons, get_content_fields, uuid_from_id
 
 import solr
 
@@ -146,7 +146,7 @@ class FormsController(BaseController): #{
     for result in sol_response.results:
       uuid_fieldname = get_uuid_fieldname() 
       raw_uuid = result[ uuid_fieldname ]
-      processed_uuid = raw_uuid.split(":")[1]  # strip off 'uuid:' prefix from value of field
+      processed_uuid = uuid_from_id(raw_uuid) #raw_uuid.split("_")[1]  # strip off 'uuid:' prefix from value of field
       result['uuid'] = processed_uuid
       c.solr['results'].append(result)
     #endfor
@@ -276,7 +276,7 @@ class FormsController(BaseController): #{
     c.solr['highlights'] = sol_response.highlighting;
     
     for result in sol_response.results:
-      result['uuid'] = result['id'].split(":")[1]
+      result['uuid'] = uuid_from_id(result['id'])#result['id'].split(":")[1]
       c.solr['results'].append(result)
     #endfor
         

@@ -416,29 +416,29 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- resource_id -->
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- resource_id -->
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="ox:titleOfResource"  type="text"  indexed="true"  stored="true"  required="true"  /> <!-- resource_name -->
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="ox:detailsOfResource"  type="text"  indexed="true"  stored="true"  /> <!-- resource_details -->
-  <field name="dcterms:relation"  type="text"  indexed="true"  stored="true"  /> <!-- resource_url -->
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="ox_titleOfResource"  type="text"  indexed="true"  stored="true"  required="true"  /> <!-- resource_name -->
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="ox_detailsOfResource"  type="text"  indexed="true"  stored="true"  /> <!-- resource_details -->
+  <field name="dcterms_relation"  type="text"  indexed="true"  stored="true"  /> <!-- resource_url -->
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
 <!--                      -->
 <!-- Links from resources -->
 <!--                      --> 
 
-  <field name="rdfs:seeAlso-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
-  <field name="rdfs:seeAlso-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
-  <field name="rdfs:seeAlso-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+  <field name="rdfs_seeAlso-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+  <field name="rdfs_seeAlso-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+  <field name="rdfs_seeAlso-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
 
 <!-- end CofK: links from resources -->
 
@@ -511,7 +511,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>id</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -527,10 +527,10 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <!-- copyField source="dcterms:identifier-uuid:" dest="id"/ -->
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="ox:titleOfResource" dest="default_search_field"/>
-  <copyField source="ox:detailsOfResource" dest="default_search_field"/>
+  <copyField source="ox_titleOfResource" dest="default_search_field"/>
+  <copyField source="ox_detailsOfResource" dest="default_search_field"/>
 
    
    <!-- Above, multiple source fields are copied to the [text] field. 

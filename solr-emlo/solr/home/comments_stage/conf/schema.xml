@@ -415,33 +415,33 @@
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
 
-  <field name="dcterms:identifier-uuid:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-uri:"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="dcterms:identifier-edit:"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- comment_id -->
+  <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- comment_id -->
 <!--          -->
 <!-- optional -->
 <!--          --> 
-  <field name="bibo:Note"  type="text"  indexed="true"  stored="true"  />
-  <field name="rdf:type"  type="string"  indexed="false"  stored="true"  />
-  <field name="ox:internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox:internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox:internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
-  <field name="ox:internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
+  <field name="bibo_Note"  type="text"  indexed="true"  stored="true"  />
+  <field name="rdf_type"  type="string"  indexed="false"  stored="true"  />
+  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
 <!--                     -->
 <!-- Links from comments -->
 <!--                     --> 
 
-  <field name="bibo:annotates-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
-  <field name="bibo:annotates-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
-  <field name="bibo:annotates-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
-  <field name="bibo:annotates-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
-  <field name="ox:annotatesAddressee-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_addressee -->
-  <field name="ox:annotatesAuthor-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
-  <field name="ox:annotatesDate-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
-  <field name="ox:annotatesDate-manifestation"  type="string"  indexed="false"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
-  <field name="ox:annotatesAgentsReferenced-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
+  <field name="bibo_annotates-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
+  <field name="bibo_annotates-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
+  <field name="bibo_annotates-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
+  <field name="bibo_annotates-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to -->
+  <field name="ox_annotatesAddressee-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_addressee -->
+  <field name="ox_annotatesAuthor-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
+  <field name="ox_annotatesDate-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+  <field name="ox_annotatesDate-manifestation"  type="string"  indexed="false"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+  <field name="ox_annotatesAgentsReferenced-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
 
 <!-- end CofK: links from comments -->
 
@@ -514,7 +514,7 @@
  <!-- Field to use to determine and enforce document uniqueness. 
       Unless this field is marked with required="false", it will be a required field
    -->
- <uniqueKey>id</uniqueKey>
+ <uniqueKey>dcterms_identifier-uuid_</uniqueKey>
 
  <!-- field for the QueryParser to use when an explicit fieldname is absent -->
  <defaultSearchField>default_search_field</defaultSearchField>
@@ -530,9 +530,9 @@
 <!--                                          -->
 <!-- <copyField source="SOURCE" dest="DEST"/> -->
 <!--                                          --> 
-  <!-- copyField source="dcterms:identifier-uuid:" dest="id"/ -->
+  <copyField source="dcterms_identifier-uuid_" dest="id"/>
 
-  <copyField source="bibo:Note" dest="default_search_field"/>
+  <copyField source="bibo_Note" dest="default_search_field"/>
    
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 

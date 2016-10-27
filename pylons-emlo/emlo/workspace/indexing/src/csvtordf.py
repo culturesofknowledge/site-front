@@ -116,6 +116,7 @@ ignoreIfEqual='ignoreIfEqual'   #     ignoreIfEqual - ignore this piece of data 
 additional='additional'         # additional - a list of additional values to add which are not in the csv file
 solr='solr'                     #     solr - an alternative name to use in solr (currently only for fields not translated to RDF)
 
+type_fieldname = fieldmap.get_type_fieldname()
 
 from conversionhelper import *  # For converter functions (e.g. convert to date)
 
@@ -199,7 +200,7 @@ conversions = [
     },
 
     additional : {
-      'rdf:type':'http://purl.org/dc/terms/Location'
+      type_fieldname :'http://purl.org/dc/terms/Location'
     }
   },
 
@@ -251,7 +252,7 @@ conversions = [
     },
       
     additional : {
-      'rdf:type':'http://purl.org/ontology/bibo/Note'
+      type_fieldname :'http://purl.org/ontology/bibo/Note'
     }
   },
 
@@ -318,7 +319,7 @@ conversions = [
     },
     
     additional : {
-      'rdf:type':'http://purl.org/dc/dcmitype/Image'
+      type_fieldname :'http://purl.org/dc/dcmitype/Image'
     }
   },
   #########
@@ -675,7 +676,7 @@ conversions = [
     },
 
     additional : {
-    'rdf:type':'http://purl.org/net/biblio#Letter'
+      type_fieldname :'http://purl.org/net/biblio#Letter'
     }
   },
 
@@ -916,7 +917,7 @@ conversions = [
     },
     
     additional : {#
-        'rdf:type':'http://xmlns.com/foaf/0.1/Agent' # Agents can be either people or organisations
+      type_fieldname :'http://xmlns.com/foaf/0.1/Agent' # Agents can be either people or organisations
     }
   },
 
@@ -1134,7 +1135,7 @@ conversions = [
     },
 
     additional : {
-    'rdf:type':'http://purl.org/vocab/frbr/core#Manifestation'
+      type_fieldname :'http://purl.org/vocab/frbr/core#Manifestation'
     }
   },
 
@@ -1217,7 +1218,7 @@ conversions = [
     },
 
     additional : {
-      'rdf:type':'http://purl.org/vocab/aiiso/schema#Institution'
+      type_fieldname :'http://purl.org/vocab/aiiso/schema#Institution'
     }
   },
 
@@ -1280,7 +1281,7 @@ conversions = [
     },
 
     additional : {
-      'rdf:type':'http://www.w3.org/2000/01/rdf-schema#Resource'
+      type_fieldname :'http://www.w3.org/2000/01/rdf-schema#Resource'
     }
   },
 ]
