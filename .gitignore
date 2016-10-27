@@ -19,3 +19,5 @@ solr-emlo/solr/home/people_stage/data
 solr-emlo/solr/home/resources_stage/data
 solr-emlo/solr/home/works_stage/data
 
+pylons-emlo/emlo/**/*.pyc
+
