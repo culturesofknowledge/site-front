@@ -10,8 +10,14 @@
 FROM solr:6.2
 MAINTAINER matthew
 
+# Solr core configuration
+ADD /solr/home /opt/solr/server/solr/home
+
 # Tweak the config with more heap
 RUN sed -i "s/SOLR_HEAP=\".*\"/SOLR_HEAP=\"1024m\"/" /opt/solr/bin/solr.in.sh
 
-# Solr core configuration
-ADD /solr/home /opt/solr/server/solr/
+# Allow solr to write to folders
+#RUN chown -R :solr /opt/solr/server/solr/home
+#RUN chmod -R 777 /opt/solr/server/solr/home
+
+
