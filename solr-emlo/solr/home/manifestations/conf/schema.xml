@@ -420,7 +420,7 @@
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- manifestation_id -->
-  <field name="dcterms_type"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- manifestation_type e.g. Draft, Scribal Copy -->
+  <field name="dcterms_type"  type="string"  indexed="true"  stored="true"  required="true"  default="Other" /> <!-- manifestation_type e.g. Draft, Scribal Copy -->
 <!--          -->
 <!-- optional -->
 <!--          --> 
