@@ -17,9 +17,9 @@ def get_csv_data( csvfilelocation, csvfile, headings=None, skip_first=False ):
 
     csvreader = csv.reader( csvfile, dialect='excel' )
     
-    if headings == None:
+    if headings is None:
         headings = csvreader.next()
-    elif skip_first == True:
+    elif skip_first :
         csvreader.next()
     
     csvdata = []
@@ -62,7 +62,7 @@ def get_csv_data_via_location( csvfilelocation, headings=None, skip_first=False)
             csv_file = codecs.open( csvfilelocation, encoding="utf-8", mode="rb")
             csv_data = get_csv_data( csvfilelocation, csv_file, headings, skip_first )
             csv_file.close()
-    
+
     return csv_data
 
 
@@ -78,7 +78,7 @@ def get_csv_headings( csvfile ):
     return utf8_headings
 
 def get_csv_headings_via_location( csvfilelocation ):
-    
+
     try:
         filesize = os.path.getsize(csvfilelocation)
     except OSError:
@@ -100,7 +100,7 @@ def get_csv_field_data( csvfilelocation, field ):
     
     field_data = None
     
-    if csv_file != None:
+    if csv_file is not None:
         field_data = []
         line = 0
         for record in csv_data:
@@ -111,8 +111,8 @@ def get_csv_field_data( csvfilelocation, field ):
                   field_data.append(data)
             else :
                print "Error: Can't read " + field + " on line " + line + " of " + csvfilelocation
-    
-    del csv_data 
+
+    del csv_data
     
     return field_data
 
