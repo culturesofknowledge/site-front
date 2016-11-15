@@ -6,6 +6,7 @@ Created on 25 Aug 2010
 '''
 
 import sys
+import time
 
 # These two lines are hacks. They switch the default encoding to utf8 so that the command line will convert UTF8 + Ascii to UTF8
 reload(sys)
@@ -162,7 +163,8 @@ def AdditionalWorksData() : #{
   
   while start < total : #{
     
-    print  str(updated_count)+":"+str(start),
+    print str(updated_count) + ":" + str(start),
+    time.sleep(0.1)
     
     people = set()
     locations = set()
@@ -735,13 +737,17 @@ def AdditionalWorksData() : #{
   #}
   
   print ""  
-  print "Committing " + str( updated_count ) + " works..."  
+  print "Committing " + str( updated_count ) + " works..."
+
   solr_works.commit()
-  
   solr_works.close()
+
   solr_people.close()
   solr_locations.close()
-  
+  solr_manifestations.close()
+  solr_institutions.close()
+  solr_resources.close()
+
   return error_count
 #}
 #================================================================
