@@ -590,8 +590,7 @@ def build_advanced_query( requests ): #{
 
     cat_field = escape_colons( get_catalogue_fieldname() )	
 
-    cat_group_q = cat_field + ': ("' + '" OR "'.join(requests['cat_group'].split("|")) + '")'
-    print cat_group_q
+    cat_group_q = cat_field + ': ("' + '" OR "'.join(requests['cat_group'].split("|")) + '")' 
     queries.append( cat_group_q )
   
   #========================
@@ -845,9 +844,7 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
 
          ids_diff = ids.difference(ids_all)
          q = " OR ".join(ids_diff)
-
-         print q
-
+         
          if q != '' :
             res = sol.query( q, score=False, rows=len(ids_diff), start=0, fields=selected_fields )
          
