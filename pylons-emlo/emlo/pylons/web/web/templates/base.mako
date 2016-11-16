@@ -12,7 +12,7 @@
    from pylons import request
 %>
 	<head>
-		<!-- MMK/MW -->
+		<!-- MMK/JMW -->
 		<meta charset="utf-8" />
 		<title>${app_globals.title + " : " + self.attr.main_title}</title>
 
@@ -27,7 +27,7 @@
 		## For emlo-stage.bodleian:
 		## <script src="//use.typekit.net/rdk6qkf.js"></script>
 		## For emlo.bodleian:
-		<!-- script src="//use.typekit.net/axz4cgy.js"></script -->
+		<script src="//use.typekit.net/axz4cgy.js"></script>
 
 		<script>try{Typekit.load();}catch(e){}</script>
 
@@ -95,10 +95,7 @@
 
   intermediate = []
   for one_image in raw_data_in_random_order:
-    if sortfield in one_image :
-      sortvalue = one_image[ sortfield ]
-    else :
-      sortvalue = ""
+    sortvalue = one_image[ sortfield ]
     intermediate.append( ( sortvalue, one_image ) )
   #endfor
 
@@ -156,12 +153,12 @@
 
 <%def name="catalogue_options()">
 ##{
-  <option class="default" value="all catalogues">all catalogues</option>
+<option class="default" value="all catalogues">all catalogues</option>
 
   <%cats = h.get_list_of_catalogues()%>
 
   % for catname in cats: 
-    <option>${catname}</option>
+<option>${catname}</option>\
   % endfor
 ##}
 </%def>
@@ -169,35 +166,21 @@
 ##------------------------------------------------------------------------------------------
 
 <%def name="year_options( add_unknown_year = False )">
-##{
-  <option class="default">all years</option>
-  <script type="text/javascript">
-    for( var i = 1500; i < 1840; i++ )
-      document.write( "<option>" + i + "</option>" );
-    % if add_unknown_year:
-      document.write( '<option value="9999">????</option>' );
-    % endif
-  </script>
-##}
+<option class="default">all years</option>
+	<% years = range(1500,1841) %>
+	% for year in years :
+<option>${year}</option>\
+	% endfor
+  % if add_unknown_year:
+<option value="9999">????</option>
+  % endif
 </%def>
 
 ##------------------------------------------------------------------------------------------
 
 <%def name="month_options()">
 ##{
-  <option class="default" value="all months">all months</option>
-  <option value="1">January</option>
-  <option value="2">February</option>
-  <option value="3">March</option>
-  <option value="4">April</option>
-  <option value="5">May</option>
-  <option value="6">June</option>
-  <option value="7">July</option>
-  <option value="8">August</option>
-  <option value="9">September</option>
-  <option value="10">October</option>
-  <option value="11">November</option>
-  <option value="12">December</option>
+<option class="default" value="all months">all months</option><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
 ##}
 </%def>
 
@@ -205,11 +188,11 @@
 
 <%def name="day_options()">
 ##{
-  <option class="default">all dates</option>
-  <script type="text/javascript">
-    for( var i = 1; i <= 31; i++ )
-      document.write( "<option>" + i + "</option>" );
-  </script>
+<option class="default">all dates</option>\
+	<% days = range(1,32) %>
+	% for day in days :
+<option>${day}<option>\
+	% endfor
 ##}
 </%def>
 
@@ -217,35 +200,24 @@
 
 <%def name="document_type_options()">
 ##{
-  <option class="default">all types</option>
-  <option>Letter</option>
-  <option>Manuscript copy</option>
-  <option>Printed copy</option>
-  <option>Extract</option>
-  <option>Draft</option>
-  <option>Other</option>
+<option class="default">all types</option><option>Digital copy</option><option>Draft</option><option>Extract</option><option>Letter</option><option>Manuscript copy</option><option>Printed copy</option><option>Other</option>
 ##}
 </%def>
 
 ##------------------------------------------------------------------------------------------
 
 <%def name="gender_options()">
-##{
-  <option class="default">all</option>
-  <option value="female">Female</option>
-  <option value="male">Male</option>
-  <option value="unknown">unknown</option>
-##}
+<option class="default">all</option><option value="female">Female</option><option value="male">Male</option><option value="unknown">unknown</option>
 </%def>
 
 ##------------------------------------------------------------------------------------------
 
 <%def name="repository_options()">
 ##{
-  <option class="default">all repositories</option>
+<option class="default">all repositories</option>
   <% repos=h.get_repository_name_list() %>
   % for reposname in repos: 
-    <option value="${reposname}">${reposname}</option>
+<option value="${reposname}">${reposname}</option>\
   % endfor
 ##}
 </%def>
@@ -254,12 +226,12 @@
 
 <%def name="page_count_options()">
 ##{
-  <option class="default" value="0">any number</option>
+<option class="default" value="0">any number</option>
   <% 
   page_counts = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 100 ]
   %>
   % for page_count in page_counts: 
-    <option>${page_count}</option>
+<option>${page_count}</option>\
   % endfor
 ##}
 </%def>
@@ -268,7 +240,7 @@
 
 <%def name="language_options()">
 ##{
-  <option class="default">all languages</option>
+<option class="default">all languages</option>
 
   <% 
   ## Unfortunately hard-coded for now 
@@ -296,7 +268,7 @@
   %>
 
   % for language in languages: 
-    <option>${language}</option>
+<option>${language}</option>\
   % endfor
 ##}
 </%def>
@@ -557,24 +529,17 @@
 ##------------------------------------------------------------------------------------------
 
 <%def name="normal_checkbox( fieldname, title='', css_class='checkbox', value = 'true', onclick = '' )">
-
-  <input id="${fieldname}" name="${fieldname}" value="${value}" class="${css_class}" type="checkbox" title="${title}" onclick="${onclick}" />
-
-  <%
+<input id="${fieldname}" name="${fieldname}" value="${value}" class="${css_class}" type="checkbox" title="${title}" onclick="${onclick}" /><%
   ## See if they are trying to refine an existing search
   search_term = self.get_search_term( fieldname )
   self.set_checkbox_from_search_term( fieldname, search_term )
-  %>
-
-</%def>
+%></%def>
 ##------------------------------------------------------------------------------------------
 
 <%def name="set_checkbox_from_search_term( fieldname, search_term = '' )">
- % if search_term != '':
-    <script type="text/javascript">
-      document.getElementById( '${fieldname}' ).checked = true;
-    </script>
-  % endif
+% if search_term != '':
+  <script type="text/javascript">document.getElementById( '${fieldname}' ).checked = true;</script>
+% endif
 </%def>
 ##------------------------------------------------------------------------------------------
 
@@ -637,7 +602,6 @@
 	  uri_fieldname = h.get_uri_fieldname()
 	  uri_for_search = c.profile[ uri_fieldname ]
 	  uri_for_search = h.strip_value_prefix( uri_for_search, h.get_uri_value_prefix())
-	  print uri_fieldname, uri_for_search
 
 	  if object_type == 'person':
 	    total_links = [ { 'field_for_link_text': h.get_total_works_written_by_agent_fieldname(),
@@ -665,7 +629,6 @@
 	    return
 
 	  print_divider = False
-	  print total_links
 	  %>
 
 	  % for one_total in total_links:
@@ -677,11 +640,7 @@
 
 	    <%
 	    field_for_link_text = one_total[ 'field_for_link_text' ]
-	    if field_for_link_text in c.profile :
-	        total_number = c.profile[ field_for_link_text ]
-	    else:
-	        total_number = 0
-
+	    total_number = c.profile[ field_for_link_text ]
 	    field_label = trans.translate( field_for_link_text )
 	    link_text = unicode( total_number ) + ' ' + field_label.lower()
 

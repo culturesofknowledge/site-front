@@ -1122,6 +1122,34 @@
 						</div>
 					</fieldset>
 
+					<!-- <fieldset class="alignment">
+						<%
+							fieldname = 'cat_group'
+							help = "Search within multiple catalogues."
+						%>
+						<label for="${fieldname}" >Catalogue</label>
+						<div class="row">
+							<div class="large-11 columns">
+								<select name="${fieldname}" multiple="true" height="100">
+									${self.catalogue_options()}
+								</select>
+							</div>
+							<div class="large-1 columns">
+								${self.context_help(help, with_gap = False, calling_field = fieldname)}
+							</div>
+						</div>
+					</fieldset> -->
+					<% 
+						cat_group = "empty"
+						#if "profile" in c :
+						#	cat_group = c.profile.get( 'cat_group', "" ) 
+						if len( request.params ) > 0: #{
+							cat_group = h.get_parm_value_from_request( request, required_parm = fieldname )
+							if cat_group == "" :
+								cat_group = "empty"
+					%>
+					<input type="hidden" name="cat_group" value="${cat_group}"/>
+
 					${self.extra_submit_search_button()}
 				</div>
 

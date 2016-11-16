@@ -114,14 +114,11 @@
 
 					% for data in browse_data :
 						% if c.browsing == data['browse']:
-							<li class="stats-text text-center active"><a href="#">
+<li class="stats-text text-center active"><a href="#">
 						% else:
-							<li class="stats-text text-center"><a href="/browse/${data['browse']}">
+<li class="stats-text text-center"><a href="/browse/${data['browse']}">
 						% endif
-							<img src="/img/${data['image']}" alt="${data['label']} icon" class="stats-icon"/>
-							<br/>${data['count']}<br/>${data['label']}
-
-						</a></li>
+<img src="/img/${data['image']}" alt="${data['label']} icon" class="stats-icon"/><br/>${data['count']}<br/>${data['label']}</a></li>
 
 					% endfor
 				</ul>
@@ -373,9 +370,11 @@
 
            % else :
              % if c.browsing == 'works':
+<%doc>
                ##====================================
                ## Allow them to pick a year for works
                ##====================================
+</%doc>
                ${self.choose_decade_and_year()}
                <br/><br/>
              % else:
@@ -420,11 +419,12 @@
 	            <a href="#" class="close">&times;</a>
 				</div>
               % endif
-
+<%doc>
               ##====================================================
               ## Display entries for selected letter of the alphabet
               ## (Data gets retrieved in controllers/browse.py)
               ##====================================================
+</%doc>
               % if len( c.browse ) > 0:
                 ##<table id="browsing" width="100%" style="min-width:100% !important;">
 				<table id="browsing" class="${c.browsing}">
@@ -486,13 +486,11 @@
 
 <%def name="one_line_of_browse( item, shopping_basket_enabled = False, shopping_item_count = 0, \
                                 max_shopping_items = 0  )">
-##{
-
-  <%
+<%
   # Check we have a written, recieved or mentioned otherwise skip it.
-  have_written = True
-  have_received = True
-  have_mentioned = True
+  have_written = False
+  have_received = False
+  have_mentioned = False
 
   if len( item[ 'link_fields' ]) > 0:
 
@@ -500,11 +498,11 @@
 
       if link_field['fieldvalue'] > 0 :
 
-        if link_field['fieldname'] == h.get_total_works_written_by_agent_fieldname() or link_field['fieldname'] == get_total_works_sent_from_place_fieldname():
+        if link_field['fieldname'] == h.get_total_works_written_by_agent_fieldname() or link_field['fieldname'] == h.get_total_works_sent_from_place_fieldname():
           have_written = True
-        elif link_field['fieldname'] == get_total_works_recd_by_agent_fieldname() or link_field['fieldname'] == get_total_works_sent_to_place_fieldname():
+        elif link_field['fieldname'] == h.get_total_works_recd_by_agent_fieldname() or link_field['fieldname'] == h.get_total_works_sent_to_place_fieldname():
           have_received = True
-        elif link_field['fieldname'] == get_total_works_mentioning_agent_fieldname() or link_field['fieldname'] == get_total_works_mentioning_place_fieldname():
+        elif link_field['fieldname'] == h.get_total_works_mentioning_agent_fieldname() or link_field['fieldname'] == h.get_total_works_mentioning_place_fieldname():
           have_mentioned = True
 
 
@@ -515,14 +513,11 @@
   gender = ""
   for extra in item['extra_fields']:
   
-    if extra['fieldname'] == 'foaf:gender' :
+    if extra['fieldname'] == h.get_gender_fieldname() : #  'foaf_gender'
       gender = extra['fieldvalue']
 		
-  %>
-
-
-
-  <%
+%>
+<%
   main_displayable_field = item['main_displayable_field']
   profile_url = h.profile_url_from_uri( item['main_uri'] )
   uuid = h.uuid_from_uri( item['main_uri'], full=True )
@@ -536,18 +531,17 @@
         already_selected = True
     #}
   #}
-  %>
+%>
 
-  <tr class=" 
-    ${gender}
+<tr class="${gender} \
 	% if have_written :
-    written 
+written \
   %endif
   % if have_received :
-    received
+received \
   %endif
   % if have_mentioned :
-    mentioned 
+mentioned \
   % endif
   ">
   
@@ -555,32 +549,31 @@
   ## Offer the chance to put this person, place etc into 'shopping basket'
   ##======================================================================
   % if shopping_basket_enabled: 
-    <td class="normalcell">
+<td class="normalcell">\
     ${self.normal_checkbox( fieldname = checkbox_fieldname, value = uuid, \
                             onclick = "add_or_remove_item_from_basket( this, " \
                                     + unicode( shopping_item_count ) + ", " \
                                     + unicode( max_shopping_items ) + " )" )}
     % if already_selected:
-      <script type="text/javascript">
-        document.getElementById( "${checkbox_fieldname}").checked=true;
-      </script>
+<script>document.getElementById( "${checkbox_fieldname}").checked=true;</script>
     % endif
-    </td>
+</td>\
   % endif
+<%
+##
+##================================================================
+## Link to the profile page for the main subject of the browse,
+## e.g. if we are browsing people, link to the Person profile page
+##================================================================
+%>
+<td class="normalcell"><a name="${uuid}" href="${profile_url}" title="Profile page for ${main_displayable_field}">${main_displayable_field}</a></td>\
 
-  ##================================================================
-  ## Link to the profile page for the main subject of the browse,
-  ## e.g. if we are browsing people, link to the Person profile page
-  ##================================================================
-  ##<td class="normalcell" width="200px">
-  <td class="normalcell">
-  <a name="${uuid}" href="${profile_url}" title="Profile page for ${main_displayable_field}">${main_displayable_field}</a>
-  </td>
-
-  ##=================================================================================================
-  ## Use totals (e.g. number of letters written) as links leading to a query on works.
-  ## E.g. number of letters written should link to search results for letters written by that author.
-  ##=================================================================================================
+<%
+##=================================================================================================
+## Use totals (e.g. number of letters written) as links leading to a query on works.
+## E.g. number of letters written should link to search results for letters written by that author.
+##=================================================================================================
+%>
   % if len( item[ 'link_fields' ]) > 0:
 
     % for link_field in item[ 'link_fields' ]:
@@ -604,19 +597,18 @@
            + '&return_to_anchor=' + uuid
       title = 'View list of ' + tran.translate( link_field[ 'fieldname' ] ).lower()
       %>
-		  <td class="textcenter">\
+##
+<td class="textcenter">\
       % if len( search_on_fieldname ) > 0 and value_for_display:
-        ## Link to search results with the URI of the person, location or whatever
 <a href="${href}" title="${title}">${value_for_display}</a>\
       % else:
 		% if value_for_display > 0 :
-        	## Just display the data, no link
 ${value_for_display}\
 			% else:
 -\
 		%endif
       % endif
-      </td>\
+</td>\
     % endfor
   % endif
 
@@ -624,7 +616,7 @@ ${value_for_display}\
   ## We'll put all the remaining extra fields into one table cell.
   ## If there is more than one such field, we'll put them one per line inside the cell.
   ##===================================================================================
-  <td class="normalcell">
+  <td class="normalcell">\
   <%
   extra_field_count = len( item[ 'extra_fields' ])
   resource_count = len( item[ 'resource_fields' ])
@@ -638,22 +630,22 @@ ${value_for_display}\
       fieldrow += 1
       %>
       % if fieldrow > 1:
-        <br />
+<br />
       % endif
-      ${label}: ${value_for_display}
+${label}: ${value_for_display}
     % endfor
   % endif
 
   % if resource_count > 0:
     <% first_resource = True %>
     % if fieldrow > 0:
-      <br />
+<br />
     % endif
 
     % if resource_count == 1:
       Related resource: 
     % else:
-      Related Resources: 
+      Related resources: 
     % endif
 
     % for resource_dict in item[ 'resource_fields' ]:
@@ -664,27 +656,24 @@ ${value_for_display}\
 
       fieldrow += 1
       %>
+
       % if fieldrow > 1 and not first_resource:
-        <br />
+<br />
       % endif
 
       % if resource_url and resource_title:
-        <a href="${resource_url}" title="${resource_title}" target="_blank" >${resource_title}</a>
+<a href="${resource_url}" title="${resource_title}" target="_blank" >${resource_title}</a>
       % else:
         ${resource_title}
       % endif
 
       % if resource_details:
-        (${resource_details})
+(${resource_details})
       % endif
       <% first_resource = False %>
     % endfor
   % endif
-
-  </td>
-  </tr>
-
-##}  # end one_line_of_browse()
+</td></tr>\
 </%def>
 
 ##=============================================================================

@@ -332,7 +332,7 @@
 	  <h3 class="worklegend"><img src="/img/icon-repository.png" class="workicon"/>Repositories and Versions</h3>
 
 		<div class="workspacing content">
-			<h4>Versions (originals, copies, etc):</h4>
+			<h4>Versions (originals, copies, digital, etc.)</h4>
 			${self.detailed_relations(h.get_relations_to_manifestation_fieldname())}
 			##${self.h4_relations_list( h.get_relations_to_manifestation_fieldname(), type='detailed' )}
 

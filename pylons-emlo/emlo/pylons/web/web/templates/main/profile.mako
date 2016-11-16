@@ -782,8 +782,9 @@
       %>
 
       % if obj.has_key( field_to_display ):
-
-        ${label}:
+				% if label :
+         ${label}..:
+				% endif
         % if len( related_obj ) > 0:
 		 ${self.display_details_of_one_object( related_obj, nested = True )}
         % else:
@@ -815,10 +816,10 @@
       <% 
       self.display_images( field, listall )
       %>
+
     % else :  # not an image
       <ul>
       % for obj in c.further_relations[field].values():
-
         <%
         object_type = obj[ 'object_type' ]
         display_fieldname = h.get_main_displayable_fieldname( object_type )

@@ -138,14 +138,26 @@
 
 		    <script type='text/javascript'>
 				var person_data = [\
-				% for year in count_keys :
-{y:${year},m:${counts[year]['mentioned']},r:${counts[year]['recipient']},c:${counts[year]['creator']}},\
-                % endfor
+% for year in count_keys :
+<% 
+	mem=counts[year]['mentioned']
+	rec=counts[year]['recipient']
+	cre=counts[year]['creator']
+%>\
+{y:${year},\
+% if mem != 0 :
+m:${mem},\
+% endif 
+% if rec != 0 :
+r:${rec},\
+% endif
+% if cre != 0 :
+c:${cre},\
+% endif
+},\
+% endfor
 ];
-				(function() {
-					// Switch to long format data
-					var i=person_data.length,d;for(;i;i--){d = person_data[i-1];d.year = d.y;d.mentioned=d.m;d.recipient= d.r;d.creator= d.c;delete d.y,delete d.m,delete d.c,delete d.r;}
-				})();
+				(function toLongFormat(){var i=person_data.length,d;for(;i;i--){d=person_data[i-1];d.year=d.y;d.mentioned=d.m||0;d.recipient=d.r||0;d.creator=d.c||0;delete d.y,delete d.m,delete d.c,delete d.r;}})();
 		    </script>
 
 		    ## Write CSS for bar-charts

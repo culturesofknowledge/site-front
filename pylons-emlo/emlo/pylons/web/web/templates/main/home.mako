@@ -9,10 +9,9 @@
 
 <%def name="for_head()">
 	<style>
-		#news-output .item { }
-		#news-output .item .title { margin:0 0 20px; color: black; text-align: center;vertical-align: middle; padding: 5px 3px; background-color: #EFC319;height:75px;}
-		#news-output .item .image { height: 200px;overflow:hidden;display:block;background-color: #cecece; text-align: center;}
-		#news-output .item .image img { }
+		#news-output .item .title { margin:0 0 20px; color: black; text-align: center;vertical-align: middle; padding: 5px 3px; background-color: #EFC319;min-height:100px;line-height:1.5}
+		#news-output .item .image { max-height:215px;overflow:hidden;display:block;background-color: #cecece; text-align: center;transition: max-height 1s;}
+		#news-output .item .image:hover { max-height: 1000px; transition: max-height 1s;}
 	</style>
 </%def>
 
@@ -61,10 +60,10 @@
 ##===================================================================================================
 
 <!-- Search -->
-<div class="panel"><!-- just to add grey background with full width of grid -->
+<div class="panel" style="margin-top:183px;"><!-- just to add grey background with full width of grid -->
     <div class="row ">
 
-      <h2>Search</h2>
+      <h2 style="margin-left:15px">Search</h2>
         ##========== Two alternative search forms come next ============
         <form id="search" action="/forms/">
 
@@ -82,7 +81,7 @@
             </div>
 
             ##===============================
-            <div class="large-5 columns">
+            <div class="large-6 columns">
               <label>Year(s) from</label>
               <%
               fieldname = 'dat_from_year'
@@ -93,6 +92,8 @@
               ${self.end_normal_select( fieldname )}
             </div>
 
+						<!-- div class="large-1 column"><label>&nbsp</label>-</di -->
+
             <div class="large-5 columns">
               <label>To</label>
 
@@ -102,7 +103,9 @@
               ${self.end_normal_select( fieldname )}
 
             </div>
-            <div class="large-2 column"><label>&nbsp;<!-- for alingment--></label>
+
+
+            <div class="large-1 column"><label>&nbsp;<!-- for alignment--></label>
               ${self.context_help( help, with_gap = False, calling_field = fieldname )}
             </div>
 
@@ -133,7 +136,7 @@
             </div>
 
             ##===============================
-						<!-- 
+						 
             <div class="large-11 columns">
               <label>Catalogue</label>
               <%
@@ -144,9 +147,9 @@
               ${self.catalogue_options()}
               ${self.end_normal_select( fieldname )}
             </div>
-            <div class="large-1 column"><label>&nbsp;<!- for alingment-></label>
+            <div class="large-1 column"><label>&nbsp;<!-- for alingment --></label>
               ${self.context_help( help, with_gap = False, calling_field = fieldname )}
-            </div>-->
+            </div>
 
           <div class="large-12 columns">
             <p class="text-center">Prefer things at a glance? You can also <a href="/browse/people">Browse</a>. Want a full set of fields? Try <a href="/advanced">Search+</a></p>
@@ -241,9 +244,9 @@ ${desc}
 	<div id="news-output"  class="panel" style="display:none"> <!-- this panel is just to give the grey background for the entire row even outside grid -->
 		<div class="row">
 
-			<h3>Featured catalogues</h3>
+			<h2 style="margin-left:15px;">Featured catalogues</h2>
 
-			<div class="row">
+			<!--div class="row"-->
 				<div class="item large-4 medium-4 small-12 columns">
 						<a class="link" >
 							<div class="image"></div>
