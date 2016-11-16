@@ -55,3 +55,15 @@ textarea {
 
 }
 
+.worklegend .workicon {
+  margin: 0 -3px 0 -11px;
+}
+.worklegend {
+  font-size: 22px !important;
+  padding-top:5px
+}
+
+#circle-search input:focus::-webkit-input-placeholder {
+    color: #888;
+}
+

@@ -3,6 +3,10 @@
 $(document).ready(function(){
 	"use strict";
 
+  var haveLetterCounts = $("#browsing .written, #browsing .received, #browsing .mentioned").length > 0;
+
+	if( haveLetterCounts ) {
+
 	var showGender = {
 			female : true, 
 			male : true,
@@ -47,7 +51,6 @@ $(document).ready(function(){
 	}
 
 	var haveGenders = $("#browsing .female,#browsing .male,#browsing .unknown").length > 0;
-  var haveLetterCounts = $("#browsing .written, #browsing .received, #browsing .mentioned").length > 0;
 
 	if( !haveGenders ) {
 		$("table#browsing tr").not(".written,.recieved,.mentioned").addClass(filterHiddenClass).hide(); // TODO: Fix at server, we shouldn't be selecting these objects
@@ -258,6 +261,7 @@ $(document).ready(function(){
 		$('#filters').slideDown(300, function() {
 			letters();
 		});
+		}
 	}
 	function hide( selector, time ) {
 		var selected = $(selector);
