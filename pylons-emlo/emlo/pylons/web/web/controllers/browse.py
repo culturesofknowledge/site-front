@@ -210,8 +210,6 @@ class BrowseController(BaseController):
 
   def browse(self, q, object, display_fields, link_details, letter):  #{
 
-    # Connect to the relevant Solr core
-    sol = solr.SolrConnection( solrconfig.solr_urls[object] )
 
     # Tell Solr to return the URI identifying the record, e.g. the person URI if you're browsing people.
     fields = []
@@ -235,27 +233,26 @@ class BrowseController(BaseController):
     # e.g. Ile de France (there should be a circumflex over that I). No option for I-circumflex on list.
     # Can we strip off the accent before setting up the 'browse' field on import? Think about this one.
 
-    # See how many rows we need to get
-    #sol_response = sol.query( q.encode( 'utf-8' ), score=False, fields="id", rows=0 )
-    #numFound = sol_response.numFound
-
     # Decide what to sort on
     if object == 'works':
       sortfield = 'started_date_sort asc'
     else:
       sortfield = 'browse asc'
 
-    #print numFound, q
+
+    # Connect to the relevant Solr core
+    sol = solr.SolrConnection( solrconfig.solr_urls[object] )
 
     # Get the data from Solr
     sol_response = sol.query( q.encode( 'utf-8' ), \
-                   score=False, fields=fields, rows=1000000, start=0, sort=sortfield )
+                   score=False, fields=fields, rows=999999999, start=0, sort=sortfield )  
+
+    sol.close()
     
     # Transfer the data from the Solr response into the results list
     results = []
     for result in sol_response.results : #{
 
-      print result
       # Identify the main descriptive fieldname e.g. person's name, placename, repository name
       main_displayable_fieldname = display_fields[0]
       link_fields = []
@@ -329,8 +326,7 @@ class BrowseController(BaseController):
                         'extra_fields': extra_fields
                       } )
     #}
-    print results
-    sol.close()
+
     return results
 #}
 ##-----------------------------------------------------------------------------
@@ -385,35 +381,35 @@ class BrowseController(BaseController):
     #--------------------------------------------------------
     # Get stats for years of date of work
     #--------------------------------------------------------
-    start_year_fieldname = get_start_year_fieldname()
-    end_year_fieldname = get_end_year_fieldname()
+    #start_year_fieldname = get_start_year_fieldname()
+    #end_year_fieldname = get_end_year_fieldname()
 
-    sol_works = solr.SolrConnection( solrconfig.solr_urls["works"] )
+    #sol_works = solr.SolrConnection( solrconfig.solr_urls["works"] )
 
     # Facets by start year
-    sol_works_response = sol_works.query( "%s:*" % escape_colons( start_year_fieldname ), \
-                                          rows=0,  fl="-", score=False, \
-                                          facet='true', facet_limit=-1, facet_field=start_year_fieldname )
-    start_year_facets = sol_works_response.facet_counts['facet_fields'][start_year_fieldname]
+    #sol_works_response = sol_works.query( "%s:*" % escape_colons( start_year_fieldname ), \
+    #                                      rows=0,  fl="-", score=False, \
+    #                                      facet='true', facet_limit=-1, facet_field=start_year_fieldname )
+    #start_year_facets = sol_works_response.facet_counts['facet_fields'][start_year_fieldname]
 
     # Facets by end year
-    sol_works_response = sol_works.query( "%s:*" % escape_colons( end_year_fieldname ), \
-                                          rows=0,  fl="-", score=False, \
-                                          facet='true', facet_limit=-1, facet_field=end_year_fieldname )
-    end_year_facets = sol_works_response.facet_counts['facet_fields'][end_year_fieldname]
+    #sol_works_response = sol_works.query( "%s:*" % escape_colons( end_year_fieldname ), \
+    #                                      rows=0,  fl="-", score=False, \
+    #                                      facet='true', facet_limit=-1, facet_field=end_year_fieldname )
+    #end_year_facets = sol_works_response.facet_counts['facet_fields'][end_year_fieldname]
 
-    sol_works.close()
+    #sol_works.close()
 
     # Combine the two sets of year facets: get number of unique years
-    start_year_count = len( start_year_facets )
-    end_year_count = 0
+    #start_year_count = len( start_year_facets )
+    #end_year_count = 0
 
-    for end_year, num in end_year_facets.iteritems(): #{
-      if not start_year_facets.has_key( end_year ): #{
-        end_year_count += 1
-      #}
-    #}
+    #for end_year, num in end_year_facets.iteritems(): #{
+    #  if not start_year_facets.has_key( end_year ): #{
+    #    end_year_count += 1
+    #  #}
+    ##}
 
-    c.stats[ 'year' ] = start_year_count + end_year_count
+    c.stats[ 'year' ] = 300 # start_year_count + end_year_count
 #}
 ##-----------------------------------------------------------------------------

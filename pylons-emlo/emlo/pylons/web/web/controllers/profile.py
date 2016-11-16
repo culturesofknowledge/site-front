@@ -226,9 +226,8 @@ class ProfileController(BaseController):
 
       else: #{
          # Proceed to populate fields as normal
-         q = "id:" + escaped_id_value
-         print q
-         sol_response = sol.query( q, score=False, rows=1, start=0)
+
+         sol_response = sol.query( "id:" + escaped_id_value, score=False, rows=1, start=0)
          if len(sol_response.results) == 0:
             c.tinyurl=''
             return None, [], {}, '/main/profiles/person.mako'

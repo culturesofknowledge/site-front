@@ -29,7 +29,8 @@ class HomeController(BaseController):
        #
        sol_all = solr.SolrConnection( solrconfig.solr_urls["all"] )
        
-       facet_fields = 'object_type'
+       catalogue_fieldname = get_catalogue_fieldname()
+       facet_fields = ['object_type',catalogue_fieldname]
        sol_response_all = sol_all.query( "*:*", rows=0,  fl="-", score=False, \
                                           facet='true', facet_field=facet_fields)
 
@@ -69,7 +70,17 @@ class HomeController(BaseController):
             if url != '' :
                c.stats[stat]['url'] = url
             
-       
+      
+
+       catalogue_dict = sol_response_all.facet_counts[ 'facet_fields' ][catalogue_fieldname]
+       num_catalogues = len( catalogue_dict )
+
+       if 'No catalogue specified' in catalogue_dict.keys():
+          num_catalogues -= 1
+       c.stats['Catalogues'] = { 'number': num_catalogues }
+
+
+ 
        work_total = c.stats['works']['number']
        
        sol_people = solr.SolrConnection( solrconfig.solr_urls["people"] )
