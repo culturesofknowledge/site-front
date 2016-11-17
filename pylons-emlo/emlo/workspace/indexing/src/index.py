@@ -1,11 +1,18 @@
 __author__ = 'sers0034'
 
 import sys, time, subprocess
+import codecs, os, tempfile
 
 import redis
 
 import redisconfig
 import csvtordf
+
+import AdditionalSolr
+
+# For remote debug inside Dockers
+#import pydevd
+#pydevd.settrace('129.67.193.177', port=55157, stdoutToServer=True, stderrToServer=True)
 
 fieldmap_path = '../../../pylons/web/web/lib'
 sys.path.append( fieldmap_path )
@@ -70,9 +77,11 @@ def GetSelection():
 
 	return indexing, skip_id_gen, ""
 
-def RunIndexing() :
 
-	indexing, skip_id_generation, message = GetSelection()
+def RunIndexing( indexing=None, skip_id_generation=False) :
+
+	if indexing is None :
+		indexing, skip_id_generation, message = GetSelection()
 
 	if not len( indexing ) :
 		sys.exit( message )
@@ -81,9 +90,36 @@ def RunIndexing() :
 	timeBegin = time.time()
 
 	#
-	# Open Redis ID database
+	# Clean CSVs of control characters
 	#
-	red_ids = redis.Redis(host=redisconfig.host, db=redisconfig.db_object_ids)
+	# A vertical tabulation character has found it's way into EMLO - this breaks pythons CSV reading ability (newlines where there shouldn't be newlines)
+	# so I'm stripping them out.
+
+	print "- Cleaning CSVs of rogue characters"
+	timeStart = time.time()
+
+	for csv_file_name in csvtordf.csv_files:
+
+		csv_file_location = csvtordf.common['csv_source_directory_root'] + csvtordf.csv_files[csv_file_name][0]
+		new_csv_file_location = csv_file_location + ".new"
+
+		print "   -", csv_file_location
+
+		with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
+
+			with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
+
+				for line in csv_file_original:
+
+					line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
+					csv_file.write(line)
+
+		os.rename( csv_file_location, csv_file_location + '.bak' )
+		os.rename( csv_file_location + '.new', csv_file_location )
+
+	timeEnd = time.time()
+	print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
+
 
 	#
 	# Create ID's
@@ -91,9 +127,8 @@ def RunIndexing() :
 	if not skip_id_generation:
 
 		print "- Creating all IDs where needed:"
-		timeStart = time.time();
+		timeStart = time.time()
 
-		# errored = indexer.GenerateIds( indexing, red_ids )
 		errored = subprocess.call( ["python index_generate_ids.py"], shell=True )
 
 		if errored:
@@ -115,7 +150,7 @@ def RunIndexing() :
 	#
 	# Store relationships
 	#
-	timeStart = time.time();
+	timeStart = time.time()
 	print "- Storing relationships in temp Redis database:"
 
 	# errored = indexer.StoreRelations( indexing, red_temp )
@@ -124,8 +159,14 @@ def RunIndexing() :
 	if errored:
 		sys.exit( "Sorry, relations problem. There maybe errors with the csv files which will need to be fixed. (It could be unicode problems, try removing the invalid lines)")
 	else:
-		timeEnd = time.time();
+		timeEnd = time.time()
 		print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
+
+
+	#
+	# Open Redis ID database
+	#
+	red_ids = redis.Redis(host=redisconfig.host, db=redisconfig.db_object_ids)
 
 	#
 	# Save the RDF and output to Solr
@@ -141,11 +182,12 @@ def RunIndexing() :
 	# Update Works if needed
 	#
 	if 'works' in indexing :
-		indexer.AdditionalSolr.AdditionalWorksData()
+		AdditionalSolr.AdditionalWorksData()
 
 	#
 	# Switch from the staging cores to real ones.
 	#
+	indexer.SolrOptimize( indexing )
 	indexer.SwitchSolrCores( indexing )
 
 	#
@@ -171,5 +213,16 @@ if __name__ == '__main__':
 		print
 		csvtordf.csv_files = csvtordf.test_csv_files
 
-	RunIndexing()
-	#SwitchSolrCores()
+	RunIndexing( [
+		"comments",
+		"images",
+		"institutions",
+		"locations",
+		"manifestations",
+		"people",
+		"resources",
+		"works"
+	], False )
+
+	#RunIndexing( ["works"], True )
+	#RunIndexing( None, False )
