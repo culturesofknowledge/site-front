@@ -29,7 +29,7 @@ $(document).ready( function(){
 
 	if( $divs.length !== 0 ) {
 
-		var newsUrl = 'http://emlo.bodleian.ox.ac.uk/blog/?json_route=/posts&' +
+		var newsUrl = 'http://emlo-portal.bodleian.ox.ac.uk/collections/?json_route=/posts&' +
 			'type[]=catalogue&type[]=post&filter[orderby]=data&filter[order]=DESC&filter[posts_per_page]='+$divs.length;
 
 		if (window.location.hostname !== 'emlo.bodleian.ox.ac.uk') {
