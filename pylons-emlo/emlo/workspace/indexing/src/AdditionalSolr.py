@@ -19,7 +19,7 @@ import solrconfig
 # By using functions from 'fieldmap', we can restrict fieldnames to being hard-coded in only 
 # ONE place, allowing much easier changes if a better ontology is found. (SB, 25 Aug 2011)
 
-web_lib_path = '/home/dev/subversion/trunk/pylons/web/web/lib' 
+web_lib_path = '../../../pylons/web/web/lib' 
 sys.path.append( web_lib_path )
 import fieldmap as f
 from helpers import escape_colons
@@ -164,7 +164,7 @@ def AdditionalWorksData() : #{
   while start < total : #{
     
     print str(updated_count) + ":" + str(start),
-    time.sleep(0.1)
+    time.sleep(0.01)  # 0.1 * (100'000/200) = 10 seconds...
     
     people = set()
     locations = set()
