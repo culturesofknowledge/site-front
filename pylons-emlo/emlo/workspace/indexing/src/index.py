@@ -191,6 +191,11 @@ def RunIndexing( indexing=None, skip_id_generation=False) :
 	indexer.SwitchSolrCores( indexing )
 
 	#
+	# We don't need to keep the old data so clear it out.
+	#
+	indexer.ClearSolrData( indexing )
+
+	#
 	# Done!
 	#
 	timeFinished = time.time()
