@@ -10,15 +10,17 @@ import time
 import datetime
 import urllib
 
+
 # libraries
-import redis
 import solr
 import uuid
 #import rdfobject
 
+import csv
+import codecs
+
 # created
 import solrconfig
-import redisconfig
 import csvtordf
 import relationships
 
@@ -26,8 +28,9 @@ fieldmap_path = '../../../pylons/web/web/lib'
 sys.path.append( fieldmap_path )
 import fieldmap
 
-import csvhelper
-import AdditionalSolr
+# These two lines are hacks. They switch the default encoding to utf8 so that the command line will convert UTF8 + Ascii to UTF8
+reload(sys)
+sys.setdefaultencoding("utf8")
 
    
 def plural_to_singular( plural ):
@@ -41,16 +44,12 @@ def add_entity( entity, resource, predicate, object ):
     return
 
 def add_solr( item, key, value ):
-    if item.has_key( key ) :
+    if key in item :
         currentitem = item[key]
         if isinstance( currentitem, list) :
             item[key].append( value )
         else :
-            newlist = []
-            newlist.append( currentitem )
-            newlist.append( value )
-            
-            item[key] = newlist
+            item[key] = [currentitem, value]
     else :
         item[key] = value
     return
@@ -118,16 +117,19 @@ def GenerateIds( indexing, red_ids ):
             print "  - " + csv_file
             
             csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
-           
-            ids = csvhelper.get_csv_field_data( csv_file_location, id_field )
 
-            if ids != None:
-                for editid in ids:
-                    
+            csv_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
+            csv_data = csv.DictReader( csv_file, restval="" )
+
+            if csv_file is not None:
+
+                for csv_row in csv_data:
+
+                    editid = csv_row[id_field].strip()
+
                     if not red_ids.exists( editid ) :
                         red_ids.set( editid, uuid.uuid4() )
-                    
-                del ids
+
             else:
                 errored = True
                 print "Error - Can't open file=" + csv_file_location
@@ -166,6 +168,25 @@ def ClearSolrData( indexing ):
     
     print '   - "all" cleared of selected objects'
 
+def SolrOptimize( indexing ):
+    #
+    # Clear settings
+    #
+    print " - Optimize Solr data"
+
+    for index in indexing:
+        sol = solr.SolrConnection( solrconfig.solr_urls_stage[index] )
+        sol.optimize()
+        sol.close()
+
+        print "   - " + index + " optimized."
+
+    sol = solr.SolrConnection( solrconfig.solr_urls_stage['all'] )
+
+    sol.optimize()
+    sol.close()
+
+    print '   - all optimized.'
 
 def StoreRelations( indexing, red_temp ):
     # 
@@ -185,11 +206,12 @@ def StoreRelations( indexing, red_temp ):
         print "  - " + csv_file,
         
         csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
-        
-        csv_records = csvhelper.get_csv_data_via_location( csv_file_location )
-    
-        if csv_records :
-            print "("+ str(len(csv_records)) + ")",
+
+        csv_codec_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
+        csv_records = csv.DictReader( csv_codec_file, restval="" )
+
+        if csv_codec_file :
+            # print "("+ str(len(csv_records)) + ")",
         
             record_count = 0
             for num, record in enumerate( csv_records ):
@@ -197,17 +219,13 @@ def StoreRelations( indexing, red_temp ):
 
                 if record_count % 10000 == 0:
                     print str(record_count / 10000),
-                if record_count % 1000 == 0:
-                    time.sleep( 0.05 )
+                    time.sleep( 0.5 )
 
                 left_thing = record['left_table_name'].split('_')[-1]
                 right_thing = record['right_table_name'].split('_')[-1]
-                
-                left_add = right_add = False
-                if left_thing in indexing_singular:
-                    left_add = True
-                if right_thing in indexing_singular: 
-                    right_add = True
+
+                left_add = left_thing in indexing_singular
+                right_add = right_thing in indexing_singular
                 
                 if left_add or right_add:
                     relationship_type = record['relationship_type'].split('_', 2 )[-1]
@@ -219,10 +237,10 @@ def StoreRelations( indexing, red_temp ):
                         right = record['right_id_value']
                        
                         if left_add :
-                            red_temp.sadd(left + ":rel", ("%s::%s::%s") % (left_to_right_rel, right, right_thing) )
+                            red_temp.sadd(left + ":rel", "%s::%s::%s" % (left_to_right_rel, right, right_thing) )
                          
                         if right_add :
-                            red_temp.sadd(right + ":rel",("%s::%s::%s") % (right_to_left_rel, left, left_thing) )
+                            red_temp.sadd(right + ":rel", "%s::%s::%s" % (right_to_left_rel, left, left_thing) )
     
                     except :
                         error = True
@@ -231,12 +249,13 @@ def StoreRelations( indexing, red_temp ):
                             print "Error - Problem with relationship: " + left_thing, right_thing, relationship_type + " (Does it need adding to relationships.py?)"
                             print "Number:" + str(num) + " Record:" + str(record) 
            
-            del csv_records
             print ""
             
         else:
             error = True
             print "Error - Can't open file=" + csv_file_location
+
+        csv_codec_file.close()
 
     return error
 
@@ -286,22 +305,28 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                 #
                 csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
                 print "  - CSV file:  " + csv_file_location,
-               
-                csv_records = csvhelper.get_csv_data_via_location( csv_file_location )
-                
-                if len( csv_records ) > 0 :
-                    csv_fields = csv_records[0].keys()
+
+                csv_codec_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
+                csv_records = csv.DictReader( csv_codec_file, restval="" )
+
+                csv_fields = None
                
                 translation_errors = []
                 solr_list = []
                 record_count_per_file = 0
-               
+
                 for record in csv_records :
-                   
+
+                    if record_count_per_file > 5000 * 90 :
+                        print record
+
                     record_count += 1
                     record_count_per_file += 1
                    
                     solr_item = {}
+
+                    if csv_fields is None :
+                         csv_fields = record.keys()
 
                     if record_count_per_file % 200 == 0:
                         # rest a while, give something else a chance!
@@ -434,15 +459,17 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                 print "    -  Adding to Solr All",
                 add_to_solr( sol_all, solr_list )
                 print ""
-                   
+
+                csv_codec_file.close()
                 del solr_list[:]
-                   
+
+
             if len( csvs ) > 0 : # This is a debugging check, we should always have at least one unless we've commented something out ( - otherwise, what's the point!)
                 print "  -  Committing to Solr " + plural
                 sol.commit()
                 sol.close()
                
-                timeEnd = time.time();
+                timeEnd = time.time()
                 print "- Done. Added " + str(record_count) + " records in %0.1f seconds." % ( (timeEnd-timeStart))
     
     
