@@ -30,6 +30,8 @@ object_relation_fields = {
         get_relations_to_places_mentioned_fieldname(),
         get_relations_to_works_mentioned_fieldname(),
         get_works_in_which_mentioned_fieldname(),
+        get_relations_to_comments_on_origin_fieldname(),
+        get_relations_to_comments_on_destination_fieldname(),
       ],
       
    'person' : [

@@ -92,6 +92,8 @@
 		h.get_relations_to_comments_on_author_fieldname().lower().strip():  'Comments on author',
 		h.get_relations_to_comments_on_addressee_fieldname().lower().strip():  'Comments on addressee',
 		h.get_relations_to_comments_on_date_fieldname().lower().strip():  'Comments on date',
+		h.get_relations_to_comments_on_origin_fieldname().lower().strip():  'Comments on origin',
+		h.get_relations_to_comments_on_destination_fieldname().lower().strip():  'Comments on destination',
 		h.get_person_with_author_role_fieldname().lower().strip():  'Author',
 		h.get_author_is_org_fieldname().lower().strip():  'Author is organisation',
 		h.get_author_gender_fieldname().lower().strip():  'Gender of author ',

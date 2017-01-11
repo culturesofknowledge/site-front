@@ -482,7 +482,11 @@
   <field name="mail_origin-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
   <field name="mail_destination-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
 
-  <field name="mail_replyTo-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
+	 <field name="ox_originAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_origin -->
+	 <field name="ox_destinationAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_destination -->
+
+
+	 <field name="mail_replyTo-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
   <field name="mail_hasReply-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
   <field name="owl_sameAs-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-match -->
 
@@ -666,6 +670,8 @@
   <copyField source="ox_addresseeAnnotate-comment" dest="comments"/>
   <copyField source="ox_authorAnnotate-comment" dest="comments"/>
   <copyField source="ox_dateAnnotate-comment" dest="comments"/>
+	<copyField source="ox_originAnnotate-comment" dest="comments"/>
+	<copyField source="ox_destinationAnnotate-comment" dest="comments"/>
   <copyField source="mail_origin-location" dest="locations"/>
   <copyField source="mail_destination-location" dest="locations"/>
 

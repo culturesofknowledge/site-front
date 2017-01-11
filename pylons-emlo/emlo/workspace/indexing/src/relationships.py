@@ -396,6 +396,21 @@ relationships = {
                  get_right_side = get_destination_uri_fieldname()),
   ],
 
+	'relationship_type-refers_to_origin': [
+		# Comment (on left) refers to author of work (on right)
+		set_rel_cfg( type_on_left   = 'comment', \
+		             get_left_side  = get_relations_to_comments_on_origin_fieldname(), \
+		             type_on_right  = 'location', \
+		             get_right_side =  get_origin_uri_fieldname()),
+	],
+
+	'relationship_type-refers_to_destination': [
+		# Comment (on left) refers to author of work (on right)
+		set_rel_cfg( type_on_left   = 'comment', \
+		             get_left_side  = get_relations_to_comments_on_destination_fieldname(), \
+		             type_on_right  = 'location', \
+		             get_right_side =  get_destination_uri_fieldname()),
+	],
 }
 
 #---------------------------------------------------------------------------------------------------

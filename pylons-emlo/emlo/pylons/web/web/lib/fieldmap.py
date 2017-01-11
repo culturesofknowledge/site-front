@@ -185,6 +185,14 @@ def get_relations_to_comments_on_date_fieldname():
   return 'ox_dateAnnotate-comment'
 
 #--------------------------------------------------------------------------------------------------
+def get_relations_to_comments_on_origin_fieldname():
+	return 'ox_originAnnotate-comment'
+#--------------------------------------------------------------------------------------------------
+def get_relations_to_comments_on_destination_fieldname():
+	return 'ox_destinationAnnotate-comment'
+
+
+#--------------------------------------------------------------------------------------------------
 def get_catalogue_fieldname():
   return 'cito_Catalog'
 
