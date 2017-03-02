@@ -162,6 +162,78 @@
 			}
 		};
 	</script>
+
+	<script>
+		function sticky_relocate() {
+				var window_top = $(window).scrollTop();
+				var div_top = $('.side-nav-anchor').offset().top;
+				if (window_top > div_top) {
+						$('.side-nav').addClass('stick');
+				} else {
+						$('.side-nav').removeClass('stick');
+				}
+		}
+
+		$(document).foundation( bdlss.emlo.foundationSettings );
+
+		$(function() {
+			var stickOn = false;
+			if( Foundation.utils.is_large_up() ) {
+				
+				$(window).scroll(sticky_relocate);
+				$('.side').css("position", "initial");
+				sticky_relocate();
+				stickOn = true;
+			}
+
+			$( window ).resize( function() {
+				if( Foundation.utils.is_large_up() ) {
+					if( !stickOn ) {
+						//$('.side').css("position", "initial");
+						$(window).scroll(sticky_relocate);
+						sticky_relocate();
+						stickOn = true;
+					}
+				}
+				else {
+					if( stickOn ) {
+						$(window).off( "scroll" );
+						$('.side-nav').removeClass('stick');
+						stickOn = false;
+					}
+				}
+			});
+		});
+	</script>
+
+	<style>
+	.side-nav.stick {
+			margin-top: 0 !important;
+			position: fixed;
+			top: 0;
+			z-index: 10000;
+			border-radius: 0 0 0.5em 0.5em;
+	}
+	</style>
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+	<style>
+	.select2-container {
+			margin: 0 0 15px 0;
+	}
+
+	.select2-container--default .select2-selection--single {
+			border: 2px solid #EFC319
+	}
+	.select2-container--default .select2-selection--single .select2-selection__arrow {
+			background-color: #dedcdc;
+	}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+	<script type="text/javascript">
+		$('#dates_section select,#let_lang,#repository,#col_cat').select2();
+	</script>
+
 </%def>
 
 ##------------------------------------------------------------------------------------------
@@ -185,12 +257,14 @@
 
 		<div class="small-12 large-3 columns side">
 
-			<h3>Jump To</h3>
-
+			<p>Jump To:</p>
+			<div class="side-nav-anchor"></div>
 			<ul class="side-nav">
 				% for anchor_name, section_title in form_sections:
 				<li><a href="#${anchor_name}">${section_title}</a></li>
 				% endfor
+
+			<li><form onsubmit="return false;" style="width:200px"><input class="button submit search-related" value="Search" onclick="$('form#search').submit();" style="margin-top:10px;margin-right:45px;" type="submit"></form></li>
 			</ul>
 
 		</div> 

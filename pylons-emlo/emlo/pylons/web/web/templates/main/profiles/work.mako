@@ -102,8 +102,7 @@
 
     ##============================== Image(s) ===================================
     ## MMK/MW commented below, email from James, Hartlib issue - We've put back now.
-	  <% print "here",image_relations_fieldname %>
-    ${self.further_relations( image_relations_fieldname )}
+    ${self.further_relations( image_relations_fieldname )} 
 
   ##=============================== Alternative records ===============================
   
@@ -360,8 +359,8 @@
 		c.profile.has_key( h.get_relations_to_comments_on_author_fieldname()) or \
 		c.profile.has_key( h.get_relations_to_comments_on_addressee_fieldname()) or \
 		c.profile.has_key( h.get_comments_on_people_mentioned_in_work_fieldname()) or \
-		c.profile.has_key( h.get_comments_on_origin_fieldname()) or \
-		c.profile.has_key( h.get_comments_on_destination_fieldname()) or \
+		c.profile.has_key( h.get_relations_to_comments_on_origin_fieldname()) or \
+		c.profile.has_key( h.get_relations_to_comments_on_destination_fieldname()) or \
 		c.profile.has_key( h.get_relations_to_comments_on_date_fieldname()):  ## adding control to show or not show the fieldset if there is no content
 		<div class="column workfieldset  profilepart">
 		  <h3 class="worklegend"><img src="/img/icon-comment.png" class="workicon"/>Comments</h3>

@@ -115,47 +115,7 @@ class HomeController(BaseController):
        #sol_img.close()
        #c.stats[ 'images' ]['number'] -= card_index_total
 
-       #
-       # Get news feed (I'd like to move this to client side so there is no wait for page to load)
-       #
-       c.news_feed = {}
-       c.news_feed['link'] = ''
-       c.news_feed['image'] = ''
-       c.news_feed['title'] = 'None'
-       c.news_feed['date'] = ''
-       c.news_feed = get_news_feed()   
-       
-       #
-       # Get Record of the Week (ROTW)
-       #
-       c.rotw_feed = {}
-       c.rotw_feed['link'] = ''
-       c.rotw_feed['image'] = ''
-       c.rotw_feed['title'] = 'None'
-       c.rotw_feed['date'] = ''
-       c.rotw_feed = get_rotw()   
-       
-       
-       #
-       # Get random works and catalogs number
-       #
-       
-       sol_work = solr.SolrConnection( solrconfig.solr_urls["works"] )
-
-       catalogue_fieldname = get_catalogue_fieldname()
-       sol_response = sol_work.query( "*:*", start=0, rows=1, fields="", score=False, \
-                                       facet='true', facet_field=catalogue_fieldname)
-
-       sol_work.close()
-       
-       catalogue_dict = sol_response.facet_counts[ 'facet_fields' ][catalogue_fieldname]
-       num_catalogues = len( catalogue_dict )
-
-       if 'No catalogue specified' in catalogue_dict.keys():
-          num_catalogues -= 1
-       c.stats['Catalogues'] = { 'number': num_catalogues }
-
-       
+        
        return render('/main/home.mako')
 
 ##-----------------------------------------------------------------------------------------------

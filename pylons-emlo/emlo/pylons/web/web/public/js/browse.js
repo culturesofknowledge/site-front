@@ -266,12 +266,12 @@ $(document).ready(function(){
 	function hide( selector, time ) {
 		var selected = $(selector);
 		selected.addClass(filterHiddenClass);
-		selected.fadeOut(time || 400);
+		selected.hide(); //fadeOut(time || 400);
   }
 	function show(selector) {
 		var selected = $(selector);
 		selected.removeClass(filterHiddenClass);
-		selected.fadeIn(400);
+		selected.show(); //fadeIn(400);
   }
 
 	function setCookie(cname, cvalue, exdays) {

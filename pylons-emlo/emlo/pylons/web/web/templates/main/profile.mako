@@ -783,7 +783,7 @@
 
       % if obj.has_key( field_to_display ):
 				% if label :
-         ${label}..:
+         ${label}:
 				% endif
         % if len( related_obj ) > 0:
 		 ${self.display_details_of_one_object( related_obj, nested = True )}
