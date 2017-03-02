@@ -37,6 +37,19 @@ class HomeController(BaseController):
        sol_all.close()
        
        c.stats = {}
+       if len( sol_response_all.facet_counts['facet_fields']['object_type'] ) == 0 :
+          c.stats = {
+              'works' : { 'number': 0},
+              'people' : { 'number': 0},
+              'locations' : { 'number': 0},
+              'organisations' : { 'number': 0},
+              'repositories' : { 'number': 0},
+              'manifestations' : { 'number': 0},
+              'images' : { 'number': 0},
+              'comments'  : { 'number': 0},
+              'related resources'  : { 'number': 0}
+          }
+
        for stat, num in sol_response_all.facet_counts['facet_fields']['object_type'].iteritems():
          if stat == 'institution' :
             stat = 'repositories'
@@ -79,9 +92,9 @@ class HomeController(BaseController):
           num_catalogues -= 1
        c.stats['Catalogues'] = { 'number': num_catalogues }
 
-
- 
-       work_total = c.stats['works']['number']
+       work_total = 0
+       if "works" in c.stats :
+          work_total = c.stats['works']['number']
        
        sol_people = solr.SolrConnection( solrconfig.solr_urls["people"] )
        
