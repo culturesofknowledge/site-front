@@ -3,7 +3,8 @@
 #
 # Perhaps with commands:
 #     docker build -t pylons:0.1.4 .
-#     docker run --name pylons-emlo -p 5000:5000 -d pylons:0.1.4
+#     docker run --name pylons -p 5000:5000 -d pylons:0.1.4
+#
 FROM python:2.7
 MAINTAINER matthew
 
@@ -28,5 +29,3 @@ EXPOSE 5000
 WORKDIR /web
 CMD ["paster", "serve", "/web/development.ini"]
 
-#COPY
-#VOLUME
