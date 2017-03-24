@@ -1,0 +1,40 @@
+# Docker Compose, file version 1
+solr:
+  build: ./solr-emlo
+  restart: no
+
+  ports:
+    - "8983:8983"
+
+  volumes:
+    - ./solr/home:/opt/solr/server/solr/home
+
+redis:
+  image: redis:3.2
+  restart: no
+    - "6379:6379"
+
+pylons:
+  build: ./pylons-emlo
+  restart: no
+
+  links:
+    - solr
+    - redis
+
+  ports:
+    - "5000:5000"
+
+  volumes:
+   - ./emlo:/emlo
+   - ./data:/data
+
+nginx:
+  build: ./nginx-emlo
+  restart: no
+
+  links:
+    - pylons
+
+  ports:
+    - "80:80"
