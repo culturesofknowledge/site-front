@@ -1,0 +1,29 @@
+# Docker Compose, file version 1
+solr:
+  build: ./solr-emlo
+  restart: always
+
+redis:
+  image: redis:3.2
+  restart: always
+
+pylons:
+  build: ./pylons-emlo
+  restart: always
+
+  links:
+    - solr
+    - redis
+
+  volumes:
+   - ./data/:/data/
+
+nginx:
+  build: ./nginx-emlo
+  restart: always
+
+  links:
+    - pylons
+
+  ports:
+    - "80:80"
