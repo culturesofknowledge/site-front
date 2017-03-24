@@ -2,10 +2,13 @@
 # Create a nginx emlo specific server
 #
 # Perhaps with commands:
-#     docker build -t pylons-emlo:0.2.0 .
+#     docker build -t nginx-emlo:0.1.0 .
 #     production
-#        docker run --name pylons-emlo -p 5000:5000 --link=solr-emlo-dev-1:solr -v data:/data -d pylons-emlo:0.2.0
+#        docker run --name nginx-emlo -p 80:80 --link=pylons-emlo:pylons -d nginx-emlo:0.1.0
 #     development
-#        docker run --name pylons-emlo-dev -p 5000:5000 -v $(pwd)/data:/data -v $(pwd)/emlo:/emlo --link=solr-emlo-dev:solr --link=redis-emlo-dev:redis pylons-emlo:0.2.0
+#        docker run --name nginx-emlo-dev -p 80:80 --link=pylons-emlo-dev:pylons nginx-emlo:0.1.0
+#
 FROM nginx
 COPY nginx.conf /etc/nginx/nginx.conf
+
+LABEL version="0.1.0"
