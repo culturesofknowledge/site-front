@@ -21,3 +21,4 @@ solr-emlo/solr/home/works_stage/data
 
 pylons-emlo/emlo/**/*.pyc
 
+data/*.csv
