@@ -78,7 +78,7 @@ def GetSelection():
 	return indexing, skip_id_gen, ""
 
 
-def RunIndexing( indexing=None, skip_id_generation=False) :
+def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=False, skip_clean=False ) :
 
 	if indexing is None :
 		indexing, skip_id_generation, message = GetSelection()
@@ -89,36 +89,38 @@ def RunIndexing( indexing=None, skip_id_generation=False) :
 	# Start
 	timeBegin = time.time()
 
-	#
-	# Clean CSVs of control characters
-	#
-	# A vertical tabulation character has found it's way into EMLO - this breaks pythons CSV reading ability (newlines where there shouldn't be newlines)
-	# so I'm stripping them out.
 
-	print "- Cleaning CSVs of rogue characters"
-	timeStart = time.time()
+	if not skip_clean :
+		#
+		# Clean CSVs of control characters
+		#
+		# A vertical tabulation character has found it's way into EMLO - this breaks pythons CSV reading ability (newlines where there shouldn't be newlines)
+		# so I'm stripping them out.
 
-	for csv_file_name in csvtordf.csv_files:
+		print "- Cleaning CSVs of rogue characters"
+		timeStart = time.time()
 
-		csv_file_location = csvtordf.common['csv_source_directory_root'] + csvtordf.csv_files[csv_file_name][0]
-		new_csv_file_location = csv_file_location + ".new"
+		for csv_file_name in csvtordf.csv_files:
 
-		print "   -", csv_file_location
+			csv_file_location = csvtordf.common['csv_source_directory_root'] + csvtordf.csv_files[csv_file_name][0]
+			new_csv_file_location = csv_file_location + ".new"
 
-		with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
+			print "   -", csv_file_location
 
-			with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
+			with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
 
-				for line in csv_file_original:
+				with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
 
-					line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
-					csv_file.write(line)
+					for line in csv_file_original:
 
-		os.rename( csv_file_location, csv_file_location + '.bak' )
-		os.rename( csv_file_location + '.new', csv_file_location )
+						line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
+						csv_file.write(line)
 
-	timeEnd = time.time()
-	print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
+			os.rename( csv_file_location, csv_file_location + '.bak' )
+			os.rename( csv_file_location + '.new', csv_file_location )
+
+		timeEnd = time.time()
+		print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
 
 
 	#
@@ -150,17 +152,21 @@ def RunIndexing( indexing=None, skip_id_generation=False) :
 	#
 	# Store relationships
 	#
-	timeStart = time.time()
-	print "- Storing relationships in temp Redis database:"
+	if not skip_store_relations:
 
-	# errored = indexer.StoreRelations( indexing, red_temp )
-	errored = subprocess.call( ["python index_store_relations.py"], shell=True )
+		red_temp.flushdb()
 
-	if errored:
-		sys.exit( "Sorry, relations problem. There maybe errors with the csv files which will need to be fixed. (It could be unicode problems, try removing the invalid lines)")
-	else:
-		timeEnd = time.time()
-		print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
+		timeStart = time.time()
+		print "- Storing relationships in temp Redis database:"
+
+		# errored = indexer.StoreRelations( indexing, red_temp )
+		errored = subprocess.call( ["python index_store_relations.py"], shell=True )
+
+		if errored:
+			sys.exit( "Sorry, relations problem. There maybe errors with the csv files which will need to be fixed. (It could be unicode problems, try removing the invalid lines)")
+		else:
+			timeEnd = time.time()
+			print "  - Done (in %0.1f seconds)." % (timeEnd-timeStart)
 
 
 	#
@@ -173,10 +179,6 @@ def RunIndexing( indexing=None, skip_id_generation=False) :
 	#
 	indexer.FillRdfAndSolr( indexing, red_ids, red_temp, False )
 
-	#
-	# Clean up: empty temp redis store (But never the ID database one!)
-	#
-	red_temp.flushdb()
 
 	#
 	# Update Works if needed
@@ -218,7 +220,7 @@ if __name__ == '__main__':
 		print
 		csvtordf.csv_files = csvtordf.test_csv_files
 
-	RunIndexing( [
+	index_all = [
 		"comments",
 		"images",
 		"institutions",
@@ -227,7 +229,18 @@ if __name__ == '__main__':
 		"people",
 		"resources",
 		"works"
-	], False )
+	]
 
-	#RunIndexing( ["works"], True )
-	#RunIndexing( None, False )
+	if len( sys.argv ) == 0 :
+
+		RunIndexing( index_all, False )
+
+	else :
+		index = index_all
+		if "ask" in sys.argv :
+			index = None
+		elif "comments" in sys.argv :
+			index = ["comments"]
+
+		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv )
+
