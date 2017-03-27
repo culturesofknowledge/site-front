@@ -39,9 +39,9 @@ def plural_to_singular( plural ):
    
     return plural[:-1]
 
-def add_entity( entity, resource, predicate, object ):
-    entity.add_triple( resource, predicate, object )
-    return
+# def add_entity( entity, resource, predicate, object ):
+#     entity.add_triple( resource, predicate, object )
+#     return
 
 def add_solr( item, key, value ):
     if key in item :
@@ -72,23 +72,23 @@ def add( entity, solr_item, resource, predicate, object, prefix=None, transient=
          
     add_solr( solr_item, solr_key, solr_value )
     
-    if entity:
-        if transient != None:
-            transient_uri = "%s/%s" % ( resource, transient[csvtordf.transient] ) 
-            
-            add_entity( entity, resource, transient[csvtordf.predicate], transient_uri ) # this can be repeatedly created but it is safely ignored by rdfobject code
-            add_entity( entity, transient_uri, predicate, object )
-        else:
-            add_entity( entity, resource, predicate, object )
+    # if entity:
+    #     if transient != None:
+    #         transient_uri = "%s/%s" % ( resource, transient[csvtordf.transient] )
+    #
+    #         add_entity( entity, resource, transient[csvtordf.predicate], transient_uri ) # this can be repeatedly created but it is safely ignored by rdfobject code
+    #         add_entity( entity, transient_uri, predicate, object )
+    #     else:
+    #         add_entity( entity, resource, predicate, object )
         
     return
 
 
-def create_uri( base, type, uid ): # base ends with "/"
+def create_uri( base, type, uid ):  # base ends with "/"
     return "%s%s/%s" % (base, type, uid)
 
 
-def create_uri_quick( baseAndType, uid ):# baseAndType ends with "/"
+def create_uri_quick( baseAndType, uid ):  # baseAndType ends with "/"
     return baseAndType + uid
 
 
@@ -98,9 +98,9 @@ def add_to_solr( sol, items ):
     batch = 1000
   
     while start < total:
-        print str(start/batch),
+        print start,
         sol.add_many( items[start:start+batch], False )
-        start += batch;
+        start += batch
 
 
 def GenerateIds( indexing, red_ids ):
@@ -278,12 +278,13 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
             print "- Converting " + plural
            
             if create_file_entities :
-                uri_entity_base = uri_base + singular
-                entitystore_directory = csvtordf.common['file_entity_storage_root'] + plural
+                print "Warning: We are NOT creating entities anymore!"
+                # uri_entity_base = uri_base + singular
+                # entitystore_directory = csvtordf.common['file_entity_storage_root'] + plural
            
-                fileEntity = rdfobject.FileEntityFactory(uri_base=uri_entity_base, 
-                                                storage_dir = entitystore_directory, 
-                                                prefix = csvtordf.common['file_entity_prefix'] )
+                # fileEntity = rdfobject.FileEntityFactory(uri_base=uri_entity_base,
+                #                                storage_dir = entitystore_directory,
+                #                                prefix = csvtordf.common['file_entity_prefix'] )
            
             sol = solr.SolrConnection( solrconfig.solr_urls_stage[plural] )
            
@@ -297,7 +298,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
            
             now = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ" )
            
-            csvs = csvtordf.csv_files[plural]
+            csvs = csvtordf.csv_files[plural]  # This is more than likely to be a single csv only
            
             for csv_file in csvs:
                 #
@@ -313,27 +314,20 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                
                 translation_errors = []
                 solr_list = []
-                record_count_per_file = 0
+
+
+                for record in csv_records :
+                    csv_fields = record.keys()
+                    break
 
                 for record in csv_records :
 
-                    if record_count_per_file > 5000 * 90 :
-                        print record
-
                     record_count += 1
-                    record_count_per_file += 1
-                   
-                    solr_item = {}
 
-                    if csv_fields is None :
-                         csv_fields = record.keys()
-
-                    if record_count_per_file % 200 == 0:
+                    if record_count % 1000 == 0:
+                        print record_count,
                         # rest a while, give something else a chance!
-                        time.sleep( 0.1 )
-
-                    if record_count_per_file % 5000 == 0:
-                        print str(record_count_per_file/5000),
+                        time.sleep( 0.5 )
                    
                     editid = record[id_field]
                    
@@ -342,22 +336,24 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     uri = create_uri_quick( uri_base_with_type, uid )
                     
                     entity = None
-                    if create_file_entities :
-                        try:
-                            entity = fileEntity.get(uri)
-                        except Exception as ex:
-                            print "Error - UID = " + uid + " URI = " + uri + " Exception:" + str(ex)
+                    # if create_file_entities :
+                    #     try:
+                    #         entity = fileEntity.get(uri)
+                    #     except Exception as ex:
+                    #         print "Error - UID = " + uid + " URI = " + uri + " Exception:" + str(ex)
                    
                     #
                     # Add common object predicates
                     #
                    
-                    if entity :
-                        entity.add_namespaces({
-                            'dcterms' : 'http://dublincore.org/documents/dcmi-terms/',
-                            'ox'      : 'http://vocab.ox.ac.uk/' 
-                        })
-                        
+                    # if entity :
+                    #     entity.add_namespaces({
+                    #         'dcterms' : 'http://dublincore.org/documents/dcmi-terms/',
+                    #         'ox'      : 'http://vocab.ox.ac.uk/'
+                    #     })
+
+                    solr_item = {}
+
                     add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
                          uri, fieldmap.get_uri_value_prefix() )
                     add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
@@ -372,7 +368,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     # Add predicates and objects from csv
                     #
                    
-                    #entity.add_namespaces(con[csvtordf.namespaces])
+                    # entity.add_namespaces(con[csvtordf.namespaces])
                    
                     translations = con[csvtordf.translations]
                     for field in csv_fields: 
@@ -394,12 +390,12 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                                 if data != '' :
                                   
                                     # Convert data if a function present
-                                    if translation.has_key( csvtordf.converter ) :
+                                    if csvtordf.converter in translation :
                                         converter = translation[csvtordf.converter]
                                         data = converter(data)
                                       
                                     # check to see whether we need to ignore this value
-                                    if not translation.has_key( csvtordf.ignoreIfEqual ) or translation[csvtordf.ignoreIfEqual] != data :                                                                           
+                                    if csvtordf.ignoreIfEqual not in translation or translation[csvtordf.ignoreIfEqual] != data :
                                        
                                         if translation[csvtordf.predicate] :
                                             prefix = translation.get( csvtordf.prefix, None )
@@ -407,7 +403,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                                           
                                             add( entity, solr_item, uri, translation[csvtordf.predicate], data, prefix=prefix, transient=transient )    
                                       
-                                        else: #translation[csvtordf.solr]:
+                                        else:  # translation[csvtordf.solr]:
                                             add_solr( solr_item, translation[csvtordf.solr], data )
                                            
                                         property_count += 1
@@ -416,7 +412,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     # Add additional predicates not in CSV files
                     #
                     additional = con[csvtordf.additional]
-                    for predicate,object in additional.iteritems():
+                    for predicate, object in additional.iteritems():
                         add( entity, solr_item, uri, predicate, object )
                        
                     property_count += len(additional)
@@ -428,11 +424,10 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     cardinal = red_temp.scard( editid_rel )
                    
                     if cardinal > 0 :
-                        if entity :
-                            entity.add_namespaces( relationships.namespaces )
+                        # if entity :
+                        #     entity.add_namespaces( relationships.namespaces )
                        
-                        for i in range( cardinal ):
-                            i = i # to hide warning
+                        for _ in range( cardinal ):
                             
                             rel = red_temp.spop( editid_rel )
 
@@ -445,8 +440,8 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
 
                             property_count += 1
                   
-                    if entity:
-                        entity.commit()
+                    # if entity:
+                    #    entity.commit()
                         
                     solr_list.append(solr_item)
                    
@@ -464,13 +459,15 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                 del solr_list[:]
 
 
-            if len( csvs ) > 0 : # This is a debugging check, we should always have at least one unless we've commented something out ( - otherwise, what's the point!)
+            if len( csvs ) > 0 :
+                # len(csvs) > 0 is a debugging check, we should always have at least one unless we've
+                #  commented something out ( - otherwise, what's the point!)
                 print "  -  Committing to Solr " + plural
                 sol.commit()
                 sol.close()
                
                 timeEnd = time.time()
-                print "- Done. Added " + str(record_count) + " records in %0.1f seconds." % ( (timeEnd-timeStart))
+                print "- Done. Added " + str(record_count) + " records in %0.1f seconds." % ( timeEnd-timeStart)
     
     
     print '- Committing to solr "all" repository'  
@@ -486,15 +483,15 @@ def SwitchSolrCores( indexing ) :
 
         if core_name in indexing or ( core_name == 'all' and len(indexing) == 8 ) :
 
-           # http://localhost:8983/solr/admin/cores?action=swap&core=people&other=people_stage
-           swapurl = solrconfig.solr_base_url + 'admin/cores?action=swap'
+            # http://localhost:8983/solr/admin/cores?action=swap&core=people&other=people_stage
+            swapurl = solrconfig.solr_base_url + 'admin/cores?action=swap'
 
-           swapurl += '&core=' + solr_url_stage.replace( solrconfig.solr_base_url, '' )
-           swapurl += '&other=' + solrconfig.solr_urls[core_name].replace( solrconfig.solr_base_url, '' )
+            swapurl += '&core=' + solr_url_stage.replace( solrconfig.solr_base_url, '' )
+            swapurl += '&other=' + solrconfig.solr_urls[core_name].replace( solrconfig.solr_base_url, '' )
 
-           print "Switching ", core_name,":", swapurl
+            print "Switching ", core_name, ":", swapurl
 
-           urllib.urlopen( swapurl )
+            urllib.urlopen( swapurl )
 
 
     
