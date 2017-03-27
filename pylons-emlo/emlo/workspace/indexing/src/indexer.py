@@ -13,8 +13,8 @@ import urllib
 
 # libraries
 import solr
-import uuid
-#import rdfobject
+# import uuid
+# import rdfobject
 
 import csv
 import codecs
@@ -85,7 +85,7 @@ def add( entity, solr_item, resource, predicate, object, prefix=None, transient=
 
 
 def create_uri( base, type, uid ):  # base ends with "/"
-    return "%s%s/%s" % (base, type, uid)
+    return "".join([base, type, "/", uid])
 
 
 def create_uri_quick( baseAndType, uid ):  # baseAndType ends with "/"
@@ -98,17 +98,20 @@ def add_to_solr( sol, items ):
     batch = 1000
   
     while start < total:
-        print start,
+        # print start,
         sol.add_many( items[start:start+batch], False )
         start += batch
 
 
 def GenerateIds( indexing, red_ids ):
     #
-    # Create ID's for all entities.
+    # This used to Create ID's for all entities but now it just stores their uuids
+    # The uuids are used in the relation matching
     #
     errored = False
-        
+
+    red_ids.flushdb()
+
     for con in csvtordf.conversions:
  
         id_field = con[csvtordf.title_singular] + "_id"
@@ -126,9 +129,7 @@ def GenerateIds( indexing, red_ids ):
                 for csv_row in csv_data:
 
                     editid = csv_row[id_field].strip()
-
-                    if not red_ids.exists( editid ) :
-                        red_ids.set( editid, uuid.uuid4() )
+                    red_ids.set( editid, csv_row["uuid"] )
 
             else:
                 errored = True
@@ -221,14 +222,14 @@ def StoreRelations( indexing, red_temp ):
                     print str(record_count / 10000),
                     time.sleep( 0.5 )
 
-                left_thing = record['left_table_name'].split('_')[-1]
-                right_thing = record['right_table_name'].split('_')[-1]
+                left_thing = record['left_table_name'][11:]  # remove "cofk_union_"
+                right_thing = record['right_table_name'][11:]  # remove "cofk_union_"
 
                 left_add = left_thing in indexing_singular
                 right_add = right_thing in indexing_singular
                 
                 if left_add or right_add:
-                    relationship_type = record['relationship_type'].split('_', 2 )[-1]
+                    relationship_type = record['relationship_type'][11:]  # remove "cofk_union_"
                        
                     try:   
                         left_to_right_rel, right_to_left_rel = relationships.getRdfRelationshipsLeftRight( left_thing, relationship_type, right_thing )
@@ -237,10 +238,10 @@ def StoreRelations( indexing, red_temp ):
                         right = record['right_id_value']
                        
                         if left_add :
-                            red_temp.sadd(left + ":rel", "%s::%s::%s" % (left_to_right_rel, right, right_thing) )
-                         
+                            red_temp.sadd(left + ":rel", "::".join([left_to_right_rel, right, right_thing]) )
+
                         if right_add :
-                            red_temp.sadd(right + ":rel", "%s::%s::%s" % (right_to_left_rel, left, left_thing) )
+                            red_temp.sadd(right + ":rel", "::".join([right_to_left_rel, left, left_thing]) )
     
                     except :
                         error = True
@@ -267,7 +268,11 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
     
     uri_base = csvtordf.common['file_entity_uri_base']
     sol_all = solr.SolrConnection( solrconfig.solr_urls_stage['all'] )
-    
+
+    core_id_name = fieldmap.get_core_id_fieldname()
+    uri_prefix = fieldmap.get_uri_value_prefix()
+    date_added_name = fieldmap.get_date_added_fieldname()
+
     for con in csvtordf.conversions:
     
         if con[csvtordf.title_plural] in indexing :
@@ -304,34 +309,25 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                 # open each csvfile and output to entity store as rdf
                 #
                 csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
-                print "  - CSV file:  " + csv_file_location,
+                print "  - CSV file:  " + csv_file_location
 
                 csv_codec_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
                 csv_records = csv.DictReader( csv_codec_file, restval="" )
 
-                csv_fields = None
+                csv_fields = csv_records.fieldnames
                
                 translation_errors = []
                 solr_list = []
 
-
-                for record in csv_records :
-                    csv_fields = record.keys()
-                    break
-
                 for record in csv_records :
 
                     record_count += 1
-
-                    if record_count % 1000 == 0:
-                        print record_count,
-                        # rest a while, give something else a chance!
-                        time.sleep( 0.5 )
                    
                     editid = record[id_field]
-                   
                     # Get ID, create uri then start editid_relnew entity
-                    uid = red_ids.get( editid )
+                    # uid = red_ids.get( editid )
+                    uid = record["uuid"]
+
                     uri = create_uri_quick( uri_base_with_type, uid )
                     
                     entity = None
@@ -353,14 +349,12 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
 
                     solr_item = {
                         "sid" : record_count,
-                        "object_type" : singular
+                        "object_type" : singular,
+                        date_added_name : now
                     }
 
-                    add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
-                         uri, fieldmap.get_uri_value_prefix() )
-                    add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
-                         uid, fieldmap.get_uuid_value_prefix() )
-                    add( entity, solr_item, uri, fieldmap.get_date_added_fieldname(), now )
+                    add( entity, solr_item, uri, core_id_name, uri, uri_prefix )
+                    # add( entity, solr_item, uri, date_added_name, now )
                    
                     #
                     # Add predicates and objects from csv
@@ -417,56 +411,64 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     # Add relationships
                     #
                     editid_rel = editid + ":rel"
-                    cardinal = red_temp.scard( editid_rel )
+                    members = red_temp.smembers( editid_rel )
                    
-                    if cardinal > 0 :
+                    if len( members ) > 0 :
                         # if entity :
                         #     entity.add_namespaces( relationships.namespaces )
-                       
-                        for _ in range( cardinal ):
-                            
-                            rel = red_temp.spop( editid_rel )
 
-                            parts = rel.split("::")
+                        for member in members:
+
+                            parts = member.split("::")
                                                  
                             uid_relationship = red_ids.get( parts[1] )
-                            uri_relationship = create_uri( uri_base, parts[2], uid_relationship )
+
+                            if uid_relationship is None:
+                                # item deleted but relation still exists in emlo-edit... ignore it
+                                print "Warning: Missing relation", editid_rel, parts[0], parts[1], parts[2]
+                            else :
+                                uri_relationship = create_uri( uri_base, parts[2], uid_relationship )
                             
-                            add( entity, solr_item, uri, parts[0] , uri_relationship, relationship=parts[2] )
+                                add( entity, solr_item, uri, parts[0] , uri_relationship, relationship=parts[2] )
 
                   
                     # if entity:
                     #    entity.commit()
-                        
+                    # print solr_item
                     solr_list.append(solr_item)
-                   
-                print ""
-               
-                print "    -  Adding to Solr " + plural,
-                add_to_solr( sol, solr_list )
-                print ""
-               
-                print "    -  Adding to Solr All",
-                add_to_solr( sol_all, solr_list )
-                print ""
 
-                csv_codec_file.close()
+                    if record_count % 5000 == 0:
+                        print "  - add to solr to", record_count
+                        add_to_solr( sol, solr_list )
+                        add_to_solr( sol_all, solr_list )
+
+                        del solr_list[:]
+
+                        # rest a while, give something else a chance!
+                        time.sleep( 1)
+
+
+                print "  - adding to solr last to", record_count
+                add_to_solr( sol, solr_list )
+                add_to_solr( sol_all, solr_list )
+
                 del solr_list[:]
 
+                csv_codec_file.close()
 
-            if len( csvs ) > 0 :
-                # len(csvs) > 0 is a debugging check, we should always have at least one unless we've
-                #  commented something out ( - otherwise, what's the point!)
-                print "  -  Committing to Solr " + plural
-                sol.commit()
-                sol.close()
-               
-                timeEnd = time.time()
-                print "- Done. Added " + str(record_count) + " records in %0.1f seconds." % ( timeEnd-timeStart)
+
+            print "  - committing", record_count
+            sol.commit()
+            sol_all.commit()
+
+            sol.close()
+
+            timeEnd = time.time()
+            print "- Done. Added " + str(record_count) + " records in %0.1f seconds." % ( timeEnd-timeStart)
     
     
     print '- Committing to solr "all" repository'  
-    sol_all.commit()
+
     sol_all.close()
     
 

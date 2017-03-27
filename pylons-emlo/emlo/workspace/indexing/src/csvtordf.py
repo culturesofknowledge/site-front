@@ -197,6 +197,12 @@ conversions = [
       {
         predicate: fieldmap.get_total_works_mentioning_place_fieldname(),
       },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
 
     additional : {
@@ -248,7 +254,13 @@ conversions = [
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
-      }
+      },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
       
     additional : {
@@ -315,7 +327,13 @@ conversions = [
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
-      }
+      },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
     
     additional : {
@@ -672,7 +690,13 @@ conversions = [
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
-      }
+      },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
 
     additional : {
@@ -914,6 +938,12 @@ conversions = [
       {
         predicate: fieldmap.get_person_further_reading_fieldname(),
       },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
     
     additional : {#
@@ -1131,7 +1161,13 @@ conversions = [
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
-      }
+      },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
 
     additional : {
@@ -1215,6 +1251,12 @@ conversions = [
       {
         predicate: fieldmap.get_total_docs_in_repos_fieldname(),
       },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
 
     additional : {
@@ -1277,7 +1319,13 @@ conversions = [
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
-      }
+      },
+      'uuid':
+        {
+          predicate: fieldmap.get_core_id_fieldname(),
+          prefix:    fieldmap.get_uuid_value_prefix()
+          #store: "uuid"
+        }
     },
 
     additional : {
