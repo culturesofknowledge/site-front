@@ -291,7 +291,6 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
             # Keep track of what is happening with these
             timeStart = time.time()
             record_count = 0
-            property_count = 0 
            
             id_field = singular + "_id"
             uri_base_with_type = uri_base + singular + "/"
@@ -352,17 +351,16 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     #         'ox'      : 'http://vocab.ox.ac.uk/'
                     #     })
 
-                    solr_item = {}
+                    solr_item = {
+                        "sid" : record_count,
+                        "object_type" : singular
+                    }
 
                     add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
                          uri, fieldmap.get_uri_value_prefix() )
                     add( entity, solr_item, uri, fieldmap.get_core_id_fieldname(),
                          uid, fieldmap.get_uuid_value_prefix() )
                     add( entity, solr_item, uri, fieldmap.get_date_added_fieldname(), now )
-                    property_count += 3
-                        
-                    add_solr( solr_item, "sid", record_count )
-                    add_solr( solr_item, "object_type", singular )
                    
                     #
                     # Add predicates and objects from csv
@@ -405,8 +403,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                                       
                                         else:  # translation[csvtordf.solr]:
                                             add_solr( solr_item, translation[csvtordf.solr], data )
-                                           
-                                        property_count += 1
+
                    
                     #
                     # Add additional predicates not in CSV files
@@ -414,8 +411,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     additional = con[csvtordf.additional]
                     for predicate, object in additional.iteritems():
                         add( entity, solr_item, uri, predicate, object )
-                       
-                    property_count += len(additional)
+
                    
                     #
                     # Add relationships
@@ -438,7 +434,6 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                             
                             add( entity, solr_item, uri, parts[0] , uri_relationship, relationship=parts[2] )
 
-                            property_count += 1
                   
                     # if entity:
                     #    entity.commit()
