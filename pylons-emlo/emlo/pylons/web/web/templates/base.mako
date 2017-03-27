@@ -191,7 +191,7 @@
 <option class="default">all dates</option>\
 	<% days = range(1,32) %>
 	% for day in days :
-<option>${day}<option>\
+<option>${day}</option>\
 	% endfor
 ##}
 </%def>
