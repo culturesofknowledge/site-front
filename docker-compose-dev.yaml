@@ -1,22 +1,25 @@
 # Docker Compose, file version 1
+# Development build settings: docker-compose -f "docker-compose-dev.yaml" up -d
 solr:
   build: ./solr-emlo
-  restart: no
+  #restart: no
 
   ports:
     - "8983:8983"
 
   volumes:
-    - ./solr/home:/opt/solr/server/solr/home
+    - ./solr-emlo/solr/home:/opt/solr/server/solr/home
 
 redis:
   image: redis:3.2
-  restart: no
+  #restart: no
+
+  ports:
     - "6379:6379"
 
 pylons:
   build: ./pylons-emlo
-  restart: no
+  #restart: no
 
   links:
     - solr
@@ -26,12 +29,12 @@ pylons:
     - "5000:5000"
 
   volumes:
-   - ./emlo:/emlo
+   - ./pylons-emlo/emlo:/emlo
    - ./data:/data
 
 nginx:
   build: ./nginx-emlo
-  restart: no
+  #restart: no
 
   links:
     - pylons
