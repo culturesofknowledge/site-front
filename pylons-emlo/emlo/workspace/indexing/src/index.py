@@ -232,15 +232,19 @@ if __name__ == '__main__':
 	]
 
 	if len( sys.argv ) == 0 :
-
 		RunIndexing( index_all, False )
 
 	else :
+
 		index = index_all
 		if "ask" in sys.argv :
 			index = None
+		elif "locations" in sys.argv :
+			index = ["locations"]
 		elif "comments" in sys.argv :
 			index = ["comments"]
+		elif "people" in sys.argv :
+			index = ["people"]
 
 		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv )
 
