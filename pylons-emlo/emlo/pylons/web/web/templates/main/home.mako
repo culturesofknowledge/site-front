@@ -151,18 +151,20 @@
               ${self.context_help( help, with_gap = False, calling_field = fieldname )}
             </div>
 
-          <div class="large-12 columns">
-            <p class="text-center">Prefer things at a glance? You can also <a href="/browse/people">Browse</a>. Want a full set of fields? Try <a href="/advanced">Search+</a></p>
-          </div>
 
           <div class="large-12 columns">
-            <input class="button submit search-related" type="submit" name="submit-normal" value="Search" />
+            <input class="button submit search-related" type="submit" name="submit-normal" value="Search" style="margin-top:13px" />
 
             <input type="hidden" id="search_type" name="search_type" value="normal" />
           </div>
 
         </form>  <!-- End short version of form -->
 
+          <div class="large-12 columns">
+						
+            <p class="text-center" style="margin-bottom:0">Want a full set of fields? Try <a href="/advanced">Search+</a></p>
+            <p class="text-center" style="">Prefer things at a glance? You can also <a href="/browse/people">Browse</a></p>
+          </div>
 
     </div><!-- row -->
     </div><!-- grey back panel -->
