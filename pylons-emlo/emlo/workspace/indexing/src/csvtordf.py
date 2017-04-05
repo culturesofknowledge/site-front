@@ -1167,7 +1167,110 @@ conversions = [
           predicate: fieldmap.get_core_id_fieldname(),
           prefix:    fieldmap.get_uuid_value_prefix()
           #store: "uuid"
+        },
+      'opened':
+        {
+          predicate: fieldmap.get_opened_fn(),
+          converter: convert_manifestation_opened,
+        },
+      'routing_mark_stamp':
+        {
+          predicate: fieldmap.get_routing_mark_stamp_fn(),
+        },
+      'routing_mark_ms':
+        {
+          predicate: fieldmap.get_routing_mark_ms_fn(),
+        },
+      'handling_instructions':
+        {
+          predicate: fieldmap.get_handling_instructions_fn(),
+        },
+      'stored_folded':
+        {
+          predicate: fieldmap.get_stored_folded_fn(),
+        },
+      'postage_costs_as_marked':
+        {
+          predicate: fieldmap.get_postage_costs_as_marked_fn(),
+        },
+      'postage_costs':
+        {
+          predicate: fieldmap.get_postage_costs_fn(),
+        },
+      'non_delivery_reason':
+        {
+          predicate: fieldmap.get_non_delivery_reason_fn(),
+        },
+      'date_of_receipt_as_marked':
+        {
+          predicate: fieldmap.get_date_of_receipt_as_marked_fn(),
+        },
+      'manifestation_receipt_calendar':
+        {
+          predicate: fieldmap.get_manifestation_receipt_calendar_fn(),
+        },
+      'manifestation_receipt_date':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_fn(),
+          converter: convert_to_rdf_date,
+        },
+      'manifestation_receipt_date_gregorian':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_gregorian_fn(),
+          converter: convert_to_rdf_date,
+        },
+      'manifestation_receipt_date_year':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_year_fn(),
+        },
+      'manifestation_receipt_date_month':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_month_fn(),
+        },
+      'manifestation_receipt_date_day':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_day_fn(),
+        },
+      'manifestation_receipt_date_inferred':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_inferred_fn(),
+          converter: convert_to_rdf_boolean,
+          ignoreIfEqual: 'false',
+        },
+      'manifestation_receipt_date_uncertain':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_uncertain_fn(),
+          converter: convert_to_rdf_boolean,
+          ignoreIfEqual: 'false',
+        },
+      'manifestation_receipt_date_approx':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_approx_fn(),
+          converter: convert_to_rdf_boolean,
+          ignoreIfEqual: 'false',
+        },
+      'manifestation_receipt_date2_year':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date2_year_fn(),
+        },
+      'manifestation_receipt_date2_month':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date2_month_fn(),
+        },
+      'manifestation_receipt_date2_day':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date2_day_fn(),
+        },
+      'manifestation_receipt_date_is_range':
+        {
+          predicate: fieldmap.get_manifestation_receipt_date_is_range_fn(),
+          converter: convert_to_rdf_boolean,
+        },
+      'accompaniments':
+        {
+          predicate: fieldmap.get_accompaniments_fn(),
         }
+
     },
 
     additional : {
