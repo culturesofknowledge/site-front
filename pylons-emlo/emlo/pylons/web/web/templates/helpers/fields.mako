@@ -83,39 +83,56 @@
                   # you are in 'nested' mode, because you don't want to go into an infinite loop.
 
       fields_to_display = [ h.get_relations_to_work_fieldname(),
-                            h.get_repository_fieldname(), 
-                            h.get_shelfmark_fieldname(), 
-                            h.get_printed_edition_details_fieldname(), 
-                            h.get_relations_to_comments_fieldname() ] 
-    #}
+                            h.get_repository_fieldname(),
+                            h.get_shelfmark_fieldname(),
+                            h.get_printed_edition_details_fieldname(),
+                            h.get_relations_to_comments_fieldname() ]
+
     else: #{ # full details, apart from no need to repeat work details (will be in heading of profile page)
              # or document type (will be in heading of list of manifestation details)
 
-      fields_to_display = [ h.get_repository_fieldname(), 
-                            h.get_shelfmark_fieldname(), 
-                            h.get_printed_edition_details_fieldname(), 
-                            h.get_relations_to_comments_fieldname(), 
-                            h.get_handwritten_by_fieldname(), 
-                            h.get_manifestation_address_fieldname(), 
-                            h.get_postage_mark_fieldname(), 
-                            h.get_endorsements_fieldname(), 
-                            h.get_enclosing_fieldname(), 
-                            h.get_enclosed_fieldname(), 
-                            h.get_non_letter_enclosures_fieldname(), 
-                            h.get_seal_fieldname(), 
-                            h.get_paper_type_fieldname(), 
-                            h.get_paper_size_fieldname(), 
-                            h.get_number_of_pages_of_document_fieldname(), 
-                            h.get_number_of_pages_of_text_fieldname(), 
-                            h.get_language_fieldname(), 
-                            h.get_is_translation_fieldname(), 
-                            h.get_former_owner_fieldname() ]
+        fields_to_display = [ h.get_repository_fieldname(),
+                            h.get_shelfmark_fieldname(),
+                            h.get_printed_edition_details_fieldname(),
+                            h.get_relations_to_comments_fieldname(),
+                            h.get_handwritten_by_fieldname(),
+                            h.get_manifestation_address_fieldname(),
+                            h.get_postage_mark_fieldname(),
+                            h.get_endorsements_fieldname(),
+                            h.get_enclosing_fieldname(),
+                            h.get_enclosed_fieldname(),
+                            h.get_non_letter_enclosures_fieldname(),
+                            h.get_seal_fieldname(),
+                            h.get_paper_type_fieldname(),
+                            h.get_paper_size_fieldname(),
+                            h.get_number_of_pages_of_document_fieldname(),
+                            h.get_number_of_pages_of_text_fieldname(),
+                            h.get_language_fieldname(),
+                            h.get_is_translation_fieldname(),
+                            h.get_former_owner_fieldname(),
+                            h.get_opened_fn(),
+                            h.get_routing_mark_stamp_fn(),
+                            h.get_handling_instructions_fn(),
+                            h.get_stored_folded_fn(),
+                            h.get_postage_costs_as_marked_fn(),
+                            h.get_postage_costs_fn(),
+                            h.get_non_delivery_reason_fn(),
+                            h.get_date_of_receipt_as_marked_fn(),
+                            h.get_manifestation_receipt_calendar_fn(),
+                            h.get_manifestation_receipt_date_fn(),
+                            h.get_manifestation_receipt_date_gregorian_fn(),
+                            h.get_manifestation_receipt_date_inferred_fn(),
+                            h.get_manifestation_receipt_date_uncertain_fn(),
+                            h.get_manifestation_receipt_date_approx_fn() ]
     #}
   #}
 
-  return fields_to_display 
+  return fields_to_display
   %>
 ##}
 </%def>
 
 #----------------------------------------------------------------------------------------------------
+
+
+

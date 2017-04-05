@@ -689,7 +689,11 @@
           related_obj = {}
           link = ''
 
-          if type( field_value ) == unicode or type( field_value ) == str: #{
+          if field_to_display == h.get_opened_fn() :
+	        if field_value == "Opened":
+	          continue
+	          
+          elif type( field_value ) == unicode or type( field_value ) == str: #{
             if field_value.startswith( 'http' ): #{
               related_uri = field_value
               related_obj = h.get_item_from_uri( related_uri )
@@ -698,10 +702,9 @@
               field_value = h.strip_value_prefix( field_value, h.get_shelfmark_value_prefix())
             #}
           #}
-          elif field_to_display == h.get_is_translation_fieldname(): #{
+          elif field_to_display == h.get_is_translation_fieldname():
             if field_value == False:
               continue
-          #}
 
           if related_uri == '': #{
             display_value = field_value
