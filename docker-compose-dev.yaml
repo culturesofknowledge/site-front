@@ -32,6 +32,8 @@ pylons:
    - ./pylons-emlo/emlo:/emlo
    - ./data:/data
 
+   command: ["paster", "serve", "--reload", "development.ini"]
+
 nginx:
   build: ./nginx-emlo
   #restart: no
