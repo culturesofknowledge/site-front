@@ -37,7 +37,7 @@ def GetSelection():
 	print "    6. people "
 	print "    7. resources "
 	print "    8. works"
-	print "    9. (skip id creation)"
+	#print "    9. (skip id creation)"
 	print "    x. exit"
 	print ""
 
@@ -72,8 +72,8 @@ def GetSelection():
 		return [], False, "Incorrect numbers selected, exiting."
 
 	skip_id_gen = False
-	if '9' in response:
-		skip_id_gen = True
+	#if '9' in response:
+	#	skip_id_gen = True
 
 	return indexing, skip_id_gen, ""
 
@@ -81,7 +81,7 @@ def GetSelection():
 def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=False, skip_clean=False ) :
 
 	if indexing is None :
-		indexing, skip_id_generation, message = GetSelection()
+		indexing, __skip_id_generation, message = GetSelection()
 
 	if not len( indexing ) :
 		sys.exit( message )
@@ -232,7 +232,7 @@ if __name__ == '__main__':
 	]
 
 	if len( sys.argv ) == 0 :
-		RunIndexing( index_all, False )
+		RunIndexing( index_all, False, False, False )
 
 	else :
 
@@ -245,6 +245,8 @@ if __name__ == '__main__':
 			index = ["comments"]
 		elif "people" in sys.argv :
 			index = ["people"]
+		elif "manifestations" in sys.argv :
+			index = ["manifestations"]
 
 		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv )
 

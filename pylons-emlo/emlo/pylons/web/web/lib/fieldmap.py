@@ -1021,6 +1021,76 @@ def get_transcription_url_fieldname():
 
 #----------------------------------------------------------------------------------------------
 
+def get_opened_fn() :
+  return 'ox_opened'
+
+def get_routing_mark_stamp_fn() :
+  return 'ox_routing_mark_stamp'
+
+def get_routing_mark_ms_fn() :
+  return 'ox_routing_mark_ms'
+
+def get_handling_instructions_fn() :
+  return 'ox_handling_instructions'
+
+def get_stored_folded_fn() :
+  return 'ox_stored_folded'
+
+def get_postage_costs_as_marked_fn() :
+  return 'ox_postage_costs_as_marked'
+
+def get_postage_costs_fn() :
+  return 'ox_postage_costs'
+
+def get_non_delivery_reason_fn() :
+  return 'ox_non_delivery_reason'
+
+def get_date_of_receipt_as_marked_fn() :
+  return 'ox_date_of_receipt_as_marked'
+
+def get_manifestation_receipt_calendar_fn() :
+  return 'ox_manifestation_receipt_calendar'
+
+def get_manifestation_receipt_date_fn() :
+  return 'ox_manifestation_receipt_date'
+
+def get_manifestation_receipt_date_gregorian_fn() :
+  return 'ox_manifestation_receipt_date_gregorian'
+
+def get_manifestation_receipt_date_year_fn() :
+  return 'ox_manifestation_receipt_date_year'
+
+def get_manifestation_receipt_date_month_fn() :
+  return 'ox_manifestation_receipt_date_month'
+
+def get_manifestation_receipt_date_day_fn() :
+  return 'ox_manifestation_receipt_date_day'
+
+def get_manifestation_receipt_date_inferred_fn() :
+  return 'ox_manifestation_receipt_date_inferred'
+
+def get_manifestation_receipt_date_uncertain_fn() :
+  return 'ox_manifestation_receipt_date_uncertain'
+
+def get_manifestation_receipt_date_approx_fn() :
+  return 'ox_manifestation_receipt_date_approx'
+
+def get_manifestation_receipt_date2_year_fn() :
+  return 'ox_manifestation_receipt_date2_year'
+
+def get_manifestation_receipt_date2_month_fn() :
+  return 'ox_manifestation_receipt_date2_month'
+
+def get_manifestation_receipt_date2_day_fn() :
+  return 'ox_manifestation_receipt_date2_day'
+
+def get_manifestation_receipt_date_is_range_fn() :
+  return 'ox_manifestation_receipt_date_is_range'
+
+def get_accompaniments_fn() :
+  return 'ox_accompaniments'
+
+
 if __name__ == '__main__':
   print ''
   print 'Fieldmap.py: settings:'
@@ -1036,8 +1106,7 @@ if __name__ == '__main__':
     obj = getattr( current_module, item_name )
     if inspect.isfunction( obj ):
       funcnames.append( item_name )
-    #endif
-  #endfor
+
 
   sortedfuncs = sorted( funcnames, key = lambda funcstring : funcstring )
 
@@ -1048,10 +1117,9 @@ if __name__ == '__main__':
       print funcname
       print '  ' + unicode( retval )
       print ''
-    #endif
-  #endfor
+
 
   print '*** End of fieldmap settings ***'
-#endif
+
 
 #----------------------------------------------------------------------------------------------

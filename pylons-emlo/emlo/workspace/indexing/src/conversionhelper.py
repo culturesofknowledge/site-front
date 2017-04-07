@@ -84,4 +84,15 @@ def convert_manifestation_type( value ):
    if value == 'Scribal copy' :
       return "Manuscript copy"
    
-   return value 
+   return value
+
+
+def convert_manifestation_opened( value ):
+    if value == 'o' :
+        return "Opened"
+    elif value == 'p' :
+        return "Partially Opened"
+    elif value == 'u' :
+        return "Unopened"
+
+    return "Unknown:"+value

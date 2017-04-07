@@ -609,6 +609,34 @@
   <field name="mail_destination"  type="text"  indexed="true"  stored="true"  />
   <field name="ox_printedEditionDetails"  type="text"  indexed="true"  stored="true"  />
 
+     <!-- Signed, sealed, Undelivered additions -->
+     <field name="ox_opened"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_routing_mark_stamp"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_routing_mark_ms"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_handling_instructions"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_stored_folded"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_postage_costs_as_marked"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_postage_costs"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_non_delivery_reason"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_date_of_receipt_as_marked"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_manifestation_receipt_calendar"  type="string"  indexed="false"  stored="true"  />
+     <field name="ox_accompaniments"  type="string"  indexed="false"  stored="true"  />
+
+     <field name="ox_manifestation_receipt_date"  type="tdate"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date_gregorian"  type="tdate"  indexed="true"  stored="true"  />
+
+     <field name="ox_manifestation_receipt_date_year"  type="tint"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date_month"  type="tint"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date_day"  type="tint"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date_inferred"  type="boolean"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date_uncertain"  type="boolean"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date_approx"  type="boolean"  indexed="true"  stored="true"  />
+
+     <field name="ox_manifestation_receipt_date2_year"  type="tint"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date2_month"  type="tint"  indexed="true"  stored="true"  />
+     <field name="ox_manifestation_receipt_date2_day"  type="tint"  indexed="true"  stored="true"  />
+
+     <field name="ox_manifestation_receipt_date_is_range"  type="boolean"  indexed="true"  stored="true"  />
 
 <!--                           -->
 <!-- Links from manifestations -->
