@@ -32,9 +32,9 @@ $(document).ready( function(){
 		var newsUrl = 'http://emlo-portal.bodleian.ox.ac.uk/collections/?json_route=/posts&' +
 			'type[]=catalogue&type[]=post&filter[orderby]=data&filter[order]=DESC&filter[posts_per_page]='+$divs.length;
 
-		if (window.location.hostname !== 'emlo.bodleian.ox.ac.uk') {
-			newsUrl = '/js/news.json'; // Testing purposes.
-		}
+		//if (window.location.hostname !== 'emlo.bodleian.ox.ac.uk') {
+		//	newsUrl = '/js/news.json'; // Testing purposes.
+		//}
 
 		$.ajax({
 			type: 'GET',
@@ -77,9 +77,9 @@ $(document).ready( function(){
 
 			$("#news-output").slideDown();
 
-		}).fail(function (fault1, fault2, fault3) {
+		})/*.fail(function (fault1, fault2, fault3) {
 			// If there's some error we dont show the news section
-		});
+		})*/;
 	}
 
 });
