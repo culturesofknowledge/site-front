@@ -3,6 +3,9 @@ solr:
   build: ./solr-emlo
   restart: always
 
+  volumes:
+      - ./data-solr/:/data-solr/
+
 redis:
   image: redis:3.2
   restart: always
