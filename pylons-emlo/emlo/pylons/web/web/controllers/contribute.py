@@ -11,5 +11,5 @@ class ContributeController(BaseController):
 
 	def index(self):
 
-		return redirect( "http://emlo.bodleian.ox.ac.uk/blog/?page_id=913", code=301 )
+		return redirect( "http://emlo-portal.bodleian.ox.ac.uk/collections/?page_id=913", code=301 )
 		#return render('/main/contribute.mako')

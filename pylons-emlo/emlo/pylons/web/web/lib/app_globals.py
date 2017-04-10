@@ -21,9 +21,9 @@ class Globals(object):
              {'id':"search",      'display':"Search+",       'url':"/advanced",        'accesskey': "2" },
              {'id':"browse",      'display':"Browse",        'url':"/browse/people",   'accesskey': "3" },
              #{'id':"emlo_collections",'display':"Catalogues",'url':"/emlo_collections",'accesskey': "4" },
-			 {'id':"emlo_collections",'display':"Collections",'url':"http://emlo.bodleian.ox.ac.uk/blog/?page_id=480",'accesskey': "4" },
-             {'id':"contribute",  'display':"Contribute",    'url':"/contribute",      'accesskey': "5" },
-             {'id':"about",       'display':"About",         'url':"/about",           'accesskey': "6" }
+			 {'id':"emlo_collections",'display':"Collections",'url':"http://emlo-portal.bodleian.ox.ac.uk/collections/?page_id=480",'accesskey': "4" },
+             {'id':"contribute",  'display':"Contribute",    'url':"http://emlo-portal.bodleian.ox.ac.uk/collections/?page_id=913",      'accesskey': "5" },
+             {'id':"about",       'display':"About",         'url':"http://emlo-portal.bodleian.ox.ac.uk/collections/?page_id=907",           'accesskey': "6" }
         ]
         self.title = "Early Modern Letters Online"
 

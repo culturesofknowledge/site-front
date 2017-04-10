@@ -10,5 +10,5 @@ log = logging.getLogger(__name__)
 class AboutController(BaseController):
 
 	def index(self):
-		return redirect( "http://emlo.bodleian.ox.ac.uk/blog/?page_id=907", code=301 )
+		return redirect( "http://emlo-portal.bodleian.ox.ac.uk/collections/?page_id=907", code=301 )
 		#return render('/main/about.mako')
