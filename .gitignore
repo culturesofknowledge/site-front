@@ -19,6 +19,8 @@ data-solr/people_stage
 data-solr/resources_stage
 data-solr/works_stage
 
+logs/*.log
+
 pylons-emlo/emlo/**/*.pyc
 
 data/*.csv
