@@ -12,7 +12,7 @@ Run docker-compose to download, build and run as a daemon everything needed:
 `docker-compose up -d --build`
 
 ## Indexing
-You'll need some data to index, drop the data in to the  "data" folder:
+You'll need some data to index, drop the data in to the  "data" folder defined in the docker-compose file:
 - comment.csv
 - institution.csv
 - manifestation.csv
