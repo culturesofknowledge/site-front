@@ -130,7 +130,7 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	#
 	if not skip_id_generation:
 
-		print "- Creating all IDs where needed:"
+		print "- Storing all IDs:"
 		timeStart = time.time()
 
 		errored = subprocess.call( ["python index_generate_ids.py"], shell=True )
@@ -147,21 +147,13 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	indexer.ClearSolrData( indexing )
 
 	#
-	# open redis relations database
-	#
-	red_temp = redis.Redis(host=redisconfig.host, db=redisconfig.db_temp_cofk_create)
-
-	#
 	# Store relationships
 	#
 	if not skip_store_relations:
 
-		red_temp.flushdb()
-
 		timeStart = time.time()
 		print "- Storing relationships in temp Redis database:"
 
-		# errored = indexer.StoreRelations( indexing, red_temp )
 		errored = subprocess.call( ["python index_store_relations.py"], shell=True )
 
 		if errored:
@@ -172,14 +164,14 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 
 
 	#
-	# Open Redis ID database
+	# open redis relations database
 	#
-	red_ids = redis.Redis(host=redisconfig.host, db=redisconfig.db_object_ids)
+	red_relations = redis.Redis(host=redisconfig.host, db=redisconfig.db_temp_cofk_create)
 
 	#
 	# Save the RDF and output to Solr
 	#
-	indexer.FillRdfAndSolr( indexing, red_ids, red_temp, False )
+	indexer.FillRdfAndSolr( indexing, None, red_relations, False )
 
 
 	#

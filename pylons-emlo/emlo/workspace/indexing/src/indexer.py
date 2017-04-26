@@ -189,17 +189,13 @@ def SolrOptimize( indexing ):
 
     print '   - all optimized.'
 
-def StoreRelations( indexing, red_temp ):
+def StoreRelations( _, red_rel, red_ids ):
     # 
     # open the relationship file and store the relations 
     #
     print " - Clearing old relationships."
-    red_temp.flushdb()
-    
-    indexing_singular = []
-    for index in indexing:
-        indexing_singular.append( plural_to_singular( index ) )
-    
+    red_rel.flushdb( )
+
     error = False
     error_rel = []
     for csv_file in csvtordf.csv_files['relationships']:
@@ -215,40 +211,34 @@ def StoreRelations( indexing, red_temp ):
             # print "("+ str(len(csv_records)) + ")",
         
             record_count = 0
-            for num, record in enumerate( csv_records ):
+            for record in csv_records:
                 record_count += 1
 
                 if record_count % 10000 == 0:
-                    print str(record_count / 10000),
+                    print str(record_count),
                     time.sleep( 0.5 )
 
                 left_thing = record['left_table_name'][11:]  # remove "cofk_union_"
                 right_thing = record['right_table_name'][11:]  # remove "cofk_union_"
+                relationship_type = record['relationship_type'][11:]  # remove "cofk_union_"
 
-                left_add = left_thing in indexing_singular
-                right_add = right_thing in indexing_singular
-                
-                if left_add or right_add:
-                    relationship_type = record['relationship_type'][11:]  # remove "cofk_union_"
-                       
-                    try:   
-                        left_to_right_rel, right_to_left_rel = relationships.getRdfRelationshipsLeftRight( left_thing, relationship_type, right_thing )
-                       
-                        left = record['left_id_value']
-                        right = record['right_id_value']
-                       
-                        if left_add :
-                            red_temp.sadd(left + ":rel", "::".join([left_to_right_rel, right, right_thing]) )
+                try:
+                    left_to_right_rel, right_to_left_rel = relationships.getRdfRelationshipsLeftRight( left_thing, relationship_type, right_thing )
 
-                        if right_add :
-                            red_temp.sadd(right + ":rel", "::".join([right_to_left_rel, left, left_thing]) )
-    
-                    except :
-                        error = True
-                        if relationship_type not in error_rel:
-                            error_rel.append(relationship_type)
-                            print "Error - Problem with relationship: " + left_thing, right_thing, relationship_type + " (Does it need adding to relationships.py?)"
-                            print "Number:" + str(num) + " Record:" + str(record) 
+                    left, right = red_ids.mget( [record['left_id_value'], record['right_id_value']] )
+
+                    if left is not None and right is not None:
+                        red_rel.sadd( left, "::".join( [left_to_right_rel, right, right_thing] ) )
+                        red_rel.sadd( right, "::".join( [right_to_left_rel, left, left_thing] ) )
+                    else :
+                        pass  # Reference to a missing ID. Needs to be removed in EMLO-EDIT
+
+                except :
+                    error = True
+                    if relationship_type not in error_rel:
+                        error_rel.append(relationship_type)
+                        print "Error - Problem with relationship: " + left_thing, right_thing, relationship_type + " (Does it need adding to relationships.py?)"
+                        print "Number:" + str(record_count - 1) + " Record:" + str(record)
            
             print ""
             
@@ -410,8 +400,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     #
                     # Add relationships
                     #
-                    editid_rel = editid + ":rel"
-                    members = red_temp.smembers( editid_rel )
+                    members = red_temp.smembers( uid )
                    
                     if len( members ) > 0 :
                         # if entity :
@@ -420,16 +409,9 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                         for member in members:
 
                             parts = member.split("::")
-                                                 
-                            uid_relationship = red_ids.get( parts[1] )
 
-                            if uid_relationship is None:
-                                # item deleted but relation still exists in emlo-edit... ignore it
-                                print "Warning: Missing relation", editid_rel, parts[0], parts[1], parts[2]
-                            else :
-                                uri_relationship = create_uri( uri_base, parts[2], uid_relationship )
-                            
-                                add( entity, solr_item, uri, parts[0] , uri_relationship, relationship=parts[2] )
+                            uri_relationship = create_uri( uri_base, parts[2], parts[1] )
+                            add( entity, solr_item, uri, parts[0] , uri_relationship, relationship=parts[2] )
 
                   
                     # if entity:
