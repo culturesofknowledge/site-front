@@ -84,8 +84,8 @@ def add( entity, solr_item, resource, predicate, object, prefix=None, transient=
     return
 
 
-def create_uri( base, type, uid ):  # base ends with "/"
-    return "".join([base, type, "/", uid])
+def create_uri( base, typey, uid ):  # base ends with "/"
+    return "".join([base, typey, "/", uid])
 
 
 def create_uri_quick( baseAndType, uid ):  # baseAndType ends with "/"
@@ -99,11 +99,11 @@ def add_to_solr( sol, items ):
   
     while start < total:
         # print start,
-        sol.add_many( items[start:start+batch], False )
+        sol.add_many( items[start:start + batch], False )
         start += batch
 
 
-def GenerateIds( indexing, red_ids ):
+def GenerateIds( _, red_ids ):
     #
     # This used to Create ID's for all entities but now it just stores their uuids
     # The uuids are used in the relation matching
@@ -403,8 +403,8 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     # Add additional predicates not in CSV files
                     #
                     additional = con[csvtordf.additional]
-                    for predicate, object in additional.iteritems():
-                        add( entity, solr_item, uri, predicate, object )
+                    for predicate, obj in additional.iteritems():
+                        add( entity, solr_item, uri, predicate, obj )
 
                    
                     #
@@ -464,7 +464,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
             sol.close()
 
             timeEnd = time.time()
-            print "- Done. Added " + str(record_count) + " records in %0.1f seconds." % ( timeEnd-timeStart)
+            print "- Done. Added " + str(record_count) + " records in %0.1f seconds." % ( timeEnd - timeStart)
     
     
     print '- Committing to solr "all" repository'  
