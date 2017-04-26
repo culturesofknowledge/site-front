@@ -107,6 +107,7 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 
 			print "   -", csv_file_location
 
+			stat_info = os.stat(csv_file_location)
 			with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
 
 				with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
@@ -116,8 +117,9 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 						line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
 						csv_file.write(line)
 
-			os.rename( csv_file_location, csv_file_location + '.bak' )
-			os.rename( csv_file_location + '.new', csv_file_location )
+			os.rename( csv_file_location, csv_file_location + '.bak' ) # original file to backup
+			os.rename( csv_file_location + '.new', csv_file_location ) # new file to original
+			os.chown( csv_file_location, stat_info.st_uid, stat_info.st_gid )
 
 		timeEnd = time.time()
 		print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
