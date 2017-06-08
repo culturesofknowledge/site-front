@@ -136,20 +136,20 @@
             </div>
 
             ##===============================
-						 
-            <div class="large-11 columns">
-              <label>Catalogue</label>
-              <%
-              fieldname = 'col_cat'
-              help = "Confine your search to a single catalogue. "
-              %>
-              ${self.start_normal_select( fieldname, title=help )}
-              ${self.catalogue_options()}
-              ${self.end_normal_select( fieldname )}
-            </div>
-            <div class="large-1 column"><label>&nbsp;<!-- for alingment --></label>
-              ${self.context_help( help, with_gap = False, calling_field = fieldname )}
-            </div>
+
+		    ##<div class="large-11 columns">
+            ##  <label>Catalogue</label>
+            ##  <%
+            ##  fieldname = 'col_cat'
+            ##  help = "Confine your search to a single catalogue. "
+            ##  %>
+            ##  ${self.start_normal_select( fieldname, title=help )}
+            ##  ${self.catalogue_options()}
+            ##  ${self.end_normal_select( fieldname )}
+            ##</div>
+            ##<div class="large-1 column"><label>&nbsp;<!-- for alingment --></label>
+            ##  ${self.context_help( help, with_gap = False, calling_field = fieldname )}
+            ##</div>
 
 
           <div class="large-12 columns">

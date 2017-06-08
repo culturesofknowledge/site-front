@@ -24,17 +24,22 @@
 			%>
 
 			<script src="/js/catalogue-blog.js"></script>
-			<script>
-				var catalogue_name = "${catalogue_value}";
+	  <script>
+		  var catalogue_name = "${catalogue_value}";
 
-				var data = getBlogDataFromCatName( catalogue_name );
+		  var data = getBlogDataFromCatName( catalogue_name );
 
-				if( data ) {
-					var a = document.getElementById("catalogue_link");
+		  if( data ) {
+			  var a = document.getElementById("catalogue_link_a");
+			  var span = document.getElementById("catalogue_link_span");
 
-					a.href = data.href;
-				}
-			</script>
+			  span.innerText = "Collection details: ";
+
+			  a.innerText = data.title;
+			  a.title = data.title;
+			  a.href = data.href;
+		  }
+	  </script>
 		% endif
 
 </%def>
@@ -74,30 +79,30 @@
 
 
 
-    ##=============================== Catalogue ==================================
-    % if c.profile.has_key( catalogue_fieldname ) :
-      <%
-      #---------
-      catalogue_label = trans.translate( catalogue_fieldname )
-      catalogue_value = c.profile[ catalogue_fieldname ]
-      #---------
-      %>
-      <dt>${catalogue_label}</dt>
-      <dd>
-        <a href="/forms/advanced?col_cat=${catalogue_value}">
+	  ##=============================== Catalogue ==================================
+      % if c.profile.has_key( catalogue_fieldname ) :
+  <%
+	  #---------
+	  catalogue_label = trans.translate( catalogue_fieldname )
+	  catalogue_value = c.profile[ catalogue_fieldname ]
+	  #---------
+  %>
+  ##<dt>${catalogue_label}</dt>
+      ##<dd>
+        ##<a href="/forms/advanced?col_cat=${catalogue_value}">
            ##${catalogue_value.capitalize()}
-           ${catalogue_value}
-        </a>
-        <br/>
-        <span style="font-style:italic;font-size:smaller;"><a id="catalogue_link" href="http://emlo.bodleian.ox.ac.uk/blog/?page_id=480#${catalogue_value.lower()}">
+           ##${catalogue_value}
+        ##</a>
+        ##<br/>
+        <span style="font-style:italic;"><span id="catalogue_link_span"></span><a id="catalogue_link_a" href="http://emlo.bodleian.ox.ac.uk/blog/?page_id=480#${catalogue_value.lower()}">
         ## About ${catalogue_value.capitalize()}
-        About ${catalogue_value}
+        ## About ${catalogue_value}
         </a></span>
-		</dd>
+  ##</dd>
 	% endif
-    
-    ##====================== Other items in left-hand bar ========================
-  </dl>
+
+	  ##====================== Other items in left-hand bar ========================
+    </dl>
 
 
     ##============================== Image(s) ===================================

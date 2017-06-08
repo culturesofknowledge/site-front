@@ -246,8 +246,8 @@
 				( "dates_section",        "Dates" ),
 				( "places_section",       "Places" ),
 				( "letters_section",      "Content" ),
-				( "institutions_section", "Repositories and Editions" ),
-				( "collections_section",  "Catalogues" )
+				( "institutions_section", "Repositories and Editions" )
+				##( "collections_section",  "Catalogues" )
 		]
 	%>
 
@@ -1177,55 +1177,55 @@
 
 ########## Start 'Collections' section ############
 
-				<div class="section clearfix" id="collections_section" >
-					<h3><img src="/img/icon-catalogues.png" alt="Catalogue Icon">Catalogues</h3>
+##				<div class="section clearfix" id="collections_section" >
+##					<h3><img src="/img/icon-catalogues.png" alt="Catalogue Icon">Catalogues</h3>
+##
+##					<fieldset class="alignment">
+##						<%
+##							fieldname = 'col_cat'
+##							help = "Confine your search to a single catalogue."
+##						%>
+##						<label for="${fieldname}" >Catalogue</label>
+##						<div class="row">
+##							<div class="large-11 columns">
+##								${self.start_normal_select( fieldname )}${self.catalogue_options()}${self.end_normal_select( fieldname )}
+##							</div>
+##							<div class="large-1 columns">
+##								${self.context_help(help, with_gap = False, calling_field = fieldname)}
+##							</div>
+##						</div>
+##					</fieldset>
 
-					<fieldset class="alignment">
-						<%
-							fieldname = 'col_cat'
-							help = "Confine your search to a single catalogue."
-						%>
-						<label for="${fieldname}" >Catalogue</label>
-						<div class="row">
-							<div class="large-11 columns">
-								${self.start_normal_select( fieldname )}${self.catalogue_options()}${self.end_normal_select( fieldname )}
-							</div>
-							<div class="large-1 columns">
-								${self.context_help(help, with_gap = False, calling_field = fieldname)}
-							</div>
-						</div>
-					</fieldset>
-
-					<!-- <fieldset class="alignment">
-						<%
-							fieldname = 'cat_group'
-							help = "Search within multiple catalogues."
-						%>
-						<label for="${fieldname}" >Catalogue</label>
-						<div class="row">
-							<div class="large-11 columns">
-								<select name="${fieldname}" multiple="true" height="100">
-									${self.catalogue_options()}
-								</select>
-							</div>
-							<div class="large-1 columns">
-								${self.context_help(help, with_gap = False, calling_field = fieldname)}
-							</div>
-						</div>
-					</fieldset> -->
-					<% 
-						cat_group = "empty"
-						#if "profile" in c :
-						#	cat_group = c.profile.get( 'cat_group', "" ) 
-						if len( request.params ) > 0: #{
-							cat_group = h.get_parm_value_from_request( request, required_parm = fieldname )
-							if cat_group == "" :
-								cat_group = "empty"
+##					<!-- <fieldset class="alignment">
+##						<%
+##							fieldname = 'cat_group'
+##							help = "Search within multiple catalogues."
+##						%>
+##						<label for="${fieldname}" >Catalogue</label>
+##						<div class="row">
+##							<div class="large-11 columns">
+##								<select name="${fieldname}" multiple="true" height="100">
+##									${self.catalogue_options()}
+##								</select>
+##							</div>
+##							<div class="large-1 columns">
+##								${self.context_help(help, with_gap = False, calling_field = fieldname)}
+##							</div>
+##						</div>
+##					</fieldset> -->
+					<%
+											cat_group = "empty"
+											#if "profile" in c :
+											#	cat_group = c.profile.get( 'cat_group', "" )
+											if len( request.params ) > 0: #{
+								cat_group = h.get_parm_value_from_request( request, required_parm = fieldname )
+								if cat_group == "" :
+									cat_group = "empty"
 					%>
 					<input type="hidden" name="cat_group" value="${cat_group}"/>
 
-					${self.extra_submit_search_button()}
-				</div>
+##					${self.extra_submit_search_button()}
+##				</div>
 
 
           </form>
