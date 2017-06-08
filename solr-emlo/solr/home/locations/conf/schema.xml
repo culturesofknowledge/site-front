@@ -373,6 +373,15 @@
     </fieldType>
 
 
+	  <!-- fieldType name="location_rpt"   class="solr.SpatialRecursivePrefixTreeFieldType"
+				 spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+				 distErrPct="0.025"
+				 maxDistErr="0.000009"
+				 units="degrees"
+	  / -->
+
+	  <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+
  </types>
 
 
@@ -435,8 +444,9 @@
   <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
   <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
+	 <field name="geo"  type="location"  indexed="true" stored="true" />
 
-<!--                      -->
+	 <!--                      -->
 <!-- Links from locations -->
 <!--                      --> 
 
@@ -509,6 +519,7 @@
    <dynamicField name="attr_*" type="textgen" indexed="true" stored="true" multiValued="true"/>
 
    <dynamicField name="random_*" type="random" />
+	 <dynamicField name="*_coordinate"  type="tdouble" indexed="true"  stored="false"/>
 
    <!-- uncomment the following to ignore any fields that don't already match an existing 
         field name or dynamic field, rather than reporting them as an error. 
@@ -542,7 +553,7 @@
   <copyField source="geonames_name" dest="default_search_field"/>
   <copyField source="ox_locationAlternateName" dest="default_search_field"/>
   <copyField source="geonames_name" dest="browse"/>
-   
+
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
 	  destination field is to use the dynamic field syntax. 

@@ -388,7 +388,12 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                                         else:  # translation[csvtordf.solr]:
                                             add_solr( solr_item, translation[csvtordf.solr], data )
 
-                   
+
+                    if singular == "location" and "latitude" in record and "longitude" in record:
+                        if record["latitude"] != "" and record["longitude"] != "" :
+                            add_solr( solr_item, "geo", record["latitude"] + "," + record["longitude"] )
+
+
                     #
                     # Add additional predicates not in CSV files
                     #

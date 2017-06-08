@@ -371,6 +371,7 @@
        </analyzer>
     </fieldType>
 
+	  <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
 
  </types>
 
@@ -582,6 +583,7 @@
   <field name="rel_wasPlaceOfDeathOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
   <field name="rel_wasVisitedBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
 
+	 <field name="geo"  type="location"  indexed="true" stored="true" />
 <!-- end CofK: links from locations -->
 
 
@@ -788,6 +790,7 @@
    <dynamicField name="attr_*" type="textgen" indexed="true" stored="true" multiValued="true"/>
 
    <dynamicField name="random_*" type="random" />
+	 <dynamicField name="*_coordinate"  type="tdouble" indexed="true"  stored="false"/>
 
    <!-- uncomment the following to ignore any fields that don't already match an existing 
         field name or dynamic field, rather than reporting them as an error. 
