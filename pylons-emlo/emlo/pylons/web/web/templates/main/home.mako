@@ -160,11 +160,16 @@
 
         </form>  <!-- End short version of form -->
 
-          <div class="large-12 columns">
+          <div class="large-12 hide-for-small columns" style="margin-top:-40px">
 						
             <p class="text-center" style="margin-bottom:0">Want a full set of fields? Try <a href="/advanced">Search+</a></p>
             <p class="text-center" style="">Prefer things at a glance? You can also <a href="/browse/people">Browse</a></p>
           </div>
+		<div class="small-12 show-for-small columns" style="margin-top:0">
+
+			<p class="text-center" style="margin-bottom:0">Want a full set of fields? Try <a href="/advanced">Search+</a></p>
+			<p class="text-center" style="">Prefer things at a glance? You can also <a href="/browse/people">Browse</a></p>
+		</div>
 
     </div><!-- row -->
     </div><!-- grey back panel -->
