@@ -378,8 +378,11 @@
 				 maxDistErr="0.000009"
 				 units="degrees"
 	  / -->
-	  <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
- </types>
+
+      <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate" />
+      <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"/>
+
+  </types>
 
 
  <fields>
@@ -441,7 +444,8 @@
   <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
   <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
-	 <field name="geo"  type="location"  indexed="true" stored="true" />
+     <field name="geo"  type="location"  indexed="true" stored="true" />
+     <field name="geo_rpt"  type="location_rpt"  indexed="true" stored="true" />
 
 <!--                      -->
 <!-- Links from locations -->
@@ -551,6 +555,8 @@
   <copyField source="geonames_name" dest="default_search_field"/>
   <copyField source="ox_locationAlternateName" dest="default_search_field"/>
   <copyField source="geonames_name" dest="browse"/>
+
+    <copyField source="geo" dest="geo_rpt"/>
 
    <!-- Above, multiple source fields are copied to the [text] field. 
 	  Another way to map multiple source fields to the same 
