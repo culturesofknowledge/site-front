@@ -5,7 +5,7 @@ var colours = [
 	//'#145a32','#186a3b','#7d6608','#7e5109','#784212','#6e2c00' // green to red
 	'#31eef6', '#57b5d8', '#df65b0', '#dd1c77', '#980043' // defualt
 ];
-var solrUrl = 'http://127.0.0.1/solr/locations';
+var solrUrl = window.location.origin + '/solr/locations';
 
 L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
 var map = L.mapbox.map('map', 'monicams.jpf4hpo5')
