@@ -371,7 +371,8 @@
        </analyzer>
     </fieldType>
 
-	  <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+      <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate" />
+      <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"/>
 
  </types>
 
@@ -572,7 +573,8 @@
   <field name="ox_totalWorksSentToPlace"  type="int"  indexed="false"  stored="true"  />
   <field name="ox_totalWorksMentioningPlace"  type="int"  indexed="false"  stored="true"  />
 
-	 <field name="geo"  type="location"  indexed="true" stored="true" />
+     <field name="geo"  type="location"  indexed="true" stored="true" />
+     <field name="geo_rpt"  type="location_rpt"  indexed="true" stored="true" />
 
 <!--                      -->
 <!-- Links from locations -->

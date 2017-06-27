@@ -5,26 +5,21 @@ Created on 4 Nov 2010
 '''
 
 # pythons
+import codecs
+import csv
+import datetime
+import decimal
 import sys
 import time
-import datetime
 import urllib
 
-
-# libraries
 import solr
-# import uuid
-# import rdfobject
 
-import csv
-import codecs
-
-# created
-import solrconfig
 import csvtordf
 import relationships
+import solrconfig
 
-fieldmap_path = '../../../pylons/web/web/lib' 
+fieldmap_path = '../../../pylons/web/web/lib'
 sys.path.append( fieldmap_path )
 import fieldmap
 
@@ -263,6 +258,11 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
     uri_prefix = fieldmap.get_uri_value_prefix()
     date_added_name = fieldmap.get_date_added_fieldname()
 
+    lat_min = decimal.Decimal("-90")
+    lat_max = decimal.Decimal("90")
+    long_min = decimal.Decimal("-180")
+    long_max = decimal.Decimal("180")
+
     for con in csvtordf.conversions:
     
         if con[csvtordf.title_plural] in indexing :
@@ -390,9 +390,17 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
 
 
                     if singular == "location" and "latitude" in record and "longitude" in record:
-                        if record["latitude"] != "" and record["longitude"] != "" :
-                            add_solr( solr_item, "geo", record["latitude"] + "," + record["longitude"] )
+                        latitude = record["latitude"]
+                        longitude = record["longitude"]
+                        if latitude != "" and longitude != "" :
 
+                            latitude_dec = decimal.Decimal(latitude)
+                            longitude_dec = decimal.Decimal(longitude)
+
+                            if lat_min <= latitude_dec <= lat_max and long_min <= longitude_dec <= long_max:
+                                add_solr( solr_item, "geo", record["latitude"] + "," + record["longitude"] )
+                            else:
+                                print( "Incorrect Lat/Long: ", latitude_dec, longitude_dec, "for", id )
 
                     #
                     # Add additional predicates not in CSV files

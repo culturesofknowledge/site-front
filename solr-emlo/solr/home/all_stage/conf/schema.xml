@@ -371,7 +371,8 @@
        </analyzer>
     </fieldType>
 
-	  <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate"/>
+      <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate" />
+      <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"/>
 
  </types>
 
@@ -583,7 +584,9 @@
   <field name="rel_wasPlaceOfDeathOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
   <field name="rel_wasVisitedBy-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
 
-	 <field name="geo"  type="location"  indexed="true" stored="true" />
+     <field name="geo"  type="location"  indexed="true" stored="true" />
+     <field name="geo_rpt"  type="location_rpt"  indexed="true" stored="true" />
+
 <!-- end CofK: links from locations -->
 
 

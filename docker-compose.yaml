@@ -27,6 +27,7 @@ nginx:
 
   links:
     - pylons
+    - solr
 
   ports:
     - "80:80"
