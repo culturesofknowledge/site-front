@@ -14,7 +14,11 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		popupHighlight: false,
 		fixedOpacity: false,
 		showGlobalResults: false,
-		filterQuery: false
+		filterQuery: false,
+
+		limitFields: '',
+		maxDocs: 100,
+		solrQueryCreate: null
 	},
 
 	initialize: function(url, options) {
@@ -82,7 +86,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 
 	_computeHeatmapObject: function(data) {
 		var _this = this,
-          facetHeatmapArray = data.facet_counts.facet_heatmaps[this.options.field];
+			facetHeatmapArray = data.facet_counts.facet_heatmaps[this.options.field];
 
 		_this.facetHeatmap = {};
 
@@ -119,47 +123,48 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	},
 
 	_createGeojson: function() {
-		var _this = this;
-		var geojson = {};
+		var _this = this,
+			geojson = {}, classifications;
 
 		geojson.type = 'FeatureCollection';
 		geojson.features = [];
 
-		$.each(_this.facetHeatmap.counts_ints2D, function(row, value) {
-			if (value === null) {
-				return;
-			}
-
-			$.each(value, function(column, val) {
-				if (val === 0) {
+		if( _this.facetHeatmap.counts_ints2D ) {
+			$.each(_this.facetHeatmap.counts_ints2D, function (row, value) {
+				if (value === null) {
 					return;
 				}
 
-				var newFeature = {
-					type: 'Feature',
-					geometry: {
-						type: 'Polygon',
-						coordinates: [
-							[
-								[_this._minLng(column), _this._minLat(row)],
-								[_this._minLng(column), _this._maxLat(row)],
-								[_this._maxLng(column), _this._maxLat(row)],
-								[_this._maxLng(column), _this._minLat(row)],
-								[_this._minLng(column), _this._minLat(row)]
-							]
-						]
-					},
-					properties: {
-						count: val
+				$.each(value, function (column, val) {
+					if (val === 0) {
+						return;
 					}
-				};
-				geojson.features.push(newFeature);
+
+					var newFeature = {
+						type: 'Feature',
+						geometry: {
+							type: 'Polygon',
+							coordinates: [
+								[
+									[_this._minLng(column), _this._minLat(row)],
+									[_this._minLng(column), _this._maxLat(row)],
+									[_this._maxLng(column), _this._maxLat(row)],
+									[_this._maxLng(column), _this._minLat(row)],
+									[_this._minLng(column), _this._minLat(row)]
+								]
+							]
+						},
+						properties: {
+							count: val
+						}
+					};
+					geojson.features.push(newFeature);
+				});
 			});
-		});
+		}
 
 		_this.addData(geojson);
-		var colors = _this.options.colors;
-		var classifications = _this._getClassifications(colors.length);
+		classifications = _this._getClassifications(_this.options.colors.length);
 		_this._styleByCount(classifications);
 		_this._setRenderTime();
 	},
@@ -168,7 +173,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		var _this = this;
 
 		if (_this.facetHeatmap.counts_ints2D === null) {
-		  return;
+			return;
 		}
 
 		var heatmapCells = [], cellSize=null, gradient=null;
@@ -318,13 +323,13 @@ L.SolrHeatmap = L.GeoJSON.extend({
 
 		_this.eachLayer(function(layer) {
 
-		  var color, count = layer.feature.properties.count;
-		    for( var i=0, iEnd=scale.length;i<iEnd;i++) {
-		      if( count >= classifications[i] && count <= classifications[i+1] ) { // The first section is always one wider than the rest
-			      color = scale[i];
-		          break;
-              }
-            }
+			var color, count = layer.feature.properties.count;
+			for( var i=0, iEnd=scale.length;i<iEnd;i++) {
+				if( count >= classifications[i] && count <= classifications[i+1] ) { // The first section is always one wider than the rest
+					color = scale[i];
+					break;
+				}
+			}
 
 			layer.setStyle({
 				fillColor: color,
@@ -378,7 +383,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		// convert passed location to containerpoint (pixels)
 		var _this = this;
 		if (_this._map === null) {
-		  return;
+			return;
 		}
 
 		var pointC = _this._map.latLngToContainerPoint(latlng);
@@ -400,23 +405,23 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	{
 		var _this = this;
 		if (_this._map === null) {
-		  console.log('leafletSolrHeatmap._getNearbyData null map warning');
-		  return;
+			console.log('leafletSolrHeatmap._getNearbyData null map warning');
+			return;
 		}
 		if (!startRow) {
 			startRow = 0;
 		}
 
 		var pt = latlng.lat + ',' + latlng.lng,
-		  metersPerPixel = _this._getMetersPerPixel(latlng),
-		  cellSizePixels = _this._getCellSize(),
-		  cellSizeKm = (metersPerPixel * cellSizePixels) / 1000.,
-		  cellSizeDegrees = cellSizeKm / 111.,
-		  lat = parseFloat(latlng.lat),
-		  lng = parseFloat(latlng.lng),
-		  nearbyField = _this.options.nearbyField,
-		  nearbyFieldType = _this.options.nearbyFieldType,
-		  sortField = _this.options.sortField;
+			metersPerPixel = _this._getMetersPerPixel(latlng),
+			cellSizePixels = _this._getCellSize(),
+			cellSizeKm = (metersPerPixel * cellSizePixels) / 1000.,
+			cellSizeDegrees = cellSizeKm / 111.,
+			lat = parseFloat(latlng.lat),
+			lng = parseFloat(latlng.lng),
+			nearbyField = _this.options.nearbyField,
+			nearbyFieldType = _this.options.nearbyFieldType,
+			sortField = _this.options.sortField;
 
 		// for bbox field
 		var query = '{!field f=' + nearbyField + ' score=overlapRatio}Intersects(ENVELOPE(' +
@@ -439,7 +444,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			};
 		}
 		if (sortField) {
-		  queryHash.sort = sortField + ' desc';
+			queryHash.sort = sortField + ' desc';
 		}
 
 		jQuery.ajax({
@@ -479,7 +484,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	_createPopup: function(data, latlng, nextFunctionName)
 	{
 		var solrItems = data.response.docs,
-		  lines = "", i, id;
+			lines = "", i, id;
 		_this.tmpIdToSolr = {};
 		if (solrItems.length === 0)
 		{
@@ -519,27 +524,27 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		// scroll bar on div with class leaflet-popup-content
 		// use div.outerHeight to get document size estimate
 		// use div.scrollTop to get where scrollbar is
-      /*var popupDiv = jQuery('.leaflet-popup-content');
-		var lastScrollQueryTime = 0;
+		/*var popupDiv = jQuery('.leaflet-popup-content');
+		 var lastScrollQueryTime = 0;
 
-       popupDiv.scroll(function(event){
-       if (popupDiv.scrollTop() > popupDiv.outerHeight())
-       {
-       console.log('near bottom', popupDiv.outerHeight(), popupDiv.scrollTop());
-       var content = popup.getContent();
-       content += "<div> more content!!!!!!!</div>";
-       popup.setContent(content);
-       popup.update();
+		 popupDiv.scroll(function(event){
+		 if (popupDiv.scrollTop() > popupDiv.outerHeight())
+		 {
+		 console.log('near bottom', popupDiv.outerHeight(), popupDiv.scrollTop());
+		 var content = popup.getContent();
+		 content += "<div> more content!!!!!!!</div>";
+		 popup.setContent(content);
+		 popup.update();
 
-       }
-       });
-       */
+		 }
+		 });
+		 */
 		if (_this.options.popupHighlight)
 		{
 			// div elements exist, add mouseover to highlight each one
 			for (i = 0 ; i < limit ; i++)
 			{
-			    var div, solrRecord;
+				var div, solrRecord;
 				id = 'tempLshId' + i;
 				div = jQuery('#' + id);
 				solrRecord = _this.tmpIdToSolr[id];
@@ -674,24 +679,31 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		}
 		var bounds = _this._map.getBounds();
 		var q = "*:*";
-		if (_this.options.nearbyField && (_this.options.nearbyFieldType === 'BBox')) {
-		  // score layers using bbox field
-		  q = '{!field f=' + _this.options.nearbyField + ' score=overlapRatio}Intersects(ENVELOPE(' +
-			bounds.getWest() + ',' + bounds.getEast() + ',' + bounds.getNorth() + ',' + bounds.getSouth() + '))';
+
+		if( _this.options.solrQueryCreate ){
+			q = _this.options.solrQueryCreate();
 		}
+		else if (_this.options.nearbyField && (_this.options.nearbyFieldType === 'BBox')) {
+			// score layers using bbox field
+			q = '{!field f=' + _this.options.nearbyField + ' score=overlapRatio}Intersects(ENVELOPE(' +
+				bounds.getWest() + ',' + bounds.getEast() + ',' + bounds.getNorth() + ',' + bounds.getSouth() + '))';
+		}
+
 		$.ajax({
 			url: _this._solrUrl + _this._solrQuery(),
 			dataType: 'JSONP',
 			data: {
 				q: q,
-				fl:"",//"geonames_name,id",
 				wt: 'json',
-				rows: 20,
+				rows: _this.options.maxDocs,
+				fl: _this.options.limitFields.join(","),
 				start: startCount,
 				facet: true,
+
 				'facet.heatmap': _this.options.field,
 				'facet.heatmap.geom': _this._mapViewToWkt(),
-				fq: _this.options.field + _this._mapViewToEnvelope()
+				fq: _this.options.field + _this._mapViewToEnvelope(),
+				omitHeader:true
 			},
 			jsonp: 'json.wrf',
 			success: function(data, textStatus, jqXHR) {
@@ -716,10 +728,10 @@ L.SolrHeatmap = L.GeoJSON.extend({
 				if (_this.options.showGlobalResults && ((Date.now() - _this.timeOfLastClick) > 1000))
 				{
 					var mapBounds = _this._map.getBounds(),
-					  width = mapBounds.getEast() - mapBounds.getWest(),
-					  height = mapBounds.getNorth() - mapBounds.getSouth(),
-					  popupLocation = L.latLng(mapBounds.getSouth() + (height * 0.), mapBounds.getWest() + (width* .2)),
-					  popupDisplay = _this.options.popupDisplay;
+						width = mapBounds.getEast() - mapBounds.getWest(),
+						height = mapBounds.getNorth() - mapBounds.getSouth(),
+						popupLocation = L.latLng(mapBounds.getSouth() + (height * 0.), mapBounds.getWest() + (width* .2)),
+						popupDisplay = _this.options.popupDisplay;
 
 					if ((typeof popupDisplay) === "function") {
 						popupDisplay(data, popupLocation, _this);

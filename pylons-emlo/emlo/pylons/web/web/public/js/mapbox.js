@@ -1,59 +1,195 @@
 
 var colours = [
-	//'#ff00ff','#ff0000','#ffff00','#00ff00','#0000ff', // purple, red, yellow, green, blue
-	//'#5d6d7e','#34495e','#2e4053','#283747','#212f3c','#17202a' // greys
-	//'#145a32','#186a3b','#7d6608','#7e5109','#784212','#6e2c00' // green to red
-	'#31eef6', '#57b5d8', '#df65b0', '#dd1c77', '#980043' // defualt
+	'#31eef6', '#57b5d8', '#df65b0', '#dd1c77', '#980043' // default
 ];
-var solrUrl = window.location.origin + '/solr/locations';
 
-L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
-var map = L.mapbox.map('map', 'monicams.jpf4hpo5')
-	.setView([
-		0,
-		0], 2);
+(function() {
+	var map, solr,
+		placesData = [],
+		popupHighlight = null;
 
-function onEachFeature(feature, layer) {
-  var count = feature.properties.count.toLocaleString();
-  layer.bindPopup(count);
-}
+	var monica = true;
 
-/*L.graticule({
-	interval: 15,
-	style: {
-		color: '#000',
-		weight: 0.5
+	if( monica ) {
+		L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
+		map = L.mapbox.map('map', 'monicams.jpf4hpo5');
 	}
-}).addTo(map);*/
+	else {
+		map = L.map('map');
+	}
+
+	//map.setView([39.82, -98.58], 4); // America
+	map.setView([0, 0], 2); // World
+
+	if( !monica ) {
+		L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+		}).addTo(map);
+	}
+
+	function onEachFeature(feature, layer) {
+		//var count = feature.properties.count.toLocaleString();
+		//layer.bindTooltip(count + " places").openTooltip();
+		//layer.bindPopup(count);
+	}
+
+	var solrErrorHandler = function (jqXHR, textStatus, errorThrown) {
+		// due to jsonp, no details are available
+		jQuery('#errorMessage').text('Solr error, bad URL or RPT field name');
+	};
+
+	var solrSuccessHandler = function (data, textStatus, jqXHR) {
+		var placeNames = [];
+		placesData = [];
+		for (var i = 0, iEnd = data.response.docs.length; i < iEnd; i++) {
+			placesData.push(data.response.docs[i]);
+			data.response.docs[i].reverseName = data.response.docs[i]["n"]
+				.replace(/, /g,",")
+				.split(',').reverse().join(", ");
+		}
+
+		//var nameSort = function(r,l) { return r.geonames_name.localeCompare(l.geonames_name); };
+		var reverseNameSort = function (r, l) {
+			return r.reverseName.replace(/\(/g,"").replace(/\)/g,"").replace(/\[/g,"").replace(/\]/g,"")
+				.localeCompare(l.reverseName.replace(/\(/g,"").replace(/\)/g,"").replace(/\[/g,"").replace(/\]/g,""));
+		};
+		placesData.sort(reverseNameSort);
+
+		for (i = 0, iEnd = placesData.length; i < iEnd; i++) {
+			//placeNames.push( "<option value='" + i + "'>" + placesData[i].reverseName + "  [" + placesData[i]["g"] + "]</option>" );
+			placeNames.push(['<option value="', i, '">', placesData[i].reverseName, /*" - [", placesData[i]["g"], "]",*/ "</option>"].join(""));
+		}
+
+		jQuery('#placelist').html(placeNames.join(""));
+		jQuery('#errorMessage').text('');
+		jQuery('#responseTime').html('Solr response time: ' + solr.solrTime + ' ms');
+		jQuery('#numDocs').html('Number of docs: ' + solr.docsCount.toLocaleString());
+	};
+
+	var renderCompleteHandler = function () {
+
+		if (solr.renderTime) {
+			$('#renderTime').html('Render time: ' + solr.renderTime + ' ms');
+		}
+	};
+
+	var solrQueryCreate = function () {
+		var filterVal = filter.value.trim();
+		var field = "geonames_name:";
+		var query;
+
+		if( filterVal !== "" ) {
+			var queryParts = [];
+			var words = filterVal.split(" ");
+			for (var i = 0, iEnd = words.length; i < iEnd; i++) {
+				if (words[i] != "") {
+					queryParts.push("(" + field + words[i] + " " + field + words[i] + "*)");
+				}
+			}
+
+			query = queryParts.join(" AND ");
+		}
+		else {
+			query = field + "*";
+		}
+		console.log(query);
+		return query;
+	};
 
 
-// Create and add a solrHeatmap layer to the map
-var solr = L.solrHeatmap( solrUrl, {
-  // Solr field with geospatial data (should be type Spatial Recursive Prefix Tree)
-  field: 'geo_rpt',
+	jQuery('#placelist').on("change", function () {
+		var index = jQuery('#placelist').val();
+		var placeData = placesData[+index];
 
-  // Set type of visualization. Allowed types: 'geojsonGrid', 'clusters' Note: 'clusters' requires LeafletMarkerClusterer
-	type: 'geojsonGrid',
-  //type: 'clusters',
+		var latlong = placeData["g"].split(",");
+		if (popupHighlight === null) {
+			popupHighlight = L.popup({
+				autoPan: false
+			})
+			//.setLatLng([+latlong[0], +latlong[1]])
+			//.openOn(map);
+		}
 
-	colors: colours,
+		var title = placeData["n"].split(",").slice(0, -1).join(", ");
+		if (title.trim() === "") {
+			title = placeData["n"];
+		}
+		var url = "http://emlo.bodleian.ox.ac.uk/profile/location/" + placeData["i"].replace("uuid_", "");
 
-  // Inherited from L.GeoJSON
-  onEachFeature: onEachFeature
-}).addTo(map);
+		var content = "" +
+			"<b>" + title + "</b><br/>" +
+			((placeData["f"] !== 0)
+				? "Sent from: " + placeData["f"] + " letters<br/>"
+				: "") +
+			((placeData["t"] !== 0)
+				? "Sent to: " + placeData["t"] + " letters<br/>"
+				: "") +
+			((placeData["m"] !== 0)
+				? "Mentioned: " + placeData["m"] + " letters<br/>"
+				: "") +
+			'<a href="' + url + '" target="_blank">Link to main record</a>';
 
-// Create and add a solrHeatmap layer to the map
-var solr2 = L.solrHeatmap( solrUrl, {
-	// Solr field with geospatial data (should be type Spatial Recursive Prefix Tree)
-	field: 'geo_rpt',
+		popupHighlight
+			.setLatLng([+latlong[0], +latlong[1]])
+			.setContent(content)
+			.openOn(map);
+	});
 
-	// Set type of visualization. Allowed types: 'geojsonGrid', 'clusters' Note: 'clusters' requires LeafletMarkerClusterer
-	//type: 'geojsonGrid',
-	type: 'clusters',
+	jQuery("#filter").on( "keyup", function() {
+		solr.refresh();
+	});
 
-	// Inherited from L.GeoJSON
-	onEachFeature: onEachFeature
-}).addTo(map);
+	jQuery("#update").on( "click", function () {
+		resetSolr();
+	});
+
+	jQuery("#clear").on( "click", function () {
+		filter.value = "";
+		solr.refresh();
+	});
+
+	function resetSolr() {
+		"use strict";
+
+		var colorMap = colours;
+
+		if (solr) {
+			map.removeLayer(solr);
+		}
+
+		solr = L.solrHeatmap("http://localhost:8983/solr/locations", {
+
+			field: "geo_rpt",
+			type: "geojsonGrid",
+
+			colors: colorMap,
+			maxSampleSize: 400,
+
+			solrErrorHandler: solrErrorHandler,
+			solrSuccessHandler: solrSuccessHandler,
+			renderCompleteHandler: renderCompleteHandler,
+
+			popupHighlight: true,
+			showGlobalResults: false,
+			fixedOpacity: 100,
+
+			limitFields: [
+				'g:geo',
+				'n:geonames_name',
+				'i:id',
+				'f:ox_totalWorksSentFromPlace',
+				't:ox_totalWorksSentToPlace',
+				'm:ox_totalWorksMentioningPlace'
+			],
+			maxDocs: 10000,
+
+			solrQueryCreate: solrQueryCreate
+		})
+			.addTo(map);
+	}
+
+	resetSolr();
+})();
 
 var coloursDiv = document.getElementById("colours");
 //coloursDiv.appendChild(document.createTextNode("Key: "));
