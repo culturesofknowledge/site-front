@@ -92,7 +92,6 @@ var colours = [
 		else {
 			query = field + "*";
 		}
-		console.log(query);
 		return query;
 	};
 
@@ -152,12 +151,13 @@ var colours = [
 		"use strict";
 
 		var colorMap = colours;
+		var solrURL = window.location.origin + '/solr/locations';
 
 		if (solr) {
 			map.removeLayer(solr);
 		}
 
-		solr = L.solrHeatmap("http://localhost:8983/solr/locations", {
+		solr = L.solrHeatmap( solrURL, {
 
 			field: "geo_rpt",
 			type: "geojsonGrid",
