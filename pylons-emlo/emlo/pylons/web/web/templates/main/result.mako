@@ -10,7 +10,6 @@
 ##----------------------------------------------------------------------------------------------
 
 <%def name="for_head()">
-<script>$('table.highlight tr:nth-child(2n+1)').addClass('odd');</script> <!-- IE hack to accept even/odd rows -->
 	<style>
 		@media only screen and (min-width: 64.063em) {  /* min-width 1025px, large screens */
 			.side {
@@ -36,6 +35,8 @@
 </%def>
 
 <%def name="for_foot()">
+	<script>$('table.highlight tr:nth-child(2n+1)').addClass('odd');</script> <!-- IE hack to accept even/odd rows -->
+	<script src="/sources/pages/search.js"></script>
 </%def>
 
 <%def name="body()">
@@ -235,13 +236,11 @@
     <%
     # Sort by counts, highest first
     sorted_tups = sorted( counts.items(), key=lambda count : count[1], reverse=True )
-    even=True
     %>
 
     ## Show the list of highest-scoring authors, destinations etc 
     ## and allow them to be added to the query.
     <table class="facet">
-
     % for item, count in sorted_tups :
 
       <%
@@ -268,39 +267,11 @@
           value_to_search_for = "unknown"
       #}
       %>
-
-      % if even :
-        <tr>
-      % else :
-        <tr>
-      % endif
-
-      ##================================================
-      ## Facet via a link on the name of the person, place etc
-      <td width="190px">
-      <a href="${h.query_url(c.query['baseurl'], \
+	  <tr><td><a href="${h.query_url(c.query['baseurl'], \
                  restart_fields, \
                  add=[ field_to_search_on, value_to_search_for ])}" title="Add to your search criteria">
-      ${decode}
-      </a>
-      </td>
-      ##================================================
-      ## Show number of letters by this person, etc.
-
-      <td width="50px">${count}</td>
-
-      ##================================================
-      ## Facet via the 'plus' button
-      <td width="50px" style="padding:0;">
-      <a href="${h.query_url(c.query['baseurl'], \
-                 restart_fields, \
-                 add=[ field_to_search_on, value_to_search_for ])}" title="Add to your search criteria">
-      <img class="facet" src="/img/plus-facet.png" alt="Add to your search criteria" height="15px" width="15px"/>
-      </a>
-      </td>
-      ##================================================
-      </tr>
-      <% even = not even %>
+	      <img class="facet" src="/img/plus-facet.png" alt="Add to your search criteria" height="15px" width="15px"/> ${decode}
+      </a></td><td>${count}</td></tr>
     % endfor
     </table>
   % endif
