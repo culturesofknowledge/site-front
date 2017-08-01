@@ -672,6 +672,11 @@
   if object_type == 'manifestation':
     fields_to_display = fields.get_fields_to_display_in_profile( object_type, nested )
 
+    # Filter out some which shouldn't be shown
+    if obj.has_key( h.get_manifestation_receipt_calendar_fn() ) :
+      if obj[h.get_manifestation_receipt_calendar_fn()] in ['U','u', 'Unknown', 'unknown']:
+        fields_to_display.remove(h.get_manifestation_receipt_calendar_fn())
+
   if len( fields_to_display ) > 0: #{
     for field_to_display in fields_to_display: #{
       if obj.has_key( field_to_display ): #{
