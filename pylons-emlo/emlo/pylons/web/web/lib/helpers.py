@@ -733,7 +733,7 @@ def strip_value_prefix( full_string, prefix = '' ): #{  # could be used for UUID
 
   # Or strip off everything up to and including the first colon
   else: #{
-    if ':' in full_string: #{
+    if '_' in full_string: #{
       parts = full_string.split( '_' )
       plength = len( parts[ 0 ] ) + 1
       retval = full_string[ plength : ]
