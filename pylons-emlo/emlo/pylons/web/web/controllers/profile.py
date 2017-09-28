@@ -1,4 +1,5 @@
 import logging
+import string, base64
 
 from pylons import request, response, session, tmpl_context as c, url
 from pylons.controllers.util import abort, redirect
@@ -45,7 +46,7 @@ class ProfileController(BaseController):
                                    fields=['id'], score=False, rows=1, start=0)
 
          if sol_response.numFound > 0:
-            id = sol_response.results[0]['id'].split(':')[1]
+            id = sol_response.results[0]['id'].split('_')[1]
             return redirect( url(controller='profile', action='work', id=id) )
       
       emlo_edit_id = request.params.get( 'id', None )
@@ -55,19 +56,90 @@ class ProfileController(BaseController):
          if profile_type == "person" :
             
             sol = solr.SolrConnection( solrconfig.solr_urls['people'] )
-            sol_response = sol.query( escape_colons( "dcterms:identifier-editi:" )
-
-                                   + ':' + escape_colons("editi:") + emlo_edit_id, \
-                                   fields=['id'], score=False, rows=1, start=0)
+            sol_response = sol.query( "dcterms_identifier-editi_:editi_"
+                                       + emlo_edit_id,
+                                       fields=['id'], score=False, rows=1, start=0)
 
             if sol_response.numFound > 0:
-               id = sol_response.results[0]['id'].split(':')[1]
+               id = sol_response.results[0]['id'].split('_')[1]
                return redirect( url(controller='profile', action='person', id=id) )
 
-      c.profile = {};
+      c.profile = {}
       
       return render('/main/profile.mako')
-   
+
+   def p(self, ipersonid):
+      id = '0'
+
+      sol = solr.SolrConnection( solrconfig.solr_urls['people'] )
+      sol_response = sol.query( "dcterms_identifier-editi_:editi_"
+                                + ipersonid,
+                                fields=['id'], score=False, rows=1, start=0)
+
+      if sol_response.numFound > 0:
+         id = sol_response.results[0]['id'].split('_')[1]
+
+
+      return redirect( url(controller='profile', action='person', id=id) )
+
+
+   def w(self, iworkid):
+      id = '0'
+
+      sol = solr.SolrConnection( solrconfig.solr_urls['works'] )
+      sol_response = sol.query( escape_colons( get_integer_id_fieldname( 'work' ))
+                                + ':' + escape_colons( get_integer_id_value_prefix()) + iworkid,
+                                fields=['id'], score=False, rows=1, start=0)
+
+      if sol_response.numFound > 0:
+         id = sol_response.results[0]['id'].split('_')[1]
+
+      return redirect( url(controller='profile', action='work', id=id) )
+
+   def l(self, locationid):
+
+      id = '0'
+
+      sol = solr.SolrConnection( solrconfig.solr_urls['locations'] )
+      sol_response = sol.query( "dcterms_identifier-edit_:edit_cofk_union_location-"
+                                + locationid,
+                                fields=['id'], score=False, rows=1, start=0)
+
+      if sol_response.numFound > 0:
+         id = sol_response.results[0]['id'].split('_')[1]
+
+      return redirect( url(controller='profile', action='location', id=id) )
+
+   def r(self, institutionid):
+
+      id = '0'
+
+      sol = solr.SolrConnection( solrconfig.solr_urls['institutions'] )
+      sol_response = sol.query( "dcterms_identifier-edit_:edit_cofk_union_institution-"
+                                + institutionid,
+                                fields=['id'], score=False, rows=1, start=0)
+
+      if sol_response.numFound > 0:
+         id = sol_response.results[0]['id'].split('_')[1]
+
+      return redirect( url(controller='profile', action='institution', id=id) )
+
+
+   def i(self, id):
+
+      id = self._decodeTiny(id)
+
+      if len(id) == 36:
+
+         sol = solr.SolrConnection( solrconfig.solr_urls['all'] )
+         sol_response = sol.query( "id:uuid_" + id, fields=['object_type'], score=False, rows=1, start=0)
+
+         if sol_response.numFound > 0:
+
+            return redirect( url(controller='profile', action=sol_response.results[0]['object_type'], id=id) )
+
+      c.profile = {}
+      return render('/main/profile.mako')
  
 #------------------------------------------------------------------------------------------------
 
@@ -266,13 +338,25 @@ class ProfileController(BaseController):
             t = Tinyurl()
             path = url(controller='profile', action=solr_name, id=id)
             path = path.lstrip('/')
-            page_url = "http://%s/%s"%(config['base_url'], path)
+            page_url = "http://%s/%s" % (config['base_url'], path)
             tinyurl = t.get(page_url)
             c.tinyurl = tinyurl
          except (ConnectionError, ServerNotFoundError):
             # Tinyurl = DEAD
-            c.tinyurl = "Service not available"     
-      
+            c.tinyurl = "Service not available"
+
+         c.iidUrl = None
+         if object == 'person' :
+            c.iidUrl = "/p/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
+         elif object == 'work' :
+            c.iidUrl = "/w/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
+         elif object == 'location' :
+            c.iidUrl = "/l/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_location-','')
+         elif object == 'institution' :
+            c.iidUrl = "/r/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_institution-','')
+
+         c.normalUrl = "/" + id
+         c.miniUrl = "/" + self._encodeTiny( id )
       #}
 
       return this_profile, relations, further_relations, '/main/profiles/' + object + '.mako'
@@ -312,4 +396,34 @@ class ProfileController(BaseController):
       
       return None
 
-#------------------------------------------------------------------------------------------------
+
+   @staticmethod
+   def _decodeTiny(tinyid):
+
+      if len(tinyid) >= 36:
+         return tinyid[:36]
+
+      if len( tinyid ) == 32:
+         return ("%s-%s-%s-%s-%s") % (tinyid[:8], tinyid[8:12], tinyid[12:16], tinyid[16:20], tinyid[20:])
+
+      if len( tinyid ) < 32:
+         transtbl = string.maketrans(
+            '0123456789ABCDEFGHJKMNPQRSTVWXYZ' 'OIL',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567' 'ABB' )
+
+         tinyid = base64.b32decode( tinyid.replace('-', '').upper().encode('ascii').translate(transtbl) + "======" ).encode('hex')
+
+      return ("%s-%s-%s-%s-%s") % (tinyid[:8], tinyid[8:12], tinyid[12:16], tinyid[16:20], tinyid[20:])
+
+   @staticmethod
+   def _encodeTiny( id ):
+      if len( id ) == 36:
+
+         transtbl = string.maketrans(
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
+            '0123456789ABCDEFGHJKMNPQRSTVWXYZ' )
+
+         id = base64.b32encode( id.replace('-', '').decode('hex') ).rstrip('=').translate(transtbl).lower()
+
+      return id
+

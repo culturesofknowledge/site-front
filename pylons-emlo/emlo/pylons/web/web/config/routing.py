@@ -20,7 +20,7 @@ def make_map(config):
 
     # CUSTOM ROUTES HERE
     default_action = 'index' # 'updating' #
-    
+
     map.connect('/', controller='home', action=default_action)
     map.connect('/index', controller='home', action=default_action)
     map.connect('/index/', controller='home', action=default_action)
@@ -50,5 +50,12 @@ def make_map(config):
 
     map.connect('/{controller}/', action='index') # contribute, technical, about, home, search, browse
     map.connect('/{controller}', action='index') # contribute, technical, about, home, search, browse
+
+    map.connect('/p/{ipersonid}', controller='profile', action='p') # person
+    map.connect('/w/{iworkid}', controller='profile', action='w') # work
+    map.connect('/l/{locationid}', controller='profile', action='l') # location
+    map.connect('/r/{institutionid}', controller='profile', action='r') # location
+
+    map.connect('/{id}', controller='profile', action='i') # general
 
     return map

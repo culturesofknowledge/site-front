@@ -213,6 +213,14 @@
 								on ${change_day}/${change_month}/${ change_year }.
 							% endif
 
+								<br/><br/>Alternative urls for this record:<ul>
+								<li style="font-size:smaller"><a href="${c.normalUrl}">emlo.bodleian.ox.ac.uk${c.normalUrl}</a></li>
+								<li style="font-size:smaller"><a href="${c.miniUrl}">emlo.bodleian.ox.ac.uk${c.miniUrl}</a></li>
+								% if c.iidUrl:
+									<li style="font-size:smaller"><a href="${c.iidUrl}">emlo.bodleian.ox.ac.uk${c.iidUrl}</a></li>
+                                % endif
+								<li style="font-size:smaller"><a href="${c.tinyurl}">${c.tinyurl}</a></li>
+							</ul>
 						% endif
 					</div>
 
