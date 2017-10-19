@@ -699,9 +699,6 @@
       obj[h.get_manifestation_receipt_date_gregorian_fn()] = obj[h.get_manifestation_receipt_date_gregorian_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
 
 
-        if h.get_manifestation_receipt_calendar_fn() in fields_to_display:
-          fields_to_display.remove( h.get_manifestation_receipt_calendar_fn() )
-
   if len( fields_to_display ) > 0: #{
     for field_to_display in fields_to_display: #{
       if obj.has_key( field_to_display ): #{
