@@ -212,6 +212,7 @@
 		h.get_total_works_mentioning_place_fieldname().lower().strip():  'Letters Mentioning',
 		h.get_total_docs_in_repos_fieldname().lower().strip():  'Number of documents',
 		h.get_opened_fn(): 'Opened',
+		h.get_routing_mark_ms_fn(): "Routing mark (MS)",
 		h.get_routing_mark_stamp_fn(): "Routing mark (stamp)",
 		h.get_handling_instructions_fn(): "Handling instructions",
 		h.get_stored_folded_fn(): "Stored folded",

@@ -676,6 +676,20 @@
     if obj.has_key( h.get_manifestation_receipt_calendar_fn() ) :
       if obj[h.get_manifestation_receipt_calendar_fn()] in ['U','u', 'Unknown', 'unknown']:
         fields_to_display.remove(h.get_manifestation_receipt_calendar_fn())
+      elif obj[h.get_manifestation_receipt_calendar_fn()] == 'G' :
+        obj[h.get_manifestation_receipt_calendar_fn()] = "Gregorian"
+      elif obj[h.get_manifestation_receipt_calendar_fn()] == 'J' or \
+            obj[h.get_manifestation_receipt_calendar_fn()] == 'JJ' or \
+            obj[h.get_manifestation_receipt_calendar_fn()] == 'JM':
+        obj[h.get_manifestation_receipt_calendar_fn()] = "Julian"
+
+    # Tweak display of these
+    if obj.has_key( h.get_manifestation_receipt_date_fn() ) :
+      obj[h.get_manifestation_receipt_date_fn()] = obj[h.get_manifestation_receipt_date_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
+    if obj.has_key( h.get_manifestation_receipt_date_gregorian_fn() ) :
+      obj[h.get_manifestation_receipt_date_gregorian_fn()] = obj[h.get_manifestation_receipt_date_gregorian_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
+
+
 
   if len( fields_to_display ) > 0: #{
     for field_to_display in fields_to_display: #{
@@ -735,9 +749,9 @@
   % if len( details_to_display ) == 0:
     
     % if object_type == 'comment':
-      <pre>${main_display_value}</pre>
+      <pre>${main_display_value}</pre><br/>
     % else:
-      <a href="${url}">${main_display_value}</a>
+      <a href="${url}">${main_display_value}</a><br/>
     % endif
 
     <%
@@ -753,12 +767,12 @@
         % if val:
           % if type( val ) == unicode or type( val ) == str:
             % if val.startswith("http"):
-              ${label}: <a href="${val}" target="_blank">${val}</a><br/>
+              <span style="color:#172854;">${label}</span>:<br/>&nbsp;&nbsp;&nbsp; <a href="${val}" target="_blank">${val}</a><br/>
             % else:
-              ${label}: ${val}<br/>
+			<span style="color:#172854;">${label}</span>:<br/>&nbsp;&nbsp;&nbsp; ${val}<br/>
             % endif
           % else:
-            ${label}: ${val}<br/>
+		  <span style="color:#172854;">${label}</span>:<br/>&nbsp;&nbsp;&nbsp; ${val}<br/>
           % endif
         % endif
       % endfor
@@ -791,10 +805,10 @@
 
       % if obj.has_key( field_to_display ):
 				% if label :
-         ${label}:
+				<span style="color:#172854;">${label}</span>:<br/>&nbsp;&nbsp;&nbsp;
 				% endif
         % if len( related_obj ) > 0:
-		 ${self.display_details_of_one_object( related_obj, nested = True )}
+		 ${self.display_details_of_one_object( related_obj, nested = True )}<br/>
         % else:
          ${display_value}<br/>
         % endif
@@ -805,7 +819,6 @@
     % endfor
 
   % endif
-	<br/>
 ##}
 </%def>
 #------------------------------------------------------------------------------------------------------

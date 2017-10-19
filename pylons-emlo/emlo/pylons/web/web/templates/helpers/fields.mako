@@ -111,6 +111,7 @@
                             h.get_is_translation_fieldname(),
                             h.get_former_owner_fieldname(),
                             h.get_opened_fn(),
+                            h.get_routing_mark_ms_fn(),
                             h.get_routing_mark_stamp_fn(),
                             h.get_handling_instructions_fn(),
                             h.get_stored_folded_fn(),
