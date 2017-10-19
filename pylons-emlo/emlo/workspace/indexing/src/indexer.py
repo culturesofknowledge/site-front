@@ -399,6 +399,9 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
 
                             if lat_min <= latitude_dec <= lat_max and long_min <= longitude_dec <= long_max:
                                 add_solr( solr_item, "geo", record["latitude"] + "," + record["longitude"] )
+                                # TODO: Add a uncertainty over a position, i.e. a radius ofa cirlce around a point. Large for just countries, small for streets and houses. Solr fieldneeds library adding.
+                                #add_solr( solr_item, "geo_rpt", "Circle(" + record["latitude"] + "," + record["longitude"] + " d=0.01)" )
+
                             else:
                                 print( "Incorrect Lat/Long: ", latitude_dec, longitude_dec, "for", id )
 

@@ -213,6 +213,14 @@
 								on ${change_day}/${change_month}/${ change_year }.
 							% endif
 
+								<br/><br/>Alternative urls for this record:<ul>
+								<li style="font-size:smaller"><a href="${c.normalUrl}">emlo.bodleian.ox.ac.uk${c.normalUrl}</a></li>
+								<li style="font-size:smaller"><a href="${c.miniUrl}">emlo.bodleian.ox.ac.uk${c.miniUrl}</a></li>
+								% if c.iidUrl:
+									<li style="font-size:smaller"><a href="${c.iidUrl}">emlo.bodleian.ox.ac.uk${c.iidUrl}</a></li>
+                                % endif
+								<li style="font-size:smaller"><a href="${c.tinyurl}">${c.tinyurl}</a></li>
+							</ul>
 						% endif
 					</div>
 
@@ -675,7 +683,8 @@
     # Filter out some which shouldn't be shown
     if obj.has_key( h.get_manifestation_receipt_calendar_fn() ) :
       if obj[h.get_manifestation_receipt_calendar_fn()] in ['U','u', 'Unknown', 'unknown']:
-        fields_to_display.remove(h.get_manifestation_receipt_calendar_fn())
+        if h.get_manifestation_receipt_calendar_fn() in fields_to_display:
+          fields_to_display.remove( h.get_manifestation_receipt_calendar_fn() )
       elif obj[h.get_manifestation_receipt_calendar_fn()] == 'G' :
         obj[h.get_manifestation_receipt_calendar_fn()] = "Gregorian"
       elif obj[h.get_manifestation_receipt_calendar_fn()] == 'J' or \
@@ -690,6 +699,8 @@
       obj[h.get_manifestation_receipt_date_gregorian_fn()] = obj[h.get_manifestation_receipt_date_gregorian_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
 
 
+        if h.get_manifestation_receipt_calendar_fn() in fields_to_display:
+          fields_to_display.remove( h.get_manifestation_receipt_calendar_fn() )
 
   if len( fields_to_display ) > 0: #{
     for field_to_display in fields_to_display: #{
