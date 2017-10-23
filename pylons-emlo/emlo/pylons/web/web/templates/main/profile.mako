@@ -694,7 +694,24 @@
 
     # Tweak display of these
     if obj.has_key( h.get_manifestation_receipt_date_fn() ) :
+
       obj[h.get_manifestation_receipt_date_fn()] = obj[h.get_manifestation_receipt_date_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
+      if obj.has_key( h.get_manifestation_receipt_date_inferred_fn() ) or obj.has_key( h.get_manifestation_receipt_date_uncertain_fn() ) or obj.has_key( h.get_manifestation_receipt_date_approx_fn() ):
+        obj[h.get_manifestation_receipt_date_fn()] += "  ("
+        if obj.has_key( h.get_manifestation_receipt_date_inferred_fn() ) :
+          obj[h.get_manifestation_receipt_date_fn()] += "inferred "
+        if obj.has_key( h.get_manifestation_receipt_date_uncertain_fn() ) :
+          obj[h.get_manifestation_receipt_date_fn()] += "uncertain "
+        if obj.has_key( h.get_manifestation_receipt_date_approx_fn() ) :
+          obj[h.get_manifestation_receipt_date_fn()] += "approx "
+        obj[h.get_manifestation_receipt_date_fn()] += ")"
+        if h.get_manifestation_receipt_date_inferred_fn() in fields_to_display:
+          fields_to_display.remove( h.get_manifestation_receipt_date_inferred_fn() )
+        if h.get_manifestation_receipt_date_uncertain_fn() in fields_to_display:
+          fields_to_display.remove( h.get_manifestation_receipt_date_uncertain_fn() )
+        if h.get_manifestation_receipt_date_approx_fn() in fields_to_display:
+          fields_to_display.remove( h.get_manifestation_receipt_date_approx_fn() )
+
     if obj.has_key( h.get_manifestation_receipt_date_gregorian_fn() ) :
       obj[h.get_manifestation_receipt_date_gregorian_fn()] = obj[h.get_manifestation_receipt_date_gregorian_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
 
