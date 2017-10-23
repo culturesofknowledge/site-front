@@ -366,6 +366,7 @@
 		c.profile.has_key( h.get_comments_on_people_mentioned_in_work_fieldname()) or \
 		c.profile.has_key( h.get_relations_to_comments_on_origin_fieldname()) or \
 		c.profile.has_key( h.get_relations_to_comments_on_destination_fieldname()) or \
+		c.profile.has_key( h.get_relations_to_comments_on_receipt_date_fieldname()) or \
 		c.profile.has_key( h.get_relations_to_comments_on_date_fieldname()):  ## adding control to show or not show the fieldset if there is no content
 		<div class="column workfieldset  profilepart">
 		  <h3 class="worklegend"><img src="/img/icon-comment.png" class="workicon"/>Comments</h3>
@@ -393,6 +394,8 @@
 			  ${self.h4_relations_list( h.get_relations_to_comments_on_date_fieldname(),
 										title="Comments about the Date", type='simple' )} 
 
+              ${self.h4_relations_list( h.get_relations_to_comments_on_receipt_date_fieldname(),
+                                        title="Comments about the Receipt Date", type='simple' )}
 			</div><!-- class:workspacing  content -->
 		  </div>
 	% endif

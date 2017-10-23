@@ -19,6 +19,7 @@ object_relation_fields = {
         get_relations_to_comments_on_addressee_fieldname(),
         get_relations_to_comments_on_author_fieldname(),
         get_relations_to_comments_on_date_fieldname(),
+        get_relations_to_comments_on_receipt_date_fieldname(),
         get_addressee_uri_fieldname(),
         get_origin_uri_fieldname(),
         get_destination_uri_fieldname(),

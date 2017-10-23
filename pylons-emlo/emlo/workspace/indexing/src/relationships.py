@@ -347,7 +347,13 @@ relationships = {
                  type_on_right  = 'manifestation',
                  get_right_side = get_manif_with_comment_on_date_fieldname()),
   ],
-
+  'relationship_type-refers_to_receipt_date': [
+    # Comment (on left) refers to date of manifestation (on right)
+    set_rel_cfg( type_on_left   = 'comment',
+                 get_left_side  = get_relations_to_comments_on_receipt_date_fieldname(),
+                 type_on_right  = 'manifestation',
+                 get_right_side = get_manif_with_comment_on_receipt_date_fieldname()),
+],
   'relationship_type-refers_to_people_mentioned_in_work': [
     # Comment (on left) refers to people mentioned in work (on right)
     set_rel_cfg( type_on_left   = 'comment', \

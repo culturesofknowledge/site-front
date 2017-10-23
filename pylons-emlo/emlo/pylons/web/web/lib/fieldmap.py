@@ -184,10 +184,12 @@ def get_relations_to_comments_on_addressee_fieldname():
 def get_relations_to_comments_on_date_fieldname():
   return 'ox_dateAnnotate-comment'
 
-#--------------------------------------------------------------------------------------------------
+def get_relations_to_comments_on_receipt_date_fieldname():
+  return 'ox_dateReceiptAnnotate-comment'
+
 def get_relations_to_comments_on_origin_fieldname():
 	return 'ox_originAnnotate-comment'
-#--------------------------------------------------------------------------------------------------
+
 def get_relations_to_comments_on_destination_fieldname():
 	return 'ox_destinationAnnotate-comment'
 
@@ -575,6 +577,10 @@ def get_work_with_comment_on_date_fieldname():
 #----------------------------------------------------------------------------------------------
 def get_manif_with_comment_on_date_fieldname():
   return 'ox_annotatesDate-manifestation'
+
+#----------------------------------------------------------------------------------------------
+def get_manif_with_comment_on_receipt_date_fieldname():
+  return 'ox_annotatesReceiptDate-manifestation'
 
 #----------------------------------------------------------------------------------------------
 def get_work_with_comment_on_author_fieldname():
