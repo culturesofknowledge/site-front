@@ -374,6 +374,7 @@
       <fieldType name="location" class="solr.LatLonType" subFieldSuffix="_coordinate" />
       <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"/>
 
+	  <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
  </types>
 
 
@@ -415,7 +416,8 @@
 <!--                                -->
 	 <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
+	 <field name="uuid"  type="uuid"  indexed="true"  stored="true"  required="true"  />
+	 <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
@@ -477,6 +479,7 @@
   <field name="ox_addresseeAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_addressee -->
   <field name="ox_authorAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
   <field name="ox_dateAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+	 <field name="ox_dateReceiptAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
   <field name="ox_agentsReferencedAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
 
   <field name="ox_originAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_origin -->

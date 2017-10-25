@@ -429,7 +429,7 @@
         form_field, parm_type = uri_field_to_form_field[ parm_name ]
         parm_decode_fieldname = h.get_main_displayable_fieldname( parm_type )
         parm_uuid = h.uuid_from_uri( parm_value, True )
-        dict_keyed_on_uuid = h.get_records_from_solr( parm_uuid, selected_fields = parm_decode_fieldname )
+        dict_keyed_on_uuid = h.get_records_from_solr( [parm_uuid], selected_fields = [parm_decode_fieldname] )
         if dict_keyed_on_uuid.has_key( parm_uuid ): #{
           if dict_keyed_on_uuid[ parm_uuid ].has_key( parm_decode_fieldname ): #{
             parm_name = form_field

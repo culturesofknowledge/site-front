@@ -443,7 +443,7 @@ def build_advanced_query( requests ): #{
       num_shopping_basket_fields = len( shopping_basket_fields[ browsing ] )
       values = []
       for uuid in uuids: #{
-        uri = uri_from_uuid( uuid )
+        uri = uri_from_uuid( uuid )  # TODO: 2017-10-25 ("Hi Mat!) - WTF is this doing? Why is it hitting solr multiple times??
         one_uri_values = [ uri ] * num_shopping_basket_fields
         values.extend( one_uri_values )
       #}
@@ -778,8 +778,7 @@ def image_url( current_url ): #{
    
 def get_records_from_solr( uids, selected_fields='*' ): #{
 
-   # You can pass in the 'uids' parameter as a string if you have a SINGLE uuid, 
-   # otherwise it has to be a list.
+   # You must pass in the 'uids' parameter as a list.
 
    # By default this function returns all fields, but optionally you can pass in 'selected_fields' 
    # as a comma-separated string or a list.
@@ -789,34 +788,14 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
 
    results = {}
    total = len( uids )
-   
+
+   print "I'm hitting solr for " + str(total) + " records..."
+
    if total > 0 :
 
-      # This function expects the parameter 'uids' to be a LIST. However, if a field was defined
-      # as non-multiValued in the Solr schema.xml, then instead a (Unicode) string seems to be
-      # returned. We need to convert this string into a list or the query will fail.
-
-      if type( uids ) == unicode or type( uids ) == str:
-         uids = [ uids ]
-
       # Make sure that list of selected fields includes 'id', which is essential.
-      if selected_fields != '*':  #{ 
-         id_field_is_in_list = False
-         one_field = ''
-         if type( selected_fields ) == unicode or type( selected_fields ) == str:  #{ 
-            split_on_comma = selected_fields.split( ',' )
-            selected_fields = []
-            for one_field in split_on_comma: #{
-               selected_fields.append( one_field.strip() )
-            #}
-         #}
-         for one_field in selected_fields: #{
-            if one_field == 'id':
-               id_field_is_in_list = True
-               break
-         #}
-         if not id_field_is_in_list:
-            selected_fields.append( 'id' )
+      if selected_fields != '*':  #{
+         selected_fields.append( 'id' )
       #}
 
       sol = solr.SolrConnection( solrconfig.solr_urls["all"] )
@@ -828,24 +807,19 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
       while total > count :
          ids=set()
          for uid in uids[count:count+limit]:
-            #if uid.find( "http://" ) != -1 :
-            #   # We have a uri # e.g. http://localhost/image/d462cab5-95af-4f0a-a327-cbfcb09b6bfc
-            #   uri_split = uid.split("/")
-            #   id = "uuid\:" + uuri_split[-1]
-            #else :
-            #   # we have an id (it might have "uuid" at the start already ) e.g. "uuid:d462cab5-95af-4f0a-a327-cbfcb09b6bfc" or "d462cab5-95af-4f0a-a327-cbfcb09b6bfc"
-            #   id_split = uid.split(':')
-            #   id = "uuid\:" + is_split[-1]
-            
+
             if uid != '':
-               id = "id:uuid_" + uid.split("/")[-1].split("_")[-1]
-               
+               # id = "id:uuid_" + uid.split("/")[-1].split("_")[-1]
+               # id = "uuid:" + uid.split("/")[-1].split("_")[-1]
+               id = uid.split("/")[-1].split("_")[-1]  # Divide up either http://localhost/person/{UUID} or uuid_{UUID}
+
                ids.add( id )
 
          ids_diff = ids.difference(ids_all)
-         q = " OR ".join(ids_diff)
+         # q = " OR ".join(ids_diff)
+         q = "uuid:(" + " ".join(ids_diff) + ")"
          
-         if q != '' :
+         if len(ids_diff) != 0 :
             res = sol.query( q, score=False, rows=len(ids_diff), start=0, fields=selected_fields )
          
             for result in res.results:
@@ -874,7 +848,7 @@ def profile_url_from_uri( uri_profile ): #{
 def uri_from_uuid( uuid ): #{
 
   uri = ''
-  results = get_records_from_solr( uuid, 'object_type' )
+  results = get_records_from_solr( [uuid], ['object_type'] )
 
   # 'Get records from solr' returns 2 dictionaries nested inside each other:
   # (1) keyed on UUID (2) keyed on fieldname
@@ -1417,7 +1391,7 @@ def sort_manifs_by_type( manif_uri_list ): #{
   # Initialise some variables
   manif_type_fieldname = get_manifestation_type_fieldname()
   uri_fieldname = get_uri_fieldname()
-  fields_to_get = "%s,%s" % (manif_type_fieldname, uri_fieldname)
+  fields_to_get = [manif_type_fieldname, uri_fieldname]
 
   manif_uuid_list = []
   sorted_list = []

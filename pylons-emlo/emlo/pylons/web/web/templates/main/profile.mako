@@ -1457,14 +1457,12 @@
   show_every_row = self.is_short_enough_to_show_every_row( work_uris )
 
   if show_every_row: #{ # get year, full date and description
-    fields_to_get = [ 'id', 
-                      h.get_start_year_fieldname(), 
+    fields_to_get = [ h.get_start_year_fieldname(),
                       'started_date_sort', 
                       h.get_main_displayable_fieldname( 'work' ) ]
   #}
   else:  #{ # get year only
-    fields_to_get = [ 'id', 
-                      h.get_end_year_fieldname(), 
+    fields_to_get = [ h.get_end_year_fieldname(),
                       h.get_start_year_fieldname() ]
   #}
   work_details = h.get_records_from_solr( work_uris, fields_to_get )
@@ -1557,7 +1555,7 @@
 
   if c.profile.has_key( h.get_repository_contents_fieldname() ): #{
     manifs = c.profile[ h.get_repository_contents_fieldname() ]
-    fields_to_get = [ 'id', h.get_relations_to_work_fieldname() ]
+    fields_to_get = [ h.get_relations_to_work_fieldname() ]
 
     response  = h.get_records_from_solr( manifs, fields_to_get )
 

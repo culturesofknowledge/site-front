@@ -372,6 +372,7 @@
        </analyzer>
     </fieldType>
 
+	  <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
 
  </types>
 
@@ -414,7 +415,8 @@
 <!--          -->
 	 <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
+	<field name="uuid"  type="uuid"  indexed="true"  stored="true"  required="true"  />
+	 <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
@@ -477,6 +479,7 @@
   <field name="ox_addresseeAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_addressee -->
   <field name="ox_authorAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
   <field name="ox_dateAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+	 <field name="ox_dateReceiptAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
   <field name="ox_agentsReferencedAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
   <field name="mail_recipient-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
   <field name="mail_origin-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
@@ -668,7 +671,8 @@
   <copyField source="ox_isAnnotatedBy-comment" dest="comments"/>
   <copyField source="ox_addresseeAnnotate-comment" dest="comments"/>
   <copyField source="ox_authorAnnotate-comment" dest="comments"/>
-  <copyField source="ox_dateAnnotate-comment" dest="comments"/>
+	<copyField source="ox_dateAnnotate-comment" dest="comments"/>
+	<copyField source="ox_dateReceiptAnnotate-comment" dest="comments"/>
 	<copyField source="ox_originAnnotate-comment" dest="comments"/>
 	<copyField source="ox_destinationAnnotate-comment" dest="comments"/>
   <copyField source="mail_origin-location" dest="locations"/>

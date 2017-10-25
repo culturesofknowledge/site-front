@@ -290,7 +290,7 @@
                    if shopping_item_count > i: #{
 
                      item_uuid = shopping_list[i]
-                     results = h.get_records_from_solr( item_uuid, main_displayable_fieldname )
+                     results = h.get_records_from_solr( [item_uuid], [main_displayable_fieldname] )
 
                      # Results come back as two dictionaries nested inside each other.
                      # The outer dictionary is keyed on uuid, the inner one on fieldname

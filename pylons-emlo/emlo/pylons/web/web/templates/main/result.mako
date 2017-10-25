@@ -30,7 +30,7 @@
 		ul.pagination li a {
 			color:black;
 		}
-		
+
 	</style>
 </%def>
 
@@ -106,11 +106,11 @@
               object_type = ''
 
               ## They will all be of the same object type, so find out fieldname for decoding.
-              dict = h.get_records_from_solr( uuids[0], 'object_type' )
+              dict = h.get_records_from_solr( [uuids[0]], ['object_type'] )
               for keyval, datavalues in dict.items(): #{
                 object_type = datavalues[ 'object_type' ]
               #}
-              main_displayable_fieldname = h.get_main_displayable_fieldname( object_type )
+              main_displayable_fieldname = [h.get_main_displayable_fieldname( object_type )]
 
               dict = h.get_records_from_solr( uuids, main_displayable_fieldname )
               one_decode = ''
@@ -227,7 +227,7 @@
   #}
   %>
 
-  % if len(counts) > 0 : 
+  % if len(counts) > 0 :
     <h4>
     ## Heading like 'Author', 'Destination' etc.
     ${tran.translate(facet)}
@@ -238,7 +238,7 @@
     sorted_tups = sorted( counts.items(), key=lambda count : count[1], reverse=True )
     %>
 
-    ## Show the list of highest-scoring authors, destinations etc 
+    ## Show the list of highest-scoring authors, destinations etc
     ## and allow them to be added to the query.
     <table class="facet">
     % for item, count in sorted_tups :
@@ -256,7 +256,7 @@
       if field_to_search_on == 'object_type':
         decode = tran.translate( decode )
 
-      value_to_search_for = item           
+      value_to_search_for = item
       if decode == None or decode == '' : #{
         decode = "Unknown"
 
@@ -310,7 +310,7 @@
     % endif
     ${self.change_sort_order_script()}
     </span>
-      
+
     ## Write out pagination buttons
     % if int(records_found) > int(records_per_page):
       ${pag.pagination( c.query['baseurl'], c.query['fields'], c.solr['numFound'], \
@@ -380,12 +380,12 @@
   display_object_type = tran.translate( object_type )
 
   # Get name of the field that provides the best summary of the record, e.g. for work, use Description
-  main_displayable_fieldname = h.get_main_displayable_fieldname( object_type ) 
+  main_displayable_fieldname = h.get_main_displayable_fieldname( object_type )
 
   # Start with one column for 'quick' search, then later get further details in another column,
   # because 'quick' search retrieves a mixture of object types so we must work out what to display.
 
-  collist = fields.get_columns_for_result_list( object_type )  
+  collist = fields.get_columns_for_result_list( object_type )
   colvalue = ''
 
   further_details_fields = fields.get_additional_fields( object_type )
@@ -394,7 +394,7 @@
   # Make a URL linking to the record you are displaying
   #----------------------------------------------------
   uuid = item['uuid']
-  link_to_record = '/profile/' + object_type + '/' + uuid 
+  link_to_record = '/profile/' + object_type + '/' + uuid
 
   item_to_flag = item  # later we display flags showing if a letter has an abstract, images etc.
   related_item = {}
@@ -417,7 +417,7 @@
       ## Overwrite the original 'link to record' variable
       link_to_record = h.profile_url_from_uri( related_object_uri )
       display_object_type = tran.translate( relationship )
-    
+
       related_item = h.get_item_from_uri( related_object_uri )
       if related_item.has_key( 'object_type' ): #{
         related_object_type = related_item[ 'object_type' ]
@@ -441,14 +441,14 @@
 
   ${self.link_to_profile_column( current_row, link_to_record, display_object_type )}
 
-  
-  ## 'Quick' search returns a mixture of different object types (e.g. comments, people, works), so we 
+
+  ## 'Quick' search returns a mixture of different object types (e.g. comments, people, works), so we
   ## need to work out dynamically what should appear in 'Brief details' and what in 'Further details'.
 
   ##=================== 'Brief details' column ===================
   <td class="normalcell">
   ## MMK/MW added this first IF statement (remove later), email from James, Hartlib issue
-  ##%if item['object_type']!='image': 
+  ##%if item['object_type']!='image':
       % if item.has_key( main_displayable_fieldname ) :
         <% colvalue = item[ main_displayable_fieldname ] %>
 
@@ -480,7 +480,7 @@
   ##================ 'Further details' column ======================
   <td class="normalcell">
   ## MMK/MW added this first IF statement (remove later), email from James, Hartlib issue
-  ##%if item['object_type']!='image': 
+  ##%if item['object_type']!='image':
       % for label, fieldname in further_details_fields.iteritems() :
         % if item.has_key( fieldname ) :
           <%
@@ -528,14 +528,14 @@
   #--------------------------------------------------
   # Work out which fields/columns you want to display
   #--------------------------------------------------
-  collist = fields.get_columns_for_result_list( object_type )  
+  collist = fields.get_columns_for_result_list( object_type )
   colvalue = ''
 
   #----------------------------------------------------
   # Make a URL linking to the record you are displaying
   #----------------------------------------------------
   uuid = item['uuid']
-  link_to_record = '/profile/' + object_type + '/' + uuid 
+  link_to_record = '/profile/' + object_type + '/' + uuid
   %>
 
   ##=================== Rowcount column  ===================
@@ -560,7 +560,7 @@
         ${ colvalue }
       % endif
     % endif
-    </td>  
+    </td>
   % endfor
 
   ##============ Display repositories/shelfmarks (need to look these up now) ============
@@ -569,7 +569,7 @@
     <% repos_details = self.get_repos_and_shelfmarks_from_work( item ) %>
     % for repos_and_shelfmark in repos_details:
       % if len( repos_details ) > 1:
-        &bull; 
+        &bull;
       % endif
       ${repos_and_shelfmark}
       <br>
@@ -608,19 +608,19 @@
 
   if item.has_key( start_day_fieldname ) :
     start_dates.append( str( item[ start_day_fieldname ] ) )
-    
+
   if item.has_key( start_month_fieldname ) :
     start_dates.append( months[ int( item[ start_month_fieldname ] )-1 ] )
-    
+
   if item.has_key( start_year_fieldname ) :
     start_dates.append( str( item[ start_year_fieldname ] ) )
 
   if item.has_key( end_day_fieldname ) :
     end_dates.append( str( item[ end_day_fieldname ] ) )
-    
+
   if item.has_key( end_month_fieldname ) :
     end_dates.append( months[ int( item[ end_month_fieldname ] )-1 ] )
-    
+
   if item.has_key( end_year_fieldname ) :
     end_dates.append( str( item[ end_year_fieldname ] ) )
 
@@ -702,7 +702,11 @@
       # Function "get_records_from_solr()" expects a LIST of UUIDs to be passed in
       # and returns a DICTIONARY (keyed on UUID) of DICTIONARIES (keyed on fieldname)
 
-      manif_dict = h.get_records_from_solr( manif_uuids )
+      if not isinstance(manif_uuids, list) :
+        manif_dict = h.get_records_from_solr( [manif_uuids] )
+      else :
+        manif_dict = h.get_records_from_solr( manif_uuids )
+
       manif_key_value_pairs = manif_dict.items()
 
       for manif_key, manif_record in manif_key_value_pairs:
@@ -713,7 +717,10 @@
 
           img_uuids = manif_record[ image_relations_fieldname ]
           if len( img_uuids ) > 0:
-            img_dict = h.get_records_from_solr( img_uuids ) # returns a DICTIONARY of dictionaries
+            if not isinstance(manif_uuids, list) :
+              img_dict = h.get_records_from_solr( [img_uuids] ) # returns a DICTIONARY of dictionaries
+            else :
+              img_dict = h.get_records_from_solr( img_uuids ) # returns a DICTIONARY of dictionaries
 
             # Convert to a LIST of dictionaries, as this is what the 'sort_images()' method wants.
             img_list_random = [ datafields for keyfield, datafields in img_dict.iteritems() ]
@@ -752,12 +759,18 @@
     # Function "get_records_from_solr()" expects a LIST of URIs or UUIDs to be passed in
     # and returns a DICTIONARY (keyed on UUID) of DICTIONARIES (keyed on fieldname)
 
-    fields_to_get = "%s,%s,%s" % (h.get_manifestation_type_fieldname(), \
-                                  h.get_repository_fieldname(), \
-                                  h.get_shelfmark_fieldname())
-    manif_uuid_dict = h.get_records_from_solr( manif_uris, fields_to_get )
+    fields_to_get = [
+      h.get_manifestation_type_fieldname(),
+      h.get_repository_fieldname(),
+      h.get_shelfmark_fieldname()
+    ]
 
-    fields_to_get = h.get_repository_name_fieldname()
+    if not isinstance(manif_uris, list) :
+       manif_uuid_dict = h.get_records_from_solr( [manif_uris], fields_to_get )
+    else :
+       manif_uuid_dict = h.get_records_from_solr( manif_uris, fields_to_get )
+
+    fields_to_get = [h.get_repository_name_fieldname()]
 
     num_printed_eds = 0
 
@@ -768,7 +781,7 @@
       document_type = ""
 
       if manif_field_dict.has_key( h.get_manifestation_type_fieldname() ): #{
-        document_type = manif_field_dict[ h.get_manifestation_type_fieldname() ] 
+        document_type = manif_field_dict[ h.get_manifestation_type_fieldname() ]
       #}
 
       if manif_field_dict.has_key( h.get_shelfmark_fieldname() ): #{
@@ -781,7 +794,10 @@
 
         if len( repos_uri_list ) > 0: #{ # defined as multi-valued in schema, but single-valued in practice
 
-          repos_uuid_dict = h.get_records_from_solr( repos_uri_list, fields_to_get )
+          if not isinstance(repos_uri_list, list) :
+             repos_uuid_dict = h.get_records_from_solr( [repos_uri_list], fields_to_get )
+          else :
+	         repos_uuid_dict = h.get_records_from_solr( repos_uri_list, fields_to_get )
 
           for repos_uuid, repos_field_dict in repos_uuid_dict.items(): #{
             repos_name = ""
@@ -817,9 +833,9 @@
         repos_details.append( document_location_string )
       #}
     #}
-    if num_printed_eds > 1: 
+    if num_printed_eds > 1:
       repos_details.append( "%d printed editions" % num_printed_eds )
-    elif num_printed_eds == 1: 
+    elif num_printed_eds == 1:
       repos_details.append( "1 printed edition" )
   #}
 
@@ -834,10 +850,10 @@
 ##{
 
   <h3 class="burgundy">
-  <span class="font-18"> 
+  <span class="font-18">
 
   % if c.solr['numFound'] == 1:
-    One result found. 
+    One result found.
   % elif c.solr['numFound'] > 1:
 	<%
     multipage = False
@@ -845,12 +861,12 @@
       multipage = True
 	%>
 		% if multipage  :
-	    ${records_found} results (${records_per_page} results per page) 
+	    ${records_found} results (${records_per_page} results per page)
 		% else :
-			${records_found} results 
+			${records_found} results
 		% endif
   % endif
- 
+
   </span>
 
   <br><br><div data-alert class="alert-box secondary radius">
@@ -868,7 +884,7 @@
   <form name="noname" id="noname">
     <label>Sort</label>
     <%
-    sorts = [ ('date-a',"Date Ascending"), 
+    sorts = [ ('date-a',"Date Ascending"),
               ("date-d", "Date Descending"),
               ("author-a", "Author Ascending"),
               ("author-d", "Author Descending"),
@@ -945,7 +961,7 @@
   <th class="textright">Where found</th>
 
   ## The following empty column is for the 'has image', 'has abstract' flags
-  <th class="textleft"> 
+  <th class="textleft">
   </th>
 ##}
 </%def>
@@ -982,7 +998,7 @@
   % endif
 
   ## The following empty column is for the 'has image', 'has abstract' flags
-  <th class="textleft"> 
+  <th class="textleft">
   </th>
 ##}
 </%def>
@@ -993,10 +1009,10 @@
 ##{
   <td class="normalcell">
 
-  <% 
-  current_index = str( int( current_row ) - 1 ) 
-  total_records_found = str( c.solr['numFound'] ) 
-  query_string = h.remember_orig_query( c.query, current_index, total_records_found ) 
+  <%
+  current_index = str( int( current_row ) - 1 )
+  total_records_found = str( c.solr['numFound'] )
+  query_string = h.remember_orig_query( c.query, current_index, total_records_found )
   %>
 
   <a href="${link_to_record}${query_string}" class="bold">
@@ -1014,8 +1030,8 @@
   <td>
   ## MMK/MW added this first IF statement (remove later), email from James, Hartlib issue
 
-  ##%if item['object_type']!='image': 
-  
+  ##%if item['object_type']!='image':
+
       %if highlights and highlights.has_key( item['id'] ) :
         % for highlight_field, value_list in highlights[item['id']].iteritems() :
           <%
@@ -1034,7 +1050,7 @@
           % endfor
         % endfor
       %endif
-  
+
   ##%endif
   </td>
 ##}

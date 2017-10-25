@@ -385,7 +385,7 @@ class ProfileController(BaseController):
           further_relations = dict(further_relations)
           further_relations_data  = {}
           for relation, uris in further_relations.iteritems():
-             results = get_records_from_solr( uris )
+             results = get_records_from_solr( uris )  # TODO: Take this out of the GOD DAMN FOR LOOP!!!
              further_relations_data[relation] = results
             
           #print '--------------- further relations ---------------'

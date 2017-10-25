@@ -338,7 +338,8 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     #     })
 
                     solr_item = {
-                        "sid" : record_count,
+                        "uuid" : uid,
+                        "uri" : "//emlo.bodleian.ox.ac.uk/" + uid,
                         "object_type" : singular,
                         date_added_name : now
                     }
