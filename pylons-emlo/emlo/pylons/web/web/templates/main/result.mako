@@ -110,9 +110,9 @@
               for keyval, datavalues in dict.items(): #{
                 object_type = datavalues[ 'object_type' ]
               #}
-              main_displayable_fieldname = [h.get_main_displayable_fieldname( object_type )]
+              main_displayable_fieldname = h.get_main_displayable_fieldname( object_type )
 
-              dict = h.get_records_from_solr( uuids, main_displayable_fieldname )
+              dict = h.get_records_from_solr( uuids, [main_displayable_fieldname] )
               one_decode = ''
               for keyval, datavalues in dict.items(): #{
                 one_decode = datavalues[ main_displayable_fieldname ]
