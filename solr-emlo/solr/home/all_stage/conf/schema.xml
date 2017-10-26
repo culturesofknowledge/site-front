@@ -518,6 +518,7 @@
   <field name="ox_annotatesAuthor-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
   <field name="ox_annotatesDate-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
   <field name="ox_annotatesDate-manifestation"  type="string"  indexed="false"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+	 <field name="ox_annotatesReceiptDate-manifestation"  type="string"  indexed="false"  stored="true"  multiValued="true"  /> <!-- type-refers_to_receipt_date -->
   <field name="ox_annotatesAgentsReferenced-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
 
 <!-- end CofK: links from comments -->
