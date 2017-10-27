@@ -195,14 +195,14 @@ class BrowseController(BaseController):
 
     link_details = self.get_browse_link_details( 'works' )
 
-    c.browse = self.browse( q, 'works', display_fields, link_details )
+    c.browse = self.browse( q, 'works', display_fields, link_details, sortfield='started_date_sort asc' )
     c.browsing = "works"
 
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
 
-  def browse(self, q, object, display_fields, link_details):
+  def browse(self, q, object, display_fields, link_details, sortfield = 'browse asc'):
 
 
     # Tell Solr to return the URI identifying the record, e.g. the person URI if you're browsing people.
@@ -223,26 +223,18 @@ class BrowseController(BaseController):
     # Tell Solr to return related resources
     fields.append( get_relations_to_resource_fieldname() )
 
-    # What are we going to do about names that start with letters containing an accent??? -
+    # TODO: What are we going to do about names that start with letters containing an accent??? -
     # e.g. Ile de France (there should be a circumflex over that I). No option for I-circumflex on list.
     # Can we strip off the accent before setting up the 'browse' field on import? Think about this one.
 
-    # Decide what to sort on
-    if object == 'works':
-      sortfield = 'started_date_sort asc'
-    else:
-      sortfield = 'browse asc'
 
-
-    # Connect to the relevant Solr core
     sol = solr.SolrConnection( solrconfig.solr_urls[object] )
-
-    # Get the data from Solr
-    sol_response = sol.query( q.encode( 'utf-8' ), \
-                   score=False, fields=fields, rows=999999999, start=0, sort=sortfield )  
-
+    sol_response = sol.query( q.encode( 'utf-8' ),
+                   score=False, fields=fields, rows=999999999, start=0, sort=sortfield )
     sol.close()
-    
+
+
+
     # Transfer the data from the Solr response into the results list
     results = []
     for result in sol_response.results : #{
@@ -303,14 +295,13 @@ class BrowseController(BaseController):
         for resource_uri in result[ get_relations_to_resource_fieldname() ]: #{
           resource_uuids.append( uuid_from_uri( resource_uri, True ) )
         #}
-        resource_results = get_records_from_solr( resource_uuids,
-                                                  selected_fields=[ get_resource_title_fieldname(),
-                                                                    get_resource_url_fieldname(),
-                                                                    get_resource_details_fieldname() ] )
+        resource_results = {} #get_records_from_solr( resource_uuids,  ## TODO : REMOVE FROM INSIDE LOOPP!!!!!!!!!!!!!!
+                               #                   selected_fields=[ get_resource_title_fieldname(),
+                                #                                    get_resource_url_fieldname(),
+                                 #                                   get_resource_details_fieldname() ] )
         for resource_key, resource_dict in resource_results.iteritems(): #{
           resource_fields.append( resource_dict )
-        #}
-      #}
+
 
       results.append( { 'main_displayable_field': result[ main_displayable_fieldname ], 
                         'main_displayable_fieldname':  main_displayable_fieldname, 
