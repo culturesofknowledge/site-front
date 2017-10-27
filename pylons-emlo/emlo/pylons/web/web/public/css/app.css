@@ -52,7 +52,6 @@ textarea {
 
 .content .content ul {
 	list-style:none;
-
 }
 
 .worklegend .workicon {
@@ -67,3 +66,8 @@ textarea {
     color: #888;
 }
 
+ul.pagination li {
+	width: 60px;
+	border-radius: 2px;
+	text-align: center;
+}
