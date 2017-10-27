@@ -848,22 +848,20 @@
 </%def>
 #------------------------------------------------------------------------------------------------------
 
-<%def name="further_relations( field, listall=False )">
+<%def name="further_relations( field, listall=False, style='', link=True )">
 
   <%
-  if not c.further_relations:
-    return
-  elif len( c.further_relations ) == 0:
+  if not c.further_relations or len( c.further_relations ) == 0:
     return
   %>
 
   % if field in c.further_relations :
     % if 'image' in field :
       <% 
-      self.display_images( field, listall )
+        self.display_images( field, listall )
       %>
 
-    % else :  # not an image
+    % else :
       <ul>
       % for obj in c.further_relations[field].values():
         <%
@@ -875,7 +873,13 @@
         uri = obj[ uri_fieldname ]
         url = h.profile_url_from_uri( uri )
         %>
-        <li><a href="${url}">${display}</a></li> 
+        <li style="${style}">
+			%if link:
+			    <a href="${url}">${display}</a>
+			% else :
+				${display}
+			% endif
+		</li>
       % endfor
       </ul>
     % endif
