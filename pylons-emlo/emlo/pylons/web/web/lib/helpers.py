@@ -787,48 +787,36 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
    # The outer dictionary is keyed on uuid, the inner one on fieldname.
 
    results = {}
-   total = len( uids )
 
-   print "I'm hitting solr for " + str(total) + " records..."
+   uuids_ids = []
+   for uid in uids:
+      if uid != '':
+         uuids_ids.append( uid.split("/")[-1].split("_")[-1] ) # Divide up either http://localhost/person/{UUID} or uuid_{UUID}
 
+   uuids_ids = {}.fromkeys(uuids_ids).keys()
+
+   total = len( uuids_ids )
    if total > 0 :
+      print "I'm hitting solr for " + str(total) + " records..."
 
       # Make sure that list of selected fields includes 'id', which is essential.
-      if selected_fields != '*':  #{
+      if selected_fields != '*':
          selected_fields.append( 'id' )
-      #}
 
       sol = solr.SolrConnection( solrconfig.solr_urls["all"] )
-      
-      ids_all=set()
+
       limit = 100
       count = 0
    
       while total > count :
-         ids=set()
-         for uid in uids[count:count+limit]:
 
-            if uid != '':
-               # id = "id:uuid_" + uid.split("/")[-1].split("_")[-1]
-               # id = "uuid:" + uid.split("/")[-1].split("_")[-1]
-               id = uid.split("/")[-1].split("_")[-1]  # Divide up either http://localhost/person/{UUID} or uuid_{UUID}
+        res = sol.query( "uuid:(" + " ".join(uuids_ids[count:count+limit]) + ")",
+                         score=False, rows=limit, start=0, fields=selected_fields )
 
-               ids.add( id )
+        for result in res.results:
+           results[result['id']] = result
 
-         ids_diff = ids.difference(ids_all)
-         # q = " OR ".join(ids_diff)
-         q = "uuid:(" + " ".join(ids_diff) + ")"
-         
-         if len(ids_diff) != 0 :
-            res = sol.query( q, score=False, rows=len(ids_diff), start=0, fields=selected_fields )
-         
-            for result in res.results:
-               results[result['id']] = result
-         
-         for id in ids_diff :
-            ids_all.add( id )
-            
-         count += limit
+        count += limit
       
       sol.close()
 
