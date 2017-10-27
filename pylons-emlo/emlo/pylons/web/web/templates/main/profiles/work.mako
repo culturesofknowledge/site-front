@@ -337,9 +337,17 @@
 
 		<div class="workspacing content">
 			<h4>Versions (originals, copies, digital, etc.)</h4>
+
+
 			${self.detailed_relations(h.get_relations_to_manifestation_fieldname())}
 			##${self.h4_relations_list( h.get_relations_to_manifestation_fieldname(), type='detailed' )}
 
+			<span style="color:#172854;">Notes on the date:</span>
+				${self.further_relations( h.get_relations_to_comments_on_date_fieldname(), style="list-style:none", link=False )}
+			<br/>
+
+			<span style="color:#172854;">Notes on the date of receipt:</span>
+				${self.further_relations( h.get_relations_to_comments_on_receipt_date_fieldname(), style="list-style:none", link=False )}
 			<br/>
 		</div><!-- class:workspacing  content -->
 	  </div>
@@ -396,6 +404,7 @@
 
               ${self.h4_relations_list( h.get_relations_to_comments_on_receipt_date_fieldname(),
                                         title="Comments about the Receipt Date", type='simple' )}
+
 			</div><!-- class:workspacing  content -->
 		  </div>
 	% endif
