@@ -68,12 +68,6 @@
 		shopping_list = []
 		shopping_item_count = 0
 
-		person_count   = self.get_display_total_for( 'person' )
-		location_count = self.get_display_total_for( 'location' )
-		org_count      = self.get_display_total_for( 'organisation' )
-		repo_count     = self.get_display_total_for( 'institution' )
-		year_count     = self.get_display_total_for( 'year' )
-
 		object_type = 'person'
 
 		if c.browsing == 'locations' :
@@ -86,11 +80,11 @@
 			shopping_basket_enabled = False
 
 		browse_data = [
-			{ 'browse' : 'people', 'label' : 'People', 'count' : person_count, 'image' : 'icon-stats-people.png' },
-			{ 'browse' : 'locations', 'label' : 'Locations', 'count' : location_count, 'image' : 'icon-stats-locations.png' },
-			{ 'browse' : 'organisations', 'label' : 'Organizations', 'count' : org_count, 'image' : 'icon-stats-organisations.png' },
-			{ 'browse' : 'institutions', 'label' : 'Repositories', 'count' : repo_count, 'image' : 'icon-stats-repositories.png' },
-			{ 'browse' : 'works', 'label' : 'Years', 'count' : year_count, 'image' : 'icon-stats-calendar.png' }
+			{ 'browse' : 'people', 'label' : 'People', 'image' : 'icon-stats-people.png' },
+			{ 'browse' : 'locations', 'label' : 'Locations',  'image' : 'icon-stats-locations.png' },
+			{ 'browse' : 'organisations', 'label' : 'Organizations', 'image' : 'icon-stats-organisations.png' },
+			{ 'browse' : 'institutions', 'label' : 'Repositories',  'image' : 'icon-stats-repositories.png' },
+			{ 'browse' : 'works', 'label' : 'Years', 'image' : 'icon-stats-calendar.png' }
 		]
 
 
@@ -118,7 +112,7 @@
 						% else:
 <li class="stats-text text-center"><a href="/browse/${data['browse']}">
 						% endif
-<img src="/img/${data['image']}" alt="${data['label']} icon" class="stats-icon"/><br/>${data['count']}<br/>${data['label']}</a></li>
+<img src="/img/${data['image']}" alt="${data['label']} icon" class="stats-icon"/><br/>${data['label']}</a></li>
 
 					% endfor
 				</ul>

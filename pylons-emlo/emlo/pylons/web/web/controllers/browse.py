@@ -25,8 +25,7 @@ class BrowseController(BaseController):
   def index(self):
     c.browse = None
     c.browsing = 'browse'
-    
-    self.set_object_type_stats()
+
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
@@ -126,10 +125,9 @@ class BrowseController(BaseController):
 
     link_details = self.get_browse_link_details( 'people' )
 
-    c.browse = self.browse( q, 'people', display_fields, link_details, 'a' )
+    c.browse = self.browse( q, 'people', display_fields, link_details )
     c.browsing = "people"
-    
-    self.set_object_type_stats()
+
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
@@ -137,16 +135,15 @@ class BrowseController(BaseController):
   def locations(self):
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
-    q = "browse:%s*"% (letter)
+    q = "browse:%s*" % letter
     
     display_fields = self.get_browse_display_fields( 'locations' )
 
     link_details = self.get_browse_link_details( 'locations' )
 
-    c.browse = self.browse( q, 'locations', display_fields, link_details, 'a' )
+    c.browse = self.browse( q, 'locations', display_fields, link_details )
     c.browsing = "locations"
-    
-    self.set_object_type_stats()
+
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
@@ -161,10 +158,9 @@ class BrowseController(BaseController):
 
     link_details = self.get_browse_link_details( 'organisations' )
 
-    c.browse = self.browse( q, 'people', display_fields, link_details, 'a' )
+    c.browse = self.browse( q, 'people', display_fields, link_details )
     c.browsing = "organisations"
-    
-    self.set_object_type_stats()
+
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
@@ -178,10 +174,9 @@ class BrowseController(BaseController):
 
     link_details = self.get_browse_link_details( 'institutions' )
 
-    c.browse = self.browse( q, 'institutions', display_fields, link_details, 'a' )
+    c.browse = self.browse( q, 'institutions', display_fields, link_details )
     c.browsing = "institutions"
-    
-    self.set_object_type_stats()
+
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
@@ -200,15 +195,14 @@ class BrowseController(BaseController):
 
     link_details = self.get_browse_link_details( 'works' )
 
-    c.browse = self.browse( q, 'works', display_fields, link_details, default_year )
+    c.browse = self.browse( q, 'works', display_fields, link_details )
     c.browsing = "works"
-    
-    self.set_object_type_stats()
+
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
 
-  def browse(self, q, object, display_fields, link_details, letter):  #{
+  def browse(self, q, object, display_fields, link_details):
 
 
     # Tell Solr to return the URI identifying the record, e.g. the person URI if you're browsing people.
@@ -328,88 +322,3 @@ class BrowseController(BaseController):
     #}
 
     return results
-#}
-##-----------------------------------------------------------------------------
-
-  def set_object_type_stats( self ):  #{
-
-    c.stats = {}
-
-    #--------------------------------------------------------
-    # Get main stats (split up person vs. organisation later)
-    #--------------------------------------------------------
-    sol_all = solr.SolrConnection( solrconfig.solr_urls["all"] )
-
-    sol_response_all = sol_all.query( "*:*", rows = 0,  fl = "-", score = False, \
-                                      facet = 'true', facet_field = 'object_type' )
-
-    object_type_facets = sol_response_all.facet_counts['facet_fields']['object_type']
-    sol_all.close()
-
-
-    for object_type, num in object_type_facets.iteritems(): #{
-      c.stats[ object_type ] = num
-      #print 'object type ', object_type, ' = ', num
-    #}
-        
-
-    #--------------------------------------------------------
-    # Get stats for person vs. organisation
-    #--------------------------------------------------------
-    sol_people = solr.SolrConnection( solrconfig.solr_urls["people"] )
-
-    sol_people_response = sol_people.query( get_works_created_fieldname() + ":[* TO *] OR " + get_letters_received_fieldname() + ":[* TO *] OR " + get_works_in_which_mentioned_fieldname() + ":[* TO *]", rows=0,  fl="-", score=False, \
-                                            facet='true', facet_field=get_is_organisation_fieldname())
-
-    is_org_facets = sol_people_response.facet_counts['facet_fields'][get_is_organisation_fieldname()]
-    sol_people.close()
-
-    person_count = 0
-    org_count = 0
-
-    for is_org, num in is_org_facets.iteritems(): #{
-      if is_org == 'true' :
-        org_count = num
-      else:
-        person_count = num
-      #print 'Is organisation? ', is_org, ' = ', num
-    #}
-        
-    c.stats[ 'person' ] = person_count
-    c.stats[ 'organisation' ] = org_count
-
-    #--------------------------------------------------------
-    # Get stats for years of date of work
-    #--------------------------------------------------------
-    #start_year_fieldname = get_start_year_fieldname()
-    #end_year_fieldname = get_end_year_fieldname()
-
-    #sol_works = solr.SolrConnection( solrconfig.solr_urls["works"] )
-
-    # Facets by start year
-    #sol_works_response = sol_works.query( "%s:*" % escape_colons( start_year_fieldname ), \
-    #                                      rows=0,  fl="-", score=False, \
-    #                                      facet='true', facet_limit=-1, facet_field=start_year_fieldname )
-    #start_year_facets = sol_works_response.facet_counts['facet_fields'][start_year_fieldname]
-
-    # Facets by end year
-    #sol_works_response = sol_works.query( "%s:*" % escape_colons( end_year_fieldname ), \
-    #                                      rows=0,  fl="-", score=False, \
-    #                                      facet='true', facet_limit=-1, facet_field=end_year_fieldname )
-    #end_year_facets = sol_works_response.facet_counts['facet_fields'][end_year_fieldname]
-
-    #sol_works.close()
-
-    # Combine the two sets of year facets: get number of unique years
-    #start_year_count = len( start_year_facets )
-    #end_year_count = 0
-
-    #for end_year, num in end_year_facets.iteritems(): #{
-    #  if not start_year_facets.has_key( end_year ): #{
-    #    end_year_count += 1
-    #  #}
-    ##}
-
-    c.stats[ 'year' ] = 300 # start_year_count + end_year_count
-#}
-##-----------------------------------------------------------------------------
