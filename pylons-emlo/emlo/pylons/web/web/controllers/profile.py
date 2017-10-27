@@ -271,10 +271,13 @@ class ProfileController(BaseController):
       field_for_search_on_redirect = ''
       profile_too_big = False
 
+      fields='*'
+
       if object == 'institution': #{
          check_number_of_works = True
          check_field = get_total_docs_in_repos_fieldname()
          field_for_search_on_redirect = get_main_displayable_fieldname( object )
+         fields="*,ox_hasResource-manifestation:[value v=\"\"]"
       #}
 
       
@@ -287,25 +290,25 @@ class ProfileController(BaseController):
  
          if this_profile[ check_field ] > get_max_relations_for_profile( object ):
             profile_too_big = True
-      #}
+
+
+
+      sol_response = sol.query( "id:" + escaped_id_value, fields=fields, score=False, rows=1, start=0)
+      if len(sol_response.results) == 0:
+         c.tinyurl=''
+         return None, [], {}, '/main/profiles/person.mako'
+
+      this_profile = sol_response.results[0]
+      this_profile["profile_too_big"] = profile_too_big
 
       if profile_too_big: #{
          # Don't get any more data, as things will grind to a halt.
          relations = []
          further_relations = {}
          c.tinyurl = 'None'
-      #}
 
       else: #{
          # Proceed to populate fields as normal
-
-         sol_response = sol.query( "id:" + escaped_id_value, score=False, rows=1, start=0)
-         if len(sol_response.results) == 0:
-            c.tinyurl=''
-            return None, [], {}, '/main/profiles/person.mako'
-
-         this_profile = sol_response.results[0]
-        
          relation_fields = web.lib.relations.object_relation_fields[object]
         
          relations = []
@@ -333,31 +336,31 @@ class ProfileController(BaseController):
          relations = get_records_from_solr( relations )
          further_relations = self.further_relations(relations, object)
 
-         # Get Tinyurl
-         try:
-            t = Tinyurl()
-            path = url(controller='profile', action=solr_name, id=id)
-            path = path.lstrip('/')
-            page_url = "http://%s/%s" % (config['base_url'], path)
-            tinyurl = t.get(page_url)
-            c.tinyurl = tinyurl
-         except (ConnectionError, ServerNotFoundError):
-            # Tinyurl = DEAD
-            c.tinyurl = "Service not available"
+      # Get Tinyurl
+      try:
+         t = Tinyurl()
+         path = url(controller='profile', action=solr_name, id=id)
+         path = path.lstrip('/')
+         page_url = "http://%s/%s" % (config['base_url'], path)
+         tinyurl = t.get(page_url)
+         c.tinyurl = tinyurl
+      except (ConnectionError, ServerNotFoundError):
+         # Tinyurl = DEAD
+         c.tinyurl = "Service not available"
 
-         c.iidUrl = None
-         if object == 'person' :
-            c.iidUrl = "/p/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
-         elif object == 'work' :
-            c.iidUrl = "/w/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
-         elif object == 'location' :
-            c.iidUrl = "/l/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_location-','')
-         elif object == 'institution' :
-            c.iidUrl = "/r/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_institution-','')
+      c.iidUrl = None
+      if object == 'person' :
+         c.iidUrl = "/p/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
+      elif object == 'work' :
+         c.iidUrl = "/w/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
+      elif object == 'location' :
+         c.iidUrl = "/l/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_location-','')
+      elif object == 'institution' :
+         c.iidUrl = "/r/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_institution-','')
 
-         c.normalUrl = "/" + id
-         c.miniUrl = "/" + self._encodeTiny( id )
-      #}
+      c.normalUrl = "/" + id
+      c.miniUrl = "/" + self._encodeTiny( id )
+
 
       return this_profile, relations, further_relations, '/main/profiles/' + object + '.mako'
    #}
