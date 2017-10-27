@@ -528,8 +528,8 @@
 </%def>
 ##------------------------------------------------------------------------------------------
 
-<%def name="normal_checkbox( fieldname, title='', css_class='checkbox', value = 'true', onclick = '' )">
-<input id="${fieldname}" name="${fieldname}" value="${value}" class="${css_class}" type="checkbox" title="${title}" onclick="${onclick}" /><%
+<%def name="normal_checkbox( fieldname, title='', css_class='checkbox', value = 'true', onclick = '' )">\
+<input id="${fieldname}" value="${value}" class="${css_class}" type="checkbox" title="${title}" onclick="${onclick}"/><%
   ## See if they are trying to refine an existing search
   search_term = self.get_search_term( fieldname )
   self.set_checkbox_from_search_term( fieldname, search_term )
