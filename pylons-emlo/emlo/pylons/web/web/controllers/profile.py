@@ -277,7 +277,6 @@ class ProfileController(BaseController):
          check_number_of_works = True
          check_field = get_total_docs_in_repos_fieldname()
          field_for_search_on_redirect = get_main_displayable_fieldname( object )
-         fields="*,ox_hasResource-manifestation:[value v=\"\"]"
       #}
 
       
@@ -290,13 +289,13 @@ class ProfileController(BaseController):
  
          if this_profile[ check_field ] > get_max_relations_for_profile( object ):
             profile_too_big = True
-
+            fields="*,ox_hasResource-manifestation:[value v=\"\"]"
 
 
       sol_response = sol.query( "id:" + escaped_id_value, fields=fields, score=False, rows=1, start=0)
       if len(sol_response.results) == 0:
          c.tinyurl=''
-         return None, [], {}, '/main/profiles/person.mako'
+         return None, [], {}, '/main/profiles/person.mako'  # Just any old profile page
 
       this_profile = sol_response.results[0]
       this_profile["profile_too_big"] = profile_too_big
