@@ -1,0 +1,66 @@
+<!-- from https://bitbucket.org/akademy/webviews -->
+<html>
+<head>
+	<title></title>
+	<meta content="">
+	<style></style>
+</head>
+<body>
+<h1>WebViews</h1>
+<p>An example use of WebViews. iframes of various webpages. These all exist on the same domain as this page (which means I can access the content of the iframe).</p>
+<div id="views"></div>
+<p>The border of each view shows if it loaded correctly. There should be three green and one red on this page.</p>
+<ul>
+	<li>Green means load and check OK.</li>
+	<li>Yellow means something loaded correctly but I can't access the iFrame due to security restrictions.</li>
+	<li>Red means there was some error loading or that a check failed.</li>
+	<li>Blue is used when it is loading. (At the moment websites which timeout are also shown in blue)</li>
+</ul>
+
+<p>Here's another <a href="webviews-default-config.html">example</a>.</p>
+<p>If you like it, feel free to <a href="http://www.akademy.co.uk/me/donate.php">buy me a beer</a></p>
+</body>
+<foot>
+	<script src="/js/webviews.min.js" charset="utf-8"></script>
+	<script>
+		var config = {
+			element : document.getElementById("views"),
+			views : [
+				{
+					url: "/profile/work/5080aab6-fbda-464f-83ac-74948bccc5f9",
+					title : "Work",
+					textCheck: "20 Jan 1689: Chocqueel, Magdalena, fl. 1689 (London, England) to Dobbuis, Elisabeth, fl. 1689 (The Hague, South Holland, Netherlands)",
+					autoReload : 20
+				},
+				{
+					url: "/profile/person/43bfb50c-d7b8-488d-bcd9-6d1598130e99",
+					title : "Person",
+					textCheck: "Faber, Johann Matthaeus",
+					autoReload : 23
+				},
+				{
+					url: "/profile/location/e22610af-1960-457a-aa5e-25d2fae97c05",
+					title : "Place",
+					textCheck: "Stuttgart, Baden-Württemberg, (Swabian Imperial Circle) Germany, (Holy Roman Empire)",
+					autoReload : 27
+				},
+				{
+					url: "/profile/image/8b1b4c45-376c-4a14-90a5-420ac9b1b4ed",
+					title : "images",
+					textCheck: "2 Jan 1570: Coligny, Odet de, 1517-1571 to Beale, Robert, 1541-1601",
+					autoReload : 29
+				},
+				{
+					url: "/profile/institution/e3144b60-b415-4e28-9add-d6e248cae443",
+					title : "institution",
+					textCheck: "University of Aberdeen Library",
+					autoReload : 31
+
+				}
+			]
+		};
+		// akademy.webviews( );
+		akademy.webviews( config );
+	</script>
+</foot>
+</html>
