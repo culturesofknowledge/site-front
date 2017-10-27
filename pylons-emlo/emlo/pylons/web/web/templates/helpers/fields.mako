@@ -97,6 +97,8 @@
                             h.get_relations_to_comments_fieldname(),
                             h.get_handwritten_by_fieldname(),
                             h.get_manifestation_address_fieldname(),
+							h.get_incipit_fieldname(),
+							h.get_excipit_fieldname() ,
                             h.get_postage_mark_fieldname(),
                             h.get_endorsements_fieldname(),
                             h.get_enclosing_fieldname(),
@@ -124,7 +126,7 @@
                             h.get_manifestation_receipt_date_gregorian_fn(),
                             h.get_manifestation_receipt_date_inferred_fn(),
                             h.get_manifestation_receipt_date_uncertain_fn(),
-                            h.get_manifestation_receipt_date_approx_fn() ]
+                            h.get_manifestation_receipt_date_approx_fn()]
     #}
   #}
 
