@@ -3,296 +3,296 @@
 $(document).ready(function(){
 	"use strict";
 
-  var haveLetterCounts = $("#browsing .written, #browsing .received, #browsing .mentioned").length > 0;
+	var haveLetterCounts = $("#browsing .written, #browsing .received, #browsing .mentioned").length > 0;
 
 	if( haveLetterCounts ) {
 
-	var showGender = {
-			female : true, 
-			male : true,
-			unknown : true
-	};
+		var showGender = {
+				female : true,
+				male : true,
+				unknown : true
+		};
 
-	var showLetters = {
-			written : true,
-			received : true,
-			mentioned : true
-	};
-	var filterHiddenClass = "filter-hidden";
+		var showLetters = {
+				written : true,
+				received : true,
+				mentioned : true
+		};
+		var filterHiddenClass = "filter-hidden";
 
-	var filter = null;
-	if( window.location.search.indexOf("filters=") !== -1 ) {
-		    var params = window.location.search.split("&");
-        for( var i=0; i<params.length; i++ ) {
-          if( i === 0 ) {
-            params[i] = params[i].substring(1);
-          }
+		var filter = null;
+		if( window.location.search.indexOf("filters=") !== -1 ) {
+			    var params = window.location.search.split("&");
+	        for( var i=0; i<params.length; i++ ) {
+	          if( i === 0 ) {
+	            params[i] = params[i].substring(1);
+	          }
 
-          var param = params[i].split("=");
+	          var param = params[i].split("=");
 
-          if( param[0] === "filters" ) {
-            filter = param[1];
-          }
-        }
+	          if( param[0] === "filters" ) {
+	            filter = param[1];
+	          }
+	        }
 
-	}
-	else {
-		filter = getCookie("filters");
-		console.log("cookie");
-	}
-
-	if( filter ) {
-		showGender.female = filter.indexOf("fe") !== -1;
-		showGender.male = filter.indexOf("ma") !== -1;
-		showGender.unknown = filter.indexOf("un") !== -1;
-		showLetters.written = filter.indexOf("wr") !== -1;
-		showLetters.received = filter.indexOf("re") !== -1;
-		showLetters.mentioned = filter.indexOf("me") !== -1;
-	}
-
-	var haveGenders = $("#browsing .female,#browsing .male,#browsing .unknown").length > 0;
-
-	if( !haveGenders ) {
-		$("table#browsing tr").not(".written,.recieved,.mentioned").addClass(filterHiddenClass).hide(); // TODO: Fix at server, we shouldn't be selecting these objects
-		$("table#browsing tr").first().show(); // but show table headings
-	}
-
-	if( haveGenders || haveLetterCounts ) {
-
-		var locations = $("#browsing.locations").length > 0;
-
-		var html = `
-			<style>
-				#filters{text-align:center;}
-				#filters input[type="checkbox"] { vertical-align: sub; }
-				#filters span{padding: 0 21px 0 0;}	
-			</style>
-			<form style="display:none" id="filters">
-		`;
-
-		if( haveGenders ) {
-			html += `
-	      <input type="checkbox" ` + (showGender.female ? "checked" : "") + ` id="filter-female"/><label for="filter-female">Female</label>
-        <input type="checkbox" ` + (showGender.male ? "checked" : "") + ` id="filter-male"/><label for="filter-male">Male</label>
-        <input type="checkbox" ` + (showGender.unknown ? "checked" : "") + ` id="filter-unknown"/><label for="filter-unknown">Unknown</label>
-			`
+		}
+		else {
+			filter = getCookie("filters");
+			console.log("cookie");
 		}
 
-		if( haveGenders && haveLetterCounts ) {
-			html += '<span>|</span>';
+		if( filter ) {
+			showGender.female = filter.indexOf("fe") !== -1;
+			showGender.male = filter.indexOf("ma") !== -1;
+			showGender.unknown = filter.indexOf("un") !== -1;
+			showLetters.written = filter.indexOf("wr") !== -1;
+			showLetters.received = filter.indexOf("re") !== -1;
+			showLetters.mentioned = filter.indexOf("me") !== -1;
 		}
 
-		if( haveLetterCounts ) {
-			if( locations ) {
-        html += `
-          <input type="checkbox" ` + (showLetters.written ? "checked" : "") + ` id="filter-written"/><label for="filter-written">Sent from</label>
-          <input type="checkbox" ` + (showLetters.received ? "checked" : "") + ` id="filter-received"/><label for="filter-received">Sent to</label>
-          <input type="checkbox" ` + (showLetters.mentioned ? "checked" : "") + ` id="filter-mentioned"/><label for="filter-mentioned">Mentioned</label>
-        `;
-			}
-			else {
+		var haveGenders = $("#browsing .female,#browsing .male,#browsing .unknown").length > 0;
+
+		if( !haveGenders ) {
+			$("table#browsing tr").not(".written,.recieved,.mentioned").addClass(filterHiddenClass).hide(); // TODO: Fix at server, we shouldn't be selecting these objects
+			$("table#browsing tr").first().show(); // but show table headings
+		}
+
+		if( haveGenders || haveLetterCounts ) {
+
+			var locations = $("#browsing.locations").length > 0;
+
+			var html = `
+				<style>
+					#filters{text-align:center;}
+					#filters input[type="checkbox"] { vertical-align: sub; }
+					#filters span{padding: 0 21px 0 0;}	
+				</style>
+				<form style="display:none" id="filters">
+			`;
+
+			if( haveGenders ) {
 				html += `
-        	<input type="checkbox" ` + (showLetters.written? "checked" : "") + ` id="filter-written"/><label for="filter-written">Author</label>
-        	<input type="checkbox" ` + (showLetters.received ? "checked" : "") + ` id="filter-received"/><label for="filter-received">Recipient</label>
-        	<input type="checkbox" ` + (showLetters.mentioned ? "checked" : "") + ` id="filter-mentioned"/><label for="filter-mentioned">Mentioned</label>
-				`;
+		      <input type="checkbox" ` + (showGender.female ? "checked" : "") + ` id="filter-female"/><label for="filter-female">Female</label>
+	        <input type="checkbox" ` + (showGender.male ? "checked" : "") + ` id="filter-male"/><label for="filter-male">Male</label>
+	        <input type="checkbox" ` + (showGender.unknown ? "checked" : "") + ` id="filter-unknown"/><label for="filter-unknown">Unknown</label>
+				`
 			}
-		}
 
-		html += `
-			</form>
-		`;
+			if( haveGenders && haveLetterCounts ) {
+				html += '<span>|</span>';
+			}
 
-		$("div.pagination-centered").after(html);
-
-		html = `
-			<div id="filter-message"></div>
-		`;
-		$("table#browsing").after(html);
-
-		if( haveGenders ) {
-
-			$('#filter-female').click( function() {
-				showGender.female = !showGender.female;
-				letters();
-			});
-			$('#filter-male').click( function() {
-				showGender.male = !showGender.male;
-				letters();
-			});
-			$('#filter-unknown').click( function() {
-				showGender.unknown = !showGender.unknown;
-				letters();
-			});
-
-		}
-
-		if( haveLetterCounts ) {
-			$('#filter-written').click( function() {
-				showLetters.written = !showLetters.written;
-				letters();
-			});
-			$('#filter-received').click( function() {
-				showLetters.received = !showLetters.received;
-				letters();
-			});
-			$('#filter-mentioned').click( function() {
-				showLetters.mentioned = !showLetters.mentioned;
-				letters();
-			});
-		}
-
-		function locationChange() {
-			var path = window.location.pathname,
-					search = window.location.search,
-					newSearch = "";
-
-			var filterString = [];
-			showGender.female ? filterString.push("fe") : "";
-			showGender.male ? filterString.push("ma") : "";
-			showGender.unknown ? filterString.push("un") : "";
-			showLetters.written ? filterString.push("wr") : "";
-			showLetters.received ? filterString.push("re") : "";
-			showLetters.mentioned ? filterString.push("me") : "";
-			filterString = filterString.join(",");
-			
-			setCookie("filters",filterString, 2 );
-
-			if( search ) {
-				var params = search.split("&"), found = false;
-				for( var i=0; i<params.length; i++ ) {
-					if( i === 0 ) {
-						params[i] = params[i].substring(1);
-					}
-
-					var param = params[i].split("=")[0];
-
-					if( param === "filters" ) {
-						params[i] = "filters=" + filterString;
-						found = true;
-					}
-				}
-				if( !found ) {
-					newSearch = "?" + params.join("&") + "&filters=" + filterString;
+			if( haveLetterCounts ) {
+				if( locations ) {
+	        html += `
+	          <input type="checkbox" ` + (showLetters.written ? "checked" : "") + ` id="filter-written"/><label for="filter-written">Sent from</label>
+	          <input type="checkbox" ` + (showLetters.received ? "checked" : "") + ` id="filter-received"/><label for="filter-received">Sent to</label>
+	          <input type="checkbox" ` + (showLetters.mentioned ? "checked" : "") + ` id="filter-mentioned"/><label for="filter-mentioned">Mentioned</label>
+	        `;
 				}
 				else {
-					newSearch = "?" + params.join("&");
+					html += `
+	            <input type="checkbox" ` + (showLetters.written? "checked" : "") + ` id="filter-written"/><label for="filter-written">Author</label>
+	            <input type="checkbox" ` + (showLetters.received ? "checked" : "") + ` id="filter-received"/><label for="filter-received">Recipient</label>
+	            <input type="checkbox" ` + (showLetters.mentioned ? "checked" : "") + ` id="filter-mentioned"/><label for="filter-mentioned">Mentioned</label>
+					`;
 				}
-				
-			}
-			else {
-				newSearch = "?filters=" + filterString;
 			}
 
-			history.replaceState(null,null,newSearch);
-		}
+			html += `
+				</form>
+			`;
 
-		function letters() {
-			var showPeople = [], hidePeople = [], showRow = [], hideRow = [];
-			
+			$("div.pagination-centered").after(html);
+
+			html = `
+				<div id="filter-message"></div>
+			`;
+			$("table#browsing").after(html);
+
 			if( haveGenders ) {
-			if( showGender.female ) {
-				showPeople.push( ".female" );
-			}
-			else {
-				hidePeople.push( ".female" )
-			}
-			if( showGender.male ) {
-				showPeople.push( ".male" );
-			}
-			else {
-				hidePeople.push( ".male" )
-			}
-			if( showGender.unknown ) {
-				showPeople.push( ".unknown" );
-			}
-			else {
-				hidePeople.push( ".unknown" )
-			}
-			}
-			else {
-				showPeople.push(""); // Dummy
+
+				$('#filter-female').click( function() {
+					showGender.female = !showGender.female;
+					letters();
+				});
+				$('#filter-male').click( function() {
+					showGender.male = !showGender.male;
+					letters();
+				});
+				$('#filter-unknown').click( function() {
+					showGender.unknown = !showGender.unknown;
+					letters();
+				});
+
 			}
 
-			for( var g=[showPeople,hidePeople], j=0; j < g.length; j++ ) {
+			if( haveLetterCounts ) {
+				$('#filter-written').click( function() {
+					showLetters.written = !showLetters.written;
+					letters();
+				});
+				$('#filter-received').click( function() {
+					showLetters.received = !showLetters.received;
+					letters();
+				});
+				$('#filter-mentioned').click( function() {
+					showLetters.mentioned = !showLetters.mentioned;
+					letters();
+				});
+			}
 
-				for( var i=0; i < g[j].length; i++ ) {
+			function locationChange() {
+				var path = window.location.pathname,
+						search = window.location.search,
+						newSearch = "";
 
-					var group = g[j];
-					var person = group[i];
+				var filterString = [];
+				showGender.female ? filterString.push("fe") : "";
+				showGender.male ? filterString.push("ma") : "";
+				showGender.unknown ? filterString.push("un") : "";
+				showLetters.written ? filterString.push("wr") : "";
+				showLetters.received ? filterString.push("re") : "";
+				showLetters.mentioned ? filterString.push("me") : "";
+				filterString = filterString.join(",");
 
-					if( group !== hidePeople && showLetters.written ) {
-						showRow.push( person + ".written" );
+				setCookie("filters",filterString, 2 );
+
+				if( search ) {
+					var params = search.split("&"), found = false;
+					for( var i=0; i<params.length; i++ ) {
+						if( i === 0 ) {
+							params[i] = params[i].substring(1);
+						}
+
+						var param = params[i].split("=")[0];
+
+						if( param === "filters" ) {
+							params[i] = "filters=" + filterString;
+							found = true;
+						}
+					}
+					if( !found ) {
+						newSearch = "?" + params.join("&") + "&filters=" + filterString;
 					}
 					else {
-						hideRow.push( person + ".written" );
+						newSearch = "?" + params.join("&");
 					}
-					if( group !== hidePeople && showLetters.received ) {
-						showRow.push( person + ".received" );
-					}
-					else {
-						hideRow.push( person + ".received" );
-					}
-					if( group !== hidePeople && showLetters.mentioned ) {
-						showRow.push( person + ".mentioned" );
-					}
-					else {
-						hideRow.push( person + ".mentioned" );
-					}
-					
+
 				}
-			}	
-		
-			hide( hideRow.join(",") );
-			show( showRow.join(",") );
+				else {
+					newSearch = "?filters=" + filterString;
+				}
 
-			var rowsVisible = $("table#browsing tr").not("."+filterHiddenClass).length;
-			if( rowsVisible > 0 ) {
-				$("#filter-message").html("");
-			}
-			else {
-				$("#filter-message").html('<div class="alert-box warning">All rows hidden, change filters to see rows.</div>');	
+				history.replaceState(null,null,newSearch);
 			}
 
-			locationChange();
+			function letters() {
+				var showPeople = [], hidePeople = [], showRow = [], hideRow = [];
 
-		}
+				if( haveGenders ) {
+				if( showGender.female ) {
+					showPeople.push( ".female" );
+				}
+				else {
+					hidePeople.push( ".female" )
+				}
+				if( showGender.male ) {
+					showPeople.push( ".male" );
+				}
+				else {
+					hidePeople.push( ".male" )
+				}
+				if( showGender.unknown ) {
+					showPeople.push( ".unknown" );
+				}
+				else {
+					hidePeople.push( ".unknown" )
+				}
+				}
+				else {
+					showPeople.push(""); // Dummy
+				}
 
-		$('#filters').slideDown(300, function() {
-			letters();
-		});
+				for( var g=[showPeople,hidePeople], j=0; j < g.length; j++ ) {
+
+					for( var i=0; i < g[j].length; i++ ) {
+
+						var group = g[j];
+						var person = group[i];
+
+						if( group !== hidePeople && showLetters.written ) {
+							showRow.push( person + ".written" );
+						}
+						else {
+							hideRow.push( person + ".written" );
+						}
+						if( group !== hidePeople && showLetters.received ) {
+							showRow.push( person + ".received" );
+						}
+						else {
+							hideRow.push( person + ".received" );
+						}
+						if( group !== hidePeople && showLetters.mentioned ) {
+							showRow.push( person + ".mentioned" );
+						}
+						else {
+							hideRow.push( person + ".mentioned" );
+						}
+
+					}
+				}
+
+				hide( hideRow.join(",") );
+				show( showRow.join(",") );
+
+				var rowsVisible = $("table#browsing tr").not("."+filterHiddenClass).length;
+				if( rowsVisible > 0 ) {
+					$("#filter-message").html("");
+				}
+				else {
+					$("#filter-message").html('<div class="alert-box warning">All rows hidden, change filters to see rows.</div>');
+				}
+
+				locationChange();
+
+			}
+
+			$('#filters').show(300, function() {
+				letters();
+			});
 		}
 	}
 	function hide( selector, time ) {
 		var selected = $(selector);
 		selected.addClass(filterHiddenClass);
 		selected.hide(); //fadeOut(time || 400);
-  }
+	}
 	function show(selector) {
 		var selected = $(selector);
 		selected.removeClass(filterHiddenClass);
 		selected.show(); //fadeIn(400);
-  }
+	}
 
 	function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
+	    var d = new Date();
+	    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	    var expires = "expires="+ d.toUTCString();
+	    document.cookie = cname + "=" + cvalue + "; " + expires;
 	} 
 	function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length,c.length);
-        }
-    }
-    return "";
+	    var name = cname + "=";
+	    var ca = document.cookie.split(';');
+	    for(var i = 0; i <ca.length; i++) {
+	        var c = ca[i];
+	        while (c.charAt(0)==' ') {
+	            c = c.substring(1);
+	        }
+	        if (c.indexOf(name) == 0) {
+	            return c.substring(name.length,c.length);
+	        }
+	    }
+	    return "";
 	} 
 
 });

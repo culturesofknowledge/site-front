@@ -7,7 +7,7 @@ from pylons.controllers.util import abort, redirect
 from web.lib.base import BaseController, render
 
 from web.lib.helpers import get_records_from_solr, profile_url_from_uri, escape_colons, \
-                            get_max_relations_for_profile
+                            get_max_relations_for_profile, uuid_from_uri
 from web.lib.fieldmap import *
 import web.lib.relations
 from web.lib.tinyurl import Tinyurl
@@ -37,7 +37,6 @@ class ProfileController(BaseController):
       iworkid = request.params.get( 'iwork_id', None ) 
       profile_type = request.params.get( 'type', None )
       
-			
 
       if iworkid: 
          sol = solr.SolrConnection( solrconfig.solr_urls['works'] )
@@ -143,174 +142,102 @@ class ProfileController(BaseController):
  
 #------------------------------------------------------------------------------------------------
 
-   def comments(self, id):
-      return redirect( url(controller='profile', action='comment', id=id) )
-
-#------------------------------------------------------------------------------------------------
-
-   def comment(self, id):
-
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'comments', 'comment' )
-      
-      return render( template )
-
-#------------------------------------------------------------------------------------------------
-      
-   def locations(self, id):
-      return redirect( url(controller='profile', action='location', id=id) )
-
-#------------------------------------------------------------------------------------------------
-
-   def location(self, id):
-
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'locations', 'location' )
-      
-      return render( template )
-
-#------------------------------------------------------------------------------------------------
-      
-   def institutions(self, id):
-      return redirect( url(controller='profile', action='institution', id=id) )
-
-#------------------------------------------------------------------------------------------------
-
-   def institution(self, id):
-
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'institutions', 'institution' )
-      
-      return render( template )
-
-#------------------------------------------------------------------------------------------------
-      
-   def images(self, id):
-      return redirect( url(controller='profile', action='image', id=id) )
-
-#------------------------------------------------------------------------------------------------
-
-   def image(self, id):
-
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'images', 'image' )
-      
+   def comment(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'comments', 'comment' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-      
-   def manifestations(self, id):
-      return redirect( url(controller='profile', action='manifestation', id=id) )
-
-#------------------------------------------------------------------------------------------------
-
-   def manifestation(self, id):
-
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'manifestations', 'manifestation' )
-      
-      return render( template )
-      
-#------------------------------------------------------------------------------------------------
-   
-   def works(self, id):
-      return redirect( url(controller='profile', action='work', id=id) )
-
-#------------------------------------------------------------------------------------------------
-
-   def work(self, id):
-
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'works', 'work' )
-      if c.relations:
-          c.further_relations = self.further_relations(c.relations, 'work')
-
+   def location(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'locations', 'location' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def resources(self, id):
-      return redirect( url(controller='profile', action='resource', id=id) )
-
-#------------------------------------------------------------------------------------------------
-
-   def resource(self, id):
-
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'resources', 'resource' )
-      
+   def institution(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'institutions', 'institution' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def people(self, id):
-      return redirect( url(controller='profile', action='person', id=id) )
+   def image(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'images', 'image' )
+      return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def persons(self, id):
-      return redirect( url(controller='profile', action='person', id=id) )
+
+   def manifestation(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'manifestations', 'manifestation' )
+      return render( template )
+      
+#------------------------------------------------------------------------------------------------
+
+   def work(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'works', 'work' )
+      return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def person(self, id):
+   def resource(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'resources', 'resource' )
+      return render( template )
 
-      c.profile, c.relations, c.further_relations, template = self.profile(id, 'people', 'person' )
-     
+#------------------------------------------------------------------------------------------------
+
+   def person(self, uid):
+      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'people', 'person' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
       
-   def profile(self, id, solr_name, object ):
-   #{
+   def profile(self, uid, solr_name, object ):
+
       sol = solr.SolrConnection( solrconfig.solr_urls[solr_name] )
 
-      escaped_id_value = escape_colons( get_uuid_value_prefix()) + id 
+      #  If there are too many works to display without timing out, don't get the data for a profile,
+      #  but instead go to Works Search Results for the relevant object (currently just institutions,
+      #  with the Bodleian being by far the egregious culprit! Redirect done in institution.mako.)
 
-      ## If there are too many works to display without timing out, don't get the data for a profile,
-      ## but instead go to Works Search Results for the relevant object (currently just institutions,
-      ## with the Bodleian being by far the egregious culprit! Redirect done in institution.mako.)
 
-      check_number_of_works = False
-      check_field = ''
-      field_for_search_on_redirect = ''
       profile_too_big = False
+      fields = '*'
+      q = "uuid:" + uid
 
-      if object == 'institution': #{
-         check_number_of_works = True
+      if object == 'institution' :
+
+         # check number of works
          check_field = get_total_docs_in_repos_fieldname()
-         field_for_search_on_redirect = get_main_displayable_fieldname( object )
-      #}
-
-      
-      if check_number_of_works: #{
-         fields_to_get = [ 'id', 'object_type', check_field, field_for_search_on_redirect ]
-
-         sol_response = sol.query( "id:" + escaped_id_value, fields = fields_to_get,
-                                    score=False, rows=1, start=0)
-         this_profile = sol_response.results[0]
+         sol_response = sol.query( q, fields=[check_field], score=False)
  
-         if this_profile[ check_field ] > get_max_relations_for_profile( object ):
+         if sol_response.results[0][ check_field ] > get_max_relations_for_profile( object ):
             profile_too_big = True
-      #}
+            fields = "*,ox_hasResource-manifestation:[value v=\"\"]"
+
+
+      sol_response = sol.query( q, fields=fields, score=False)
+      if len(sol_response.results) == 0:
+         c.tinyurl = ''
+         return None, [], {}, '/main/profiles/person.mako'  # Return any old profile page
+
+      this_profile = sol_response.results[0]
+      this_profile["profile_too_big"] = profile_too_big
+
+      sol.close()
 
       if profile_too_big: #{
          # Don't get any more data, as things will grind to a halt.
          relations = []
          further_relations = {}
-         c.tinyurl = 'None'
-      #}
 
       else: #{
          # Proceed to populate fields as normal
-
-         sol_response = sol.query( "id:" + escaped_id_value, score=False, rows=1, start=0)
-         if len(sol_response.results) == 0:
-            c.tinyurl=''
-            return None, [], {}, '/main/profiles/person.mako'
-
-         this_profile = sol_response.results[0]
-        
          relation_fields = web.lib.relations.object_relation_fields[object]
         
          relations = []
          for relation in relation_fields: #{
-            uris = this_profile.get(relation,None)
+            uris = this_profile.get(relation, None)
             if uris: #{
 
                # Relations defined as multiValued in the Solr schema are returned as a list, even if
@@ -329,35 +256,35 @@ class ProfileController(BaseController):
                #}
             #}
          #}
-        
+
          relations = get_records_from_solr( relations )
          further_relations = self.further_relations(relations, object)
 
-         # Get Tinyurl
-         try:
-            t = Tinyurl()
-            path = url(controller='profile', action=solr_name, id=id)
-            path = path.lstrip('/')
-            page_url = "http://%s/%s" % (config['base_url'], path)
-            tinyurl = t.get(page_url)
-            c.tinyurl = tinyurl
-         except (ConnectionError, ServerNotFoundError):
-            # Tinyurl = DEAD
-            c.tinyurl = "Service not available"
+      # Get Tinyurl
+      try:
+         t = Tinyurl()
+         path = url(controller='profile', action=solr_name, id=uid)
+         path = path.lstrip('/')
+         page_url = "http://%s/%s" % (config['base_url'], path)
+         tinyurl = t.get(page_url)
+         c.tinyurl = tinyurl
+      except (ConnectionError, ServerNotFoundError):
+         # Tinyurl = DEAD
+         c.tinyurl = "Service not available"
 
-         c.iidUrl = None
-         if object == 'person' :
-            c.iidUrl = "/p/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
-         elif object == 'work' :
-            c.iidUrl = "/w/" + this_profile['dcterms_identifier-editi_'].replace("editi_",'')
-         elif object == 'location' :
-            c.iidUrl = "/l/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_location-','')
-         elif object == 'institution' :
-            c.iidUrl = "/r/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_institution-','')
+      c.iidUrl = None
+      if object == 'person' :
+         c.iidUrl = "/p/" + this_profile['dcterms_identifier-editi_'].replace("editi_", '')
+      elif object == 'work' :
+         c.iidUrl = "/w/" + this_profile['dcterms_identifier-editi_'].replace("editi_", '')
+      elif object == 'location' :
+         c.iidUrl = "/l/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_location-', '')
+      elif object == 'institution' :
+         c.iidUrl = "/r/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_institution-', '')
 
-         c.normalUrl = "/" + id
-         c.miniUrl = "/" + self._encodeTiny( id )
-      #}
+      c.normalUrl = "/" + uid
+      c.miniUrl = "/" + self._encodeTiny( uid )
+
 
       return this_profile, relations, further_relations, '/main/profiles/' + object + '.mako'
    #}
@@ -374,8 +301,10 @@ class ProfileController(BaseController):
       further_relations = defaultdict(list)
  
       if relations and web.lib.relations.further_relation_fields.has_key(object):
+
           for first_id, relation_val in relations.iteritems():
               for relation in web.lib.relations.further_relation_fields[object]:
+
                   if relation in relation_val:
                       if type(relation_val[relation]).__name__ == 'list':
                           further_relations[relation] += relation_val[relation]
@@ -384,13 +313,24 @@ class ProfileController(BaseController):
                           
           further_relations = dict(further_relations)
           further_relations_data  = {}
+
+          all_uris = []
+          for _, uris in further_relations.iteritems():
+              all_uris.extend( uris )
+
+          results = get_records_from_solr( all_uris )
+
           for relation, uris in further_relations.iteritems():
-             results = get_records_from_solr( uris )
-             further_relations_data[relation] = results
-            
-          #print '--------------- further relations ---------------'
-          #print further_relations_data
-          #print '-----------------------------------------'
+              further_relations_data[relation] = {}
+
+              for uri in uris:
+                  uri_id = uuid_from_uri( uri, True )
+                  further_relations_data[relation][uri_id] = results[uri_id]
+
+
+          print '--------------- further relations ---------------'
+          print further_relations_data
+          print '-----------------------------------------'
           
           return further_relations_data
       

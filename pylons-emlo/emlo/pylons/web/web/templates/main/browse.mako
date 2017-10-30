@@ -68,12 +68,6 @@
 		shopping_list = []
 		shopping_item_count = 0
 
-		person_count   = self.get_display_total_for( 'person' )
-		location_count = self.get_display_total_for( 'location' )
-		org_count      = self.get_display_total_for( 'organisation' )
-		repo_count     = self.get_display_total_for( 'institution' )
-		year_count     = self.get_display_total_for( 'year' )
-
 		object_type = 'person'
 
 		if c.browsing == 'locations' :
@@ -86,11 +80,11 @@
 			shopping_basket_enabled = False
 
 		browse_data = [
-			{ 'browse' : 'people', 'label' : 'People', 'count' : person_count, 'image' : 'icon-stats-people.png' },
-			{ 'browse' : 'locations', 'label' : 'Locations', 'count' : location_count, 'image' : 'icon-stats-locations.png' },
-			{ 'browse' : 'organisations', 'label' : 'Organizations', 'count' : org_count, 'image' : 'icon-stats-organisations.png' },
-			{ 'browse' : 'institutions', 'label' : 'Repositories', 'count' : repo_count, 'image' : 'icon-stats-repositories.png' },
-			{ 'browse' : 'works', 'label' : 'Years', 'count' : year_count, 'image' : 'icon-stats-calendar.png' }
+			{ 'browse' : 'people', 'label' : 'People', 'image' : 'icon-stats-people.png' },
+			{ 'browse' : 'locations', 'label' : 'Locations',  'image' : 'icon-stats-locations.png' },
+			{ 'browse' : 'organisations', 'label' : 'Organizations', 'image' : 'icon-stats-organisations.png' },
+			{ 'browse' : 'institutions', 'label' : 'Repositories',  'image' : 'icon-stats-repositories.png' },
+			{ 'browse' : 'works', 'label' : 'Years', 'image' : 'icon-stats-calendar.png' }
 		]
 
 
@@ -118,7 +112,7 @@
 						% else:
 <li class="stats-text text-center"><a href="/browse/${data['browse']}">
 						% endif
-<img src="/img/${data['image']}" alt="${data['label']} icon" class="stats-icon"/><br/>${data['count']}<br/>${data['label']}</a></li>
+<img src="/img/${data['image']}" alt="${data['label']} icon" class="stats-icon"/><br/>${data['label']}</a></li>
 
 					% endfor
 				</ul>
@@ -290,7 +284,7 @@
                    if shopping_item_count > i: #{
 
                      item_uuid = shopping_list[i]
-                     results = h.get_records_from_solr( item_uuid, main_displayable_fieldname )
+                     results = h.get_records_from_solr( [item_uuid], [main_displayable_fieldname] )
 
                      # Results come back as two dictionaries nested inside each other.
                      # The outer dictionary is keyed on uuid, the inner one on fieldname
@@ -446,7 +440,7 @@
                   
                   % if len( firstrow[ 'link_fields' ]) > 0:
                     % for link_field in firstrow[ 'link_fields' ]:
-                      <th class="textcenter">
+                      <th>
                       <% label = tran.translate( link_field[ 'fieldname' ] ) %>
                       ${label}
                       </th>
@@ -484,8 +478,7 @@
 
 ##=============================================================================
 
-<%def name="one_line_of_browse( item, shopping_basket_enabled = False, shopping_item_count = 0, \
-                                max_shopping_items = 0  )">
+<%def name="one_line_of_browse( item, shopping_basket_enabled = False, shopping_item_count = 0, max_shopping_items = 0  )">
 <%
   # Check we have a written, recieved or mentioned otherwise skip it.
   have_written = False
@@ -516,8 +509,6 @@
     if extra['fieldname'] == h.get_gender_fieldname() : #  'foaf_gender'
       gender = extra['fieldvalue']
 		
-%>
-<%
   main_displayable_field = item['main_displayable_field']
   profile_url = h.profile_url_from_uri( item['main_uri'] )
   uuid = h.uuid_from_uri( item['main_uri'], full=True )
@@ -531,26 +522,20 @@
         already_selected = True
     #}
   #}
-%>
 
-<tr class="${gender} \
-	% if have_written :
-written \
-  %endif
-  % if have_received :
-received \
-  %endif
-  % if have_mentioned :
-mentioned \
-  % endif
-  ">
-  
-  ##======================================================================
-  ## Offer the chance to put this person, place etc into 'shopping basket'
-  ##======================================================================
-  % if shopping_basket_enabled: 
-<td class="normalcell">\
-    ${self.normal_checkbox( fieldname = checkbox_fieldname, value = uuid, \
+  class_list = [gender]
+  if have_written:
+    class_list.append("written")
+  if have_received:
+    class_list.append("received")
+  if have_mentioned:
+    class_list.append("mentioned")
+  class_list = " ".join(class_list)
+%>
+<tr class="${class_list}">
+  % if shopping_basket_enabled:
+<td>\
+${self.normal_checkbox( fieldname = checkbox_fieldname, value = uuid, \
                             onclick = "add_or_remove_item_from_basket( this, " \
                                     + unicode( shopping_item_count ) + ", " \
                                     + unicode( max_shopping_items ) + " )" )}
@@ -559,26 +544,13 @@ mentioned \
     % endif
 </td>\
   % endif
-<%
-##
-##================================================================
-## Link to the profile page for the main subject of the browse,
-## e.g. if we are browsing people, link to the Person profile page
-##================================================================
-%>
-<td class="normalcell"><a name="${uuid}" href="${profile_url}" title="Profile page for ${main_displayable_field}">${main_displayable_field}</a></td>\
-
-<%
-##=================================================================================================
-## Use totals (e.g. number of letters written) as links leading to a query on works.
-## E.g. number of letters written should link to search results for letters written by that author.
-##=================================================================================================
-%>
+<td><a href="${profile_url}" title="${main_displayable_field}">${main_displayable_field}</a></td>\
+\
   % if len( item[ 'link_fields' ]) > 0:
-
+\
     % for link_field in item[ 'link_fields' ]:
-      
-      <% 
+\
+<%
       value_for_display = link_field[ 'fieldvalue' ]
       search_on_fieldname = link_field[ 'search_on_fieldname' ]
 
@@ -596,9 +568,9 @@ mentioned \
            + '&browsing=' + c.browsing + '&letter=' + c.current_letter.lower() \
            + '&return_to_anchor=' + uuid
       title = 'View list of ' + tran.translate( link_field[ 'fieldname' ] ).lower()
-      %>
-##
-<td class="textcenter">\
+%>
+\
+<td>\
       % if len( search_on_fieldname ) > 0 and value_for_display:
 <a href="${href}" title="${title}">${value_for_display}</a>\
       % else:
@@ -611,26 +583,26 @@ ${value_for_display}\
 </td>\
     % endfor
   % endif
-
+<%
   ##===================================================================================
   ## We'll put all the remaining extra fields into one table cell.
   ## If there is more than one such field, we'll put them one per line inside the cell.
   ##===================================================================================
-  <td class="normalcell">\
-  <%
+%><td>\
+<%
   extra_field_count = len( item[ 'extra_fields' ])
   resource_count = len( item[ 'resource_fields' ])
   fieldrow = 0
-  %>
+%>
   % if extra_field_count > 0:
     % for extra_field in item[ 'extra_fields' ]:
-      <% 
+<%
       value_for_display = extra_field[ 'fieldvalue' ]
       label = tran.translate( extra_field[ 'fieldname' ] ) 
       fieldrow += 1
-      %>
+%>\
       % if fieldrow > 1:
-<br />
+<br/>\
       % endif
 ${label}: ${value_for_display}
     % endfor
@@ -639,7 +611,7 @@ ${label}: ${value_for_display}
   % if resource_count > 0:
     <% first_resource = True %>
     % if fieldrow > 0:
-<br />
+<br/>\
     % endif
 
     % if resource_count == 1:
@@ -649,26 +621,26 @@ ${label}: ${value_for_display}
     % endif
 
     % for resource_dict in item[ 'resource_fields' ]:
-      <% 
+<%
       resource_url = resource_dict.get( h.get_resource_url_fieldname(), '' )
       resource_title = resource_dict.get( h.get_resource_title_fieldname(), '' )
       resource_details = resource_dict.get( h.get_resource_details_fieldname(), '' )
 
       fieldrow += 1
-      %>
+%>
 
       % if fieldrow > 1 and not first_resource:
-<br />
+<br/>\
       % endif
 
       % if resource_url and resource_title:
-<a href="${resource_url}" title="${resource_title}" target="_blank" >${resource_title}</a>
+<a href="${resource_url}" title="${resource_title}" target="_blank" >${resource_title}</a>\
       % else:
-        ${resource_title}
+        ${resource_title}\
       % endif
 
       % if resource_details:
-(${resource_details})
+(${resource_details})\
       % endif
       <% first_resource = False %>
     % endfor
@@ -693,15 +665,12 @@ ${label}: ${value_for_display}
   decade = int( year ) - years_from_decade_start
   %>
 
-  <script type="text/javascript">
-    function change_decade( start_of_new_decade ) {
-      window.location.search = '?year=' + start_of_new_decade;
-    }
-  </script>
-  <span class="pagination">
+<script type="text/javascript">
+	function change_decade( start_of_new_decade ) { window.location.search = '?year=' + start_of_new_decade; }
+</script>
+<span class="pagination">
   <% fieldname='decade' %>
-  <label for="${fieldname}">Decade </label>
-  <select name="decade" id="decade" onchange="change_decade( this.value )">
+  <label for="${fieldname}">Decade </label><select name="decade" id="decade" onchange="change_decade( this.value )">
 
   <script type="text/javascript">
     for( var i = 1500; i < 1840; i = i + 10 ) {

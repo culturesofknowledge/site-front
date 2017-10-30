@@ -116,7 +116,7 @@
   generated_copyright_info = False
 
   if c.profile.has_key( h.get_image_credits_fieldname() ): #{
-    copyright_info = c.profile[ h.get_image_credits_fieldname() ]
+    copyright_info = "Special Collections <a href=\"#\">Centre</a>, University of Aberdeen"  # c.profile[ h.get_image_credits_fieldname() ]
   #}
   else: # {# Generate copyright info from repository name
     if manifestation_obj.has_key( h.get_repository_fieldname() ): #{
@@ -173,7 +173,7 @@
 						% if generated_copyright_info:
 							Image &copy;
 						% endif
-						${copyright_info}
+						${copyright_info|n}
 
 						<br/><br/>
 					% endif

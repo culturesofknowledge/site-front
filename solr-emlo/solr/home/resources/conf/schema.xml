@@ -372,6 +372,7 @@
        </analyzer>
     </fieldType>
 
+	  <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
 
  </types>
 
@@ -414,7 +415,8 @@
 <!--          -->
 	 <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
-  <field name="sid"  type="tint"  indexed="true"  stored="true"  required="true"  /> <!-- short id -->
+	 <field name="uuid"  type="uuid"  indexed="true"  stored="true"  required="true"  />
+	 <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />

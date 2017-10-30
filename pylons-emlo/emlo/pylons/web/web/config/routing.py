@@ -21,6 +21,15 @@ def make_map(config):
     # CUSTOM ROUTES HERE
     default_action = 'index' # 'updating' #
 
+    map.redirect('/profile/institutions/{uid:.*}', '/profile/institution/{uid}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/locations/{uid:.*}', '/profile/location/{uid}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/images/{uid:.*}', '/profile/image/{uid}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/manifestations/{uid:.*}', '/profile/manifestation/{uid}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/works/{uid:.*}', '/profile/work/{uid}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/people/{uid:.*}', '/profile/person/{uid}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/persons/{uid:.*}', '/profile/person/{uid}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/resources/{uid:.*}', '/profile/resource/{uid}', _redirect_code="301 Moved Permanently")
+
     map.connect('/', controller='home', action=default_action)
     map.connect('/index', controller='home', action=default_action)
     map.connect('/index/', controller='home', action=default_action)
@@ -45,7 +54,7 @@ def make_map(config):
     map.connect('/catalogue', controller='emlo_collections', action='index')
     map.connect('/catalogues', controller='emlo_collections', action='index')
 
-    map.connect('/{controller}/{action}/{id}') # profile/{action}/id
+    map.connect('/{controller}/{action}/{uid}') # profile/{action}/id
     map.connect('/{controller}/{action}') # search/results, browse/{action}
 
     map.connect('/{controller}/', action='index') # contribute, technical, about, home, search, browse

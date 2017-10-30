@@ -32,7 +32,7 @@ object_relation_fields = {
         get_relations_to_works_mentioned_fieldname(),
         get_works_in_which_mentioned_fieldname(),
         get_relations_to_comments_on_origin_fieldname(),
-        get_relations_to_comments_on_destination_fieldname(),
+        get_relations_to_comments_on_destination_fieldname()
       ],
       
    'person' : [
@@ -79,7 +79,7 @@ object_relation_fields = {
       get_people_who_died_at_place_fieldname(),
       get_people_who_visited_place_fieldname(),
       get_relations_to_comments_fieldname(),
-      get_relations_to_resource_fieldname(),
+      get_relations_to_resource_fieldname()
    ],
    
    'manifestation' : [
@@ -87,7 +87,7 @@ object_relation_fields = {
       get_enclosed_fieldname(),
       get_relations_to_image_fieldname(),
       get_relations_to_work_fieldname(),
-      get_repository_fieldname(),
+      get_repository_fieldname()
    ],
    
    'resource' : [
@@ -103,6 +103,8 @@ object_relation_fields = {
 further_relation_fields = {
    'work' : [
         get_relations_to_image_fieldname(),
+        get_relations_to_comments_on_date_fieldname(),
+        get_relations_to_comments_on_receipt_date_fieldname(),
       ],
       
    'image' : [

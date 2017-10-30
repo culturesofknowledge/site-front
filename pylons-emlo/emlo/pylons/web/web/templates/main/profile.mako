@@ -848,22 +848,20 @@
 </%def>
 #------------------------------------------------------------------------------------------------------
 
-<%def name="further_relations( field, listall=False )">
+<%def name="further_relations( field, listall=False, style='', link=True )">
 
   <%
-  if not c.further_relations:
-    return
-  elif len( c.further_relations ) == 0:
+  if not c.further_relations or len( c.further_relations ) == 0:
     return
   %>
 
   % if field in c.further_relations :
     % if 'image' in field :
       <% 
-      self.display_images( field, listall )
+        self.display_images( field, listall )
       %>
 
-    % else :  # not an image
+    % else :
       <ul>
       % for obj in c.further_relations[field].values():
         <%
@@ -875,7 +873,13 @@
         uri = obj[ uri_fieldname ]
         url = h.profile_url_from_uri( uri )
         %>
-        <li><a href="${url}">${display}</a></li> 
+        <li style="${style}">
+			%if link:
+			    <a href="${url}">${display}</a>
+			% else :
+				${display}
+			% endif
+		</li>
       % endfor
       </ul>
     % endif
@@ -1457,14 +1461,12 @@
   show_every_row = self.is_short_enough_to_show_every_row( work_uris )
 
   if show_every_row: #{ # get year, full date and description
-    fields_to_get = [ 'id', 
-                      h.get_start_year_fieldname(), 
+    fields_to_get = [ h.get_start_year_fieldname(),
                       'started_date_sort', 
                       h.get_main_displayable_fieldname( 'work' ) ]
   #}
   else:  #{ # get year only
-    fields_to_get = [ 'id', 
-                      h.get_end_year_fieldname(), 
+    fields_to_get = [ h.get_end_year_fieldname(),
                       h.get_start_year_fieldname() ]
   #}
   work_details = h.get_records_from_solr( work_uris, fields_to_get )
@@ -1557,7 +1559,7 @@
 
   if c.profile.has_key( h.get_repository_contents_fieldname() ): #{
     manifs = c.profile[ h.get_repository_contents_fieldname() ]
-    fields_to_get = [ 'id', h.get_relations_to_work_fieldname() ]
+    fields_to_get = [ h.get_relations_to_work_fieldname() ]
 
     response  = h.get_records_from_solr( manifs, fields_to_get )
 
