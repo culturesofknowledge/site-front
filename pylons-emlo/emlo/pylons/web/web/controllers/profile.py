@@ -34,176 +34,194 @@ class ProfileController(BaseController):
 #------------------------------------------------------------------------------------------------
 
    def index(self):
-      iworkid = request.params.get( 'iwork_id', None ) 
+      iworkid = request.params.get( 'iwork_id', None )
+
+      if iworkid:
+         return redirect( url(controller='profile', action='w', id=id) )
+
       profile_type = request.params.get( 'type', None )
-      
-
-      if iworkid: 
-         sol = solr.SolrConnection( solrconfig.solr_urls['works'] )
-         sol_response = sol.query( escape_colons( get_integer_id_fieldname( 'work' ))
-                                   + ':' + escape_colons( get_integer_id_value_prefix()) + iworkid, \
-                                   fields=['id'], score=False, rows=1, start=0)
-
-         if sol_response.numFound > 0:
-            id = sol_response.results[0]['id'].split('_')[1]
-            return redirect( url(controller='profile', action='work', id=id) )
-      
       emlo_edit_id = request.params.get( 'id', None )
 
       if profile_type and emlo_edit_id:
 
-         if profile_type == "person" :
-            
-            sol = solr.SolrConnection( solrconfig.solr_urls['people'] )
-            sol_response = sol.query( "dcterms_identifier-editi_:editi_"
-                                       + emlo_edit_id,
-                                       fields=['id'], score=False, rows=1, start=0)
+         if profile_type == "person" or profile_type == "people" or profile_type == "persons" :
+            return redirect( url(controller='profile', action='p', id=emlo_edit_id) )
 
-            if sol_response.numFound > 0:
-               id = sol_response.results[0]['id'].split('_')[1]
-               return redirect( url(controller='profile', action='person', id=id) )
+         if profile_type == "work" or profile_type == "works":
+            return redirect( url(controller='profile', action='w', id=emlo_edit_id) )
+
+         if profile_type == "institution" or profile_type == "repository" :
+            return redirect( url(controller='profile', action='r', id=emlo_edit_id) )
+
+         if profile_type == "location" or profile_type == "locations" :
+            return redirect( url(controller='profile', action='l', id=emlo_edit_id) )
 
       c.profile = {}
-      
+
       return render('/main/profile.mako')
 
    def p(self, ipersonid):
-      id = '0'
+      uuid = '0'
 
       sol = solr.SolrConnection( solrconfig.solr_urls['people'] )
-      sol_response = sol.query( "dcterms_identifier-editi_:editi_"
-                                + ipersonid,
-                                fields=['id'], score=False, rows=1, start=0)
+      sol_response = sol.query( "dcterms_identifier-editi_:editi_" + ipersonid,
+                                fields=['uuid'], score=False, rows=1, start=0)
+      sol.close()
 
       if sol_response.numFound > 0:
-         id = sol_response.results[0]['id'].split('_')[1]
+         uuid = sol_response.results[0]['uuid']
 
-
-      return redirect( url(controller='profile', action='person', id=id) )
+      return redirect( url(controller='profile', action='person', id=uuid) )
 
 
    def w(self, iworkid):
-      id = '0'
+      uuid = '0'
 
       sol = solr.SolrConnection( solrconfig.solr_urls['works'] )
-      sol_response = sol.query( escape_colons( get_integer_id_fieldname( 'work' ))
-                                + ':' + escape_colons( get_integer_id_value_prefix()) + iworkid,
-                                fields=['id'], score=False, rows=1, start=0)
+      sol_response = sol.query( get_integer_id_fieldname( 'work' ) + ':' + get_integer_id_value_prefix() + iworkid,
+                                fields='uuid', score=False, rows=1, start=0)
+      sol.close()
 
       if sol_response.numFound > 0:
-         id = sol_response.results[0]['id'].split('_')[1]
+         id = sol_response.results[0]['uuid']
 
-      return redirect( url(controller='profile', action='work', id=id) )
+      return redirect( url(controller='profile', action='work', id=uuid) )
 
    def l(self, locationid):
 
-      id = '0'
+      uuid = '0'
 
       sol = solr.SolrConnection( solrconfig.solr_urls['locations'] )
-      sol_response = sol.query( "dcterms_identifier-edit_:edit_cofk_union_location-"
-                                + locationid,
-                                fields=['id'], score=False, rows=1, start=0)
+      sol_response = sol.query( "dcterms_identifier-edit_:edit_cofk_union_location-" + locationid,
+                                fields=['uuid'], score=False, rows=1, start=0)
+      sol.close()
 
       if sol_response.numFound > 0:
-         id = sol_response.results[0]['id'].split('_')[1]
+         uuid = sol_response.results[0]['uuid']
 
-      return redirect( url(controller='profile', action='location', id=id) )
+      return redirect( url(controller='profile', action='location', id=uuid) )
 
    def r(self, institutionid):
 
-      id = '0'
+      uuid = '0'
 
       sol = solr.SolrConnection( solrconfig.solr_urls['institutions'] )
-      sol_response = sol.query( "dcterms_identifier-edit_:edit_cofk_union_institution-"
-                                + institutionid,
-                                fields=['id'], score=False, rows=1, start=0)
+      sol_response = sol.query( "dcterms_identifier-edit_:edit_cofk_union_institution-" + institutionid,
+                                fields='uuid', score=False, rows=1, start=0)
+      sol.close()
 
       if sol_response.numFound > 0:
-         id = sol_response.results[0]['id'].split('_')[1]
+         uuid = sol_response.results[0]['uuid']
 
-      return redirect( url(controller='profile', action='institution', id=id) )
+      return redirect( url(controller='profile', action='institution', id=uuid) )
 
 
    def i(self, id):
 
-      id = self._decodeTiny(id)
+      uuid = self._decodeId(id)
 
-      if len(id) == 36:
+      if len(uuid) == 36:
 
          sol = solr.SolrConnection( solrconfig.solr_urls['all'] )
-         sol_response = sol.query( "id:uuid_" + id, fields=['object_type'], score=False, rows=1, start=0)
+         sol_response = sol.query( "uuid:" + uuid, fields=['object_type'], score=False, rows=1, start=0)
 
          if sol_response.numFound > 0:
 
-            return redirect( url(controller='profile', action=sol_response.results[0]['object_type'], id=id) )
+            return redirect( url(controller='profile', action=sol_response.results[0]['object_type'], id=uuid) )
 
       c.profile = {}
       return render('/main/profile.mako')
  
 #------------------------------------------------------------------------------------------------
 
-   def comment(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'comments', 'comment' )
+   def comment(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'comments', 'comment' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def location(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'locations', 'location' )
+   def location(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'locations', 'location' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def institution(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'institutions', 'institution' )
+   def institution(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'institutions', 'institution' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def image(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'images', 'image' )
+   def image(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'images', 'image' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
 
-   def manifestation(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'manifestations', 'manifestation' )
+   def manifestation(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'manifestations', 'manifestation' )
       return render( template )
       
 #------------------------------------------------------------------------------------------------
 
-   def work(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'works', 'work' )
+   def work(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'works', 'work' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def resource(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'resources', 'resource' )
+   def resource(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'resources', 'resource' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-   def person(self, uid):
-      c.profile, c.relations, c.further_relations, template = self.profile(uid, 'people', 'person' )
+   def person(self, id='0'):
+      c.profile, c.relations, c.further_relations, template = self.profile(id, 'people', 'person' )
       return render( template )
 
 #------------------------------------------------------------------------------------------------
 
-      
+   def locations(self):
+      return self._handleRedirect( 'location', request )
+   def comments(self):
+      return self._handleRedirect( 'comment', request )
+   def institutions(self):
+      return self._handleRedirect( 'institution', request )
+   def images(self):
+      return self._handleRedirect( 'image', request )
+   def manifestations(self):
+      return self._handleRedirect( 'manifestation', request )
+   def works(self):
+      return self._handleRedirect( 'work', request )
+   def resources(self):
+      return self._handleRedirect( 'resource', request )
+   def people(self):
+      return self._handleRedirect( 'person', request )
+   def persons(self):
+      return self._handleRedirect( 'person', request )
+
+   #------------------------------------------------------------------------------------------------
+
    def profile(self, uid, solr_name, object ):
 
-      sol = solr.SolrConnection( solrconfig.solr_urls[solr_name] )
+      uid = self._decodeId(uid)
+      uid_len = len(uid)
+
+      if uid_len != 36 :
+         c.tinyurl = ''
+         return None, [], {}, '/main/profiles/person.mako'  # Return any old profile page
 
       #  If there are too many works to display without timing out, don't get the data for a profile,
       #  but instead go to Works Search Results for the relevant object (currently just institutions,
       #  with the Bodleian being by far the egregious culprit! Redirect done in institution.mako.)
-
-
       profile_too_big = False
+
       fields = '*'
       q = "uuid:" + uid
+
+      sol = solr.SolrConnection( solrconfig.solr_urls[solr_name] )
 
       if object == 'institution' :
 
@@ -261,33 +279,22 @@ class ProfileController(BaseController):
          further_relations = self.further_relations(relations, object)
 
       # Get Tinyurl
+      # path = url(controller='profile', action=solr_name, id=uid)  # God damn directing to the wrong thing for years!
+      page_url = "http://%s/profile/%s/%s" % (config['base_url'], object, uid)
+
       try:
          t = Tinyurl()
-         path = url(controller='profile', action=solr_name, id=uid)
-         path = path.lstrip('/')
-         page_url = "http://%s/%s" % (config['base_url'], path)
-         tinyurl = t.get(page_url)
-         c.tinyurl = tinyurl
+         c.tinyurl = t.get(page_url)
       except (ConnectionError, ServerNotFoundError):
-         # Tinyurl = DEAD
          c.tinyurl = "Service not available"
 
-      c.iidUrl = None
-      if object == 'person' :
-         c.iidUrl = "/p/" + this_profile['dcterms_identifier-editi_'].replace("editi_", '')
-      elif object == 'work' :
-         c.iidUrl = "/w/" + this_profile['dcterms_identifier-editi_'].replace("editi_", '')
-      elif object == 'location' :
-         c.iidUrl = "/l/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_location-', '')
-      elif object == 'institution' :
-         c.iidUrl = "/r/" + this_profile['dcterms_identifier-edit_'].replace('edit_cofk_union_institution-', '')
-
+      c.iidUrl = self._get_emlo_iid( object, this_profile )
       c.normalUrl = "/" + uid
-      c.miniUrl = "/" + self._encodeTiny( uid )
+      c.miniUrl = "/" + self._encodeId(uid)
 
 
       return this_profile, relations, further_relations, '/main/profiles/' + object + '.mako'
-   #}
+
 #------------------------------------------------------------------------------------------------
 
    def further_relations(self, relations, object):
@@ -338,25 +345,29 @@ class ProfileController(BaseController):
 
 
    @staticmethod
-   def _decodeTiny(tinyid):
+   def _decodeId(id):
+      id_len = len(id)
 
-      if len(tinyid) >= 36:
-         return tinyid[:36]
+      if id_len >= 36:
+         return id[:36]  # Possibly additional unwanted characters
 
-      if len( tinyid ) == 32:
-         return ("%s-%s-%s-%s-%s") % (tinyid[:8], tinyid[8:12], tinyid[12:16], tinyid[16:20], tinyid[20:])
+      if id_len == 32:
+         return ("%s-%s-%s-%s-%s") % (id[:8], id[8:12], id[12:16], id[16:20], id[20:])  # dashes removed
 
-      if len( tinyid ) < 32:
+      if id_len <= 6 :
+         return id  # Possibly an emlo "emloi" id
+
+      if id_len < 32:
          transtbl = string.maketrans(
             '0123456789ABCDEFGHJKMNPQRSTVWXYZ' 'OIL',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567' 'ABB' )
 
-         tinyid = base64.b32decode( tinyid.replace('-', '').upper().encode('ascii').translate(transtbl) + "======" ).encode('hex')
+         id = base64.b32decode(id.replace('-', '').upper().encode('ascii').translate(transtbl) + "======").encode('hex')
 
-      return ("%s-%s-%s-%s-%s") % (tinyid[:8], tinyid[8:12], tinyid[12:16], tinyid[16:20], tinyid[20:])
+      return ("%s-%s-%s-%s-%s") % (id[:8], id[8:12], id[12:16], id[16:20], id[20:])
 
    @staticmethod
-   def _encodeTiny( id ):
+   def _encodeId(id):
       if len( id ) == 36:
 
          transtbl = string.maketrans(
@@ -366,4 +377,29 @@ class ProfileController(BaseController):
          id = base64.b32encode( id.replace('-', '').decode('hex') ).rstrip('=').translate(transtbl).lower()
 
       return id
+
+
+   @staticmethod
+   def _get_emlo_iid(object, profile):
+
+      if profile:
+         if object == 'person' :
+            return "/p/" + profile['dcterms_identifier-editi_'].replace("editi_", '')
+
+         elif object == 'work' :
+            return "/w/" + profile['dcterms_identifier-editi_'].replace("editi_", '')
+
+         elif object == 'location' :
+            return "/l/" + profile['dcterms_identifier-edit_'].replace('edit_cofk_union_location-', '')
+
+         elif object == 'institution' :
+            return "/r/" + profile['dcterms_identifier-edit_'].replace('edit_cofk_union_institution-', '')
+
+      return None
+
+   @staticmethod
+   def _handleRedirect(action, request):
+      #  for (mismanaged) tinyurls...
+      # TODO: Figure out how to do this in the router (from /profile/locations?id=SomEthIng to /profile/location/SomEthIng )
+      return redirect( url(controller='profile', action=action, id=request.params.get('id', '0')), code=301 )
 
