@@ -12,8 +12,10 @@ import decimal
 import sys
 import time
 import urllib
+import io
 
 import solr
+import fastcsv
 
 import csvtordf
 import relationships
@@ -116,22 +118,34 @@ def GenerateIds( _, red_ids ):
             
             csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
 
-            csv_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
-            csv_data = csv.DictReader( csv_file, restval="" )
+            # csv_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
+            # csv_data = csv.DictReader( csv_file, restval="" )
+            #
+            # if csv_file is not None:
+            #
+            #    for csv_row in csv_data:
+            #
+            #        editid = csv_row[id_field].strip()
+            #        red_ids.set( editid, csv_row["uuid"] )
+            #
+            # else:
+            #    errored = True
+            #    print "Error - Can't open file=" + csv_file_location
 
-            if csv_file is not None:
+            with fastcsv.Reader(io.open(csv_file_location)) as reader :
+                csv_row = reader.next()
 
-                for csv_row in csv_data:
+                idPosition = csv_row.index(id_field)
+                uuidPosition = csv_row.index("uuid")
 
-                    editid = csv_row[id_field].strip()
-                    red_ids.set( editid, csv_row["uuid"] )
+                for csv_row in reader:
 
-            else:
-                errored = True
-                print "Error - Can't open file=" + csv_file_location
+                    editid = csv_row[idPosition].strip()
+                    red_ids.set( editid, csv_row[uuidPosition] )
+
 
         # Rest a while, you've worked hard enough
-        time.sleep(1)
+        time.sleep(0.1)  # point one second
     
     return errored
 
@@ -185,8 +199,8 @@ def SolrOptimize( indexing ):
     print '   - all optimized.'
 
 def StoreRelations( _, red_rel, red_ids ):
-    # 
-    # open the relationship file and store the relations 
+    #
+    # open the relationship file and store the relations
     #
     print " - Clearing old relationships."
     red_rel.flushdb( )
@@ -194,33 +208,38 @@ def StoreRelations( _, red_rel, red_ids ):
     error = False
     error_rel = []
     for csv_file in csvtordf.csv_files['relationships']:
-        
+
         print "  - " + csv_file,
-        
+
         csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
 
-        csv_codec_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
-        csv_records = csv.DictReader( csv_codec_file, restval="" )
+        with fastcsv.Reader(io.open(csv_file_location)) as reader :
 
-        if csv_codec_file :
-            # print "("+ str(len(csv_records)) + ")",
-        
+            csv_row = reader.next()
+
+            leftNamePosition = csv_row.index("left_table_name")
+            rightNamePosition = csv_row.index("right_table_name")
+            leftValPosition = csv_row.index("left_id_value")
+            rightValPosition = csv_row.index("right_id_value")
+            typePosition = csv_row.index("relationship_type")
+
             record_count = 0
-            for record in csv_records:
+            for record in reader:
+
                 record_count += 1
 
                 if record_count % 10000 == 0:
                     print str(record_count),
-                    time.sleep( 0.5 )
+                    time.sleep( 0.1 )  # 0.1 seconds (10  seconds in total)
 
-                left_thing = record['left_table_name'][11:]  # remove "cofk_union_"
-                right_thing = record['right_table_name'][11:]  # remove "cofk_union_"
-                relationship_type = record['relationship_type'][11:]  # remove "cofk_union_"
+                left_thing = record[leftNamePosition][11:]  # remove "cofk_union_"
+                right_thing = record[rightNamePosition][11:]  # remove "cofk_union_"
+                relationship_type = record[typePosition][11:]  # remove "cofk_union_"
 
                 try:
                     left_to_right_rel, right_to_left_rel = relationships.getRdfRelationshipsLeftRight( left_thing, relationship_type, right_thing )
 
-                    left, right = red_ids.mget( [record['left_id_value'], record['right_id_value']] )
+                    left, right = red_ids.mget( [record[leftValPosition], record[rightValPosition]] )
 
                     if left is not None and right is not None:
                         red_rel.sadd( left, "::".join( [left_to_right_rel, right, right_thing] ) )
@@ -234,16 +253,12 @@ def StoreRelations( _, red_rel, red_ids ):
                         error_rel.append(relationship_type)
                         print "Error - Problem with relationship: " + left_thing, right_thing, relationship_type + " (Does it need adding to relationships.py?)"
                         print "Number:" + str(record_count - 1) + " Record:" + str(record)
-           
-            print ""
-            
-        else:
-            error = True
-            print "Error - Can't open file=" + csv_file_location
 
-        csv_codec_file.close()
+            print ""
+
 
     return error
+
 
 
 def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
@@ -444,7 +459,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                         del solr_list[:]
 
                         # rest a while, give something else a chance!
-                        time.sleep( 1)
+                        time.sleep(0.1)
 
 
                 print "  - adding to solr last to", record_count
