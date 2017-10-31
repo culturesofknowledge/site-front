@@ -35,6 +35,10 @@
 		padding: 5px 0 5px 20px;
 		margin-bottom: 10px;
 	}
+	.comment {
+		margin-top: 10px;
+	}
+
 </style>
 </%def>
 <%def name="for_foot()">
@@ -241,8 +245,12 @@
   			  %endif
 
 
-				${self.h4_relations_list( h.get_relations_to_comments_on_date_fieldname(),
-				title="Comments about the date", type='simple' )}
+				% if c.profile.has_key( h.get_relations_to_comments_on_date_fieldname() ):
+					<div class="comment">
+						<p><span class="fieldlabel">Comments about the date:</span></p>
+						${self.simple_relations( h.get_relations_to_comments_on_date_fieldname(), "list-style: none;")}
+					</div>
+				% endif
 			</div><!-- class:workspacing content -->
 		  </div>
 	% endif
@@ -268,8 +276,13 @@
 						%if flags_decoded:
 							<p><span class="flags">Authors are ${flags_decoded}</span></p>
                         %endif
-						${self.h4_relations_list( h.get_relations_to_comments_on_author_fieldname(),
-						title="Comment about the authors", type='simple' )}
+
+			  			% if c.profile.has_key( h.get_relations_to_comments_on_author_fieldname() ):
+							<div class="comment">
+								<p><span class="fieldlabel">Comments about the authors:</span></p>
+								${self.simple_relations( h.get_relations_to_comments_on_author_fieldname(), "list-style: none;")}
+							</div>
+						%endif
 					</div>
 			  % endif
 
@@ -281,13 +294,18 @@
 					% if c.profile.has_key( addressee_as_marked_fieldname ) :
 						<p><span class="fieldlabel">Marked as:</span> <span class="as-marked">${c.profile[ addressee_as_marked_fieldname ]}</span></p>
 					% endif
+
 					<% flags_decoded = self.decode_uncertainty_flags( h.get_addressee_flags_fieldname_root() ) %>
 					%if flags_decoded:
 						<p><span class="flags">Recipients are ${flags_decoded}</span></p>
 					%endif
-					${self.h4_relations_list( h.get_relations_to_comments_on_addressee_fieldname(),
-					title="Comments about the Recipient", type='simple' )}
 
+  					% if c.profile.has_key( h.get_relations_to_comments_on_addressee_fieldname() ):
+						<div class="comment">
+							<p><span class="fieldlabel">Comments about the recipients:</span></p>
+							${self.simple_relations( h.get_relations_to_comments_on_addressee_fieldname(), "list-style: none;" )}
+						</div>
+					%endif
 				</div>
 			  % endif
 
@@ -297,8 +315,12 @@
 					<div class="people mentions">
 						${self.relations_list( h.get_relations_to_people_mentioned_fieldname() )}
 
-			  			${self.h4_relations_list( h.get_comments_on_people_mentioned_in_work_fieldname(),
-							title="Comments about mentioned",  type='simple' )}
+  						% if c.profile.has_key( h.get_comments_on_people_mentioned_in_work_fieldname() ):
+							<div class="comment">
+								<p><span class="fieldlabel">Comments about mentioned:</span></p>
+								${self.simple_relations( h.get_comments_on_people_mentioned_in_work_fieldname(), "list-style: none;" )}
+							</div>
+						% endif
 					</div>
   				% endif
 			</div><!-- class:workspacing content -->
@@ -325,9 +347,13 @@
 					% if flags_decoded:
 						<p><span class="flags">Origin is ${flags_decoded}</span></p>
 					% endif
-					${self.h4_relations_list( h.get_relations_to_comments_on_origin_fieldname(),
-					title="Comment about the origin", type='simple' )}
 
+		  			% if c.profile.has_key( h.get_relations_to_comments_on_origin_fieldname() ):
+						<div class="comment">
+							<p><span class="fieldlabel">Comments about the origin:</span></p>
+							${self.simple_relations( h.get_relations_to_comments_on_origin_fieldname(), "list-style: none;")}
+						</div>
+					% endif
 				</div>
 		  % endif
 
@@ -346,8 +372,12 @@
 					<p><span class="flags">Destination is ${flags_decoded}</span></p>
 				% endif
 
-				${self.h4_relations_list( h.get_relations_to_comments_on_destination_fieldname(),
-				title="Comments about the destination", type='simple' )}
+				% if c.profile.has_key( h.get_relations_to_comments_on_destination_fieldname() ):
+					<div class="comment">
+						<p><span class="fieldlabel">Comments about the destination:</span></p>
+						${self.simple_relations( h.get_relations_to_comments_on_destination_fieldname(), "list-style: none;" )}
+					</div>
+				% endif
 			</div>
 		  % endif
 

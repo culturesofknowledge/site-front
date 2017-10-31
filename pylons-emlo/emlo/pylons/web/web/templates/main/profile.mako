@@ -504,7 +504,7 @@
 
 #------------------------------------------------------------------------------------------------------
 
-<%def name="simple_relations(field)">  
+<%def name="simple_relations(field,style='')">
   ## Display a simple bit of text with no link. (Use this for comments.)
   % if field in c.profile :
     <ul>
@@ -518,7 +518,7 @@
 		  main_displayable_fieldname = h.get_main_displayable_fieldname( object_type )
 		  main_display_value = obj.get( main_displayable_fieldname )
       %>
-      <li><pre>${main_display_value}</pre></li>
+      <li style="${style}"><pre>${main_display_value}</pre></li>
     % endfor
     </ul>
   % endif

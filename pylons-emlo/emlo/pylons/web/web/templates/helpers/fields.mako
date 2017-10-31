@@ -93,10 +93,11 @@
         fields_to_display = [
         		h.get_repository_fieldname(),
 				h.get_shelfmark_fieldname(),
-
 				h.get_printed_edition_details_fieldname(),
+
 				h.get_relations_to_comments_fieldname(),
 				h.get_relations_to_comments_on_date_fieldname(),
+
 				h.get_handwritten_by_fieldname(),
 				h.get_manifestation_address_fieldname(),
 				h.get_incipit_fieldname(),
@@ -106,6 +107,7 @@
 				h.get_enclosing_fieldname(),
 				h.get_enclosed_fieldname(),
 				h.get_non_letter_enclosures_fieldname(),
+				h.get_accompaniments_fn(),
 				h.get_seal_fieldname(),
 				h.get_paper_type_fieldname(),
 				h.get_paper_size_fieldname(),
