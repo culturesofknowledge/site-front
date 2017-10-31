@@ -239,6 +239,10 @@
 			  %if flags_decoded:
 				  <p><span class="flags">Date is ${flags_decoded}</span></p>
   			  %endif
+
+
+				${self.h4_relations_list( h.get_relations_to_comments_on_date_fieldname(),
+				title="Comments about the date", type='simple' )}
 			</div><!-- class:workspacing content -->
 		  </div>
 	% endif
@@ -281,6 +285,9 @@
 					%if flags_decoded:
 						<p><span class="flags">Recipients are ${flags_decoded}</span></p>
 					%endif
+					${self.h4_relations_list( h.get_relations_to_comments_on_addressee_fieldname(),
+					title="Comments about the Recipient", type='simple' )}
+
 				</div>
 			  % endif
 
@@ -289,6 +296,9 @@
 					<h4>Mentions</h4>
 					<div class="people mentions">
 						${self.relations_list( h.get_relations_to_people_mentioned_fieldname() )}
+
+			  			${self.h4_relations_list( h.get_comments_on_people_mentioned_in_work_fieldname(),
+							title="Comments about mentioned",  type='simple' )}
 					</div>
   				% endif
 			</div><!-- class:workspacing content -->
@@ -315,6 +325,8 @@
 					% if flags_decoded:
 						<p><span class="flags">Origin is ${flags_decoded}</span></p>
 					% endif
+					${self.h4_relations_list( h.get_relations_to_comments_on_origin_fieldname(),
+					title="Comment about the origin", type='simple' )}
 
 				</div>
 		  % endif
@@ -333,6 +345,9 @@
 				% if flags_decoded :
 					<p><span class="flags">Destination is ${flags_decoded}</span></p>
 				% endif
+
+				${self.h4_relations_list( h.get_relations_to_comments_on_destination_fieldname(),
+				title="Comments about the destination", type='simple' )}
 			</div>
 		  % endif
 
@@ -424,41 +439,17 @@
 
 
   ##============================= Comments ============================================
-	% if c.profile.has_key( h.get_relations_to_comments_fieldname()) or \
-		c.profile.has_key( h.get_relations_to_comments_on_author_fieldname()) or \
-		c.profile.has_key( h.get_relations_to_comments_on_addressee_fieldname()) or \
-		c.profile.has_key( h.get_comments_on_people_mentioned_in_work_fieldname()) or \
-		c.profile.has_key( h.get_relations_to_comments_on_origin_fieldname()) or \
-		c.profile.has_key( h.get_relations_to_comments_on_destination_fieldname()) or \
-		c.profile.has_key( h.get_relations_to_comments_on_receipt_date_fieldname()) or \
-		c.profile.has_key( h.get_relations_to_comments_on_date_fieldname()):  ## adding control to show or not show the fieldset if there is no content
+	% if c.profile.has_key( h.get_relations_to_comments_fieldname()) :
 		<div class="column workfieldset  profilepart">
-		  <h3 class="worklegend"><img src="/img/icon-comment.png" class="workicon"/>Comments</h3>
+		  <h3 class="worklegend">
+			  <img src="/img/icon-comment.png" class="workicon"/>
+			  Comments
+		  </h3>
 
-			<div class="workspacing  content">
+		  <div class="workspacing  content">
 
 			  ${self.h4_relations_list( h.get_relations_to_comments_fieldname(),
-			  							title="General comments", type='simple')}
-
-
-
-			  ${self.h4_relations_list( h.get_relations_to_comments_on_addressee_fieldname(),
-										title="Comments about the Recipient", type='simple' )}
-
-			  ${self.h4_relations_list( h.get_relations_to_comments_on_origin_fieldname(),
-										title="Comments about the Origin", type='simple' )}
-
-			  ${self.h4_relations_list( h.get_relations_to_comments_on_destination_fieldname(),
-										title="Comments about the Destination", type='simple' )}
-
-			  ${self.h4_relations_list( h.get_comments_on_people_mentioned_in_work_fieldname(),
-										title="Comments about people mentioned",  type='simple' )}
-
-			  ${self.h4_relations_list( h.get_relations_to_comments_on_date_fieldname(),
-										title="Comments about the Date", type='simple' )} 
-
-              ${self.h4_relations_list( h.get_relations_to_comments_on_receipt_date_fieldname(),
-                                        title="Comments about the Receipt Date", type='simple' )}
+			  							title="General", type='simple')}
 
 			</div><!-- class:workspacing  content -->
 		  </div>
