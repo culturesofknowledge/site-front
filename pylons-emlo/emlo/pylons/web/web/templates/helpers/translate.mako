@@ -24,7 +24,7 @@
 		h.get_editors_notes_fieldname().lower().strip() : "Editors' Notes",
 		h.get_relations_to_manifestation_fieldname().lower().strip() : 'Versions (originals, copies, digital, etc.)',
 		h.get_relations_to_resource_fieldname().lower().strip()      : 'Related Resources',
-		h.get_relations_to_comments_fieldname().lower().strip()      : 'Comments',
+		h.get_relations_to_comments_fieldname().lower().strip()      : 'Comment',
 		h.get_start_year_fieldname().lower().strip()           : 'Year',
 		h.get_author_uri_fieldname().lower().strip()           : 'Author',
 		h.get_addressee_uri_fieldname().lower().strip()        : 'Recipient',

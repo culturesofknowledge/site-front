@@ -255,7 +255,7 @@
 
 				<!-- script moved to end of body function -->
 				<!-- AddThis Button END -->
-				<br>
+				<br/>
 
 				<%
 					object_type_desc = trans.translate( object_type )
@@ -293,17 +293,17 @@
 				${next.profileRight()}
 
 			</div><!-- class:column -->
-			<br>
+			<br/>
 
 		% else:
 
 			<div class="column large-9 large-push-3">
-				<br></br>
+				<br/>
 				<h2>Missing</h2>
 				<p>Sorry, that record has not been found, it may have been merged with another record. Sorry about that.</p>
-				<br></br>
-				<br></br>
-				<br></br>
+				<br/>
+				<br/>
+				<br/>
 			</div>
 
 		% endif
@@ -322,15 +322,15 @@
   % if c.profile.has_key( field ) :
     <% label = trans.translate(field) %>
     <dt>${label}</dt>
-    <% 
-    value = c.profile[field]
-    if capitalize:
-      value = value.capitalize()
+    <%
+		value = c.profile[field]
+		if capitalize:
+		  value = value.capitalize()
     %>
     % if link != '' :
       <%
-      # Link needs completing by adding the ID value to the end
-      full_link = link + value
+		  # Link needs completing by adding the ID value to the end
+		  full_link = link + value
       %>
       <dd><a href="${full_link}">${value}</a></dd>
     % else :
@@ -348,27 +348,17 @@
 	    value = c.profile[field]
 	    %>
 		<div class="profilepart">
+
 			% if icon :
-				<h3><img src="${icon}">${label}</h3>
+				<h4><img src="${icon}">${label}</h4>
 			% else:
-				<h3>${label}</h3>
+				<h4>${label}</h4>
 			% endif
 
-			<div class="content">
-
-			    % if field == h.get_language_fieldname():
-					<%
-						if type( value ) == list:
-							strval = ", ".join( value )
-							value = strval.strip()
-					 %>
-					<a href="/forms/advanced?let_lang=${value}" title="Display letters written in ${value}">
-						${value}
-			        </a>
-			    % else:
-					${value}
-			    % endif
+			<div class="content section">
+				${value}
 			</div>
+
 		</div>
 
   % endif
@@ -447,7 +437,7 @@
 #------------------------------------------------------------------------------------------------------
 
 <%def name="relations_list( field, display_label = False )">
-##{
+<div class="relations">
   % if field in c.profile :
     <%
     # Normally we will sort the data by the 'main displayable fieldname' (e.g. person's name)
@@ -491,23 +481,25 @@
 
     % for item in sorted_list :
       <%
-      url = h.profile_url_from_uri( item[ 'rel' ] )
-      display = item['display']
+		  url = h.profile_url_from_uri( item[ 'rel' ] )
+		  display = item['display']
+		  role = item[ 'obj' ].get( h.get_person_titles_or_roles_fieldname(), None)
       %>
-      <p>
-      <a href="${url}">${display}</a>
-      % if item[ 'obj' ].has_key( h.get_person_titles_or_roles_fieldname()):
-        <br />
-        ${item[ 'obj' ][ h.get_person_titles_or_roles_fieldname()]}
-      % endif
-      </p>
+
+      % if role:
+	  	<p><a href="${url}">${display}</a> - ${role}</p>
+	  % else :
+	  	<p><a href="${url}">${display}</a></p>
+	  % endif
+
     % endfor
 
     % if display_label:
       </dd>
     % endif
   % endif
-##}
+</div>
+
 </%def>
 
 #------------------------------------------------------------------------------------------------------
@@ -518,20 +510,15 @@
     <ul>
     % for relation in c.profile[field]:
       <%
-      uuid = h.uuid_from_uri( relation, True )
-      if not c.relations.has_key( uuid ):
-        continue
-      obj = c.relations[ uuid ]
-      object_type = obj['object_type']
-      main_displayable_fieldname = h.get_main_displayable_fieldname( object_type )
-      main_display_value = obj.get( main_displayable_fieldname )
+		  uuid = h.uuid_from_uri( relation, True )
+		  if not c.relations.has_key( uuid ):
+			continue
+		  obj = c.relations[ uuid ]
+		  object_type = obj['object_type']
+		  main_displayable_fieldname = h.get_main_displayable_fieldname( object_type )
+		  main_display_value = obj.get( main_displayable_fieldname )
       %>
-
-      <li>
-
-      <pre>${main_display_value}</pre>
-
-      </li>
+      <li><pre>${main_display_value}</pre></li>
     % endfor
     </ul>
   % endif
@@ -623,30 +610,26 @@
 
     relations_list = c.profile[ field ]
 
-    if field == h.get_relations_to_manifestation_fieldname(): #{ # they're a random mess, sort them!
-      sorted_relations = h.sort_manifs_by_type( relations_list )
-      relations_list = []
-      for manif_tuple in sorted_relations: #{  # consists of URI, manif type, manif type for sorting
-        manif_uri = manif_tuple[0]
-        relations_list.append( manif_uri )
-      #}
+    #if field == h.get_relations_to_manifestation_fieldname(): #{ # they're a random mess, sort them!
+    #  sorted_relations = h.sort_manifs_by_type( relations_list )
+    #  relations_list = []
+    #  for manif_tuple in sorted_relations: #{  # consists of URI, manif type, manif type for sorting
+    #    manif_uri = manif_tuple[0]
+    #    relations_list.append( manif_uri )
+    #  #}
     #}
 
     %>
 
-	<div>
-		% for relation in relations_list:
-
-		  <%
+	<div class="detailed_relations">
+	 <%
+		for relation in relations_list:
 		  uuid = h.uuid_from_uri( relation, True )
 		  if not c.relations.has_key( uuid ):
 			  continue
-		  obj = c.relations[ uuid ]
-		  %>
 
-		  ${self.display_details_of_one_object( obj, nested = False )}
-
-		% endfor
+		  self.display_details_of_one_object( c.relations[ uuid ], nested=False )
+	  %>
 	</div>
   % endif
 </%def>
@@ -655,6 +638,7 @@
 
 <%def name="display_details_of_one_object( obj, nested )">
 ##{
+	<div class="display_details_of_one_object ${nested}">
   <%
   uri_fieldname = h.get_uri_fieldname()
 
@@ -774,7 +758,7 @@
   % if len( details_to_display ) == 0:
     
     % if object_type == 'comment':
-      <pre>${main_display_value}</pre><br/>
+      <pre>${main_display_value}</pre>
     % else:
       <a href="${url}">${main_display_value}</a><br/>
     % endif
@@ -810,13 +794,7 @@
   ##===============================================================================
   % else:
 
-    ##% if main_displayable_fieldname == h.get_manifestation_type_fieldname():
-	  ##<h5><a href="/forms/advanced?let_type=${main_display_value}" title="Display letters of this type (${main_display_value})">
-    ##  ${main_display_value}
-    ##  </a></h5>
-    ##% else:
-		<h5>${main_display_value}</h5>
-    ##% endif
+	<h5>Version: ${main_display_value}</h5>
 
     % for details_dict in details_to_display:
 
@@ -825,17 +803,25 @@
 		  label            = details_dict[ 'label' ]
 		  display_value    = details_dict[ 'display_value' ]
 		  related_obj      = details_dict[ 'related_obj' ]
-		  link             = details_dict[ 'link' ]
       %>
 
       % if obj.has_key( field_to_display ):
-				% if label :
-				<span style="color:#172854;">${label}</span>:<br/>&nbsp;&nbsp;&nbsp;
-				% endif
+
         % if len( related_obj ) > 0:
-		 ${self.display_details_of_one_object( related_obj, nested = True )}<br/>
+
+			% if label :
+				<p><span class="fieldlabel">${label}:</span></p>
+			% endif
+		 	${self.display_details_of_one_object( related_obj, nested=True )}
+\
         % else:
-         ${display_value}<br/>
+\
+			% if label :
+				<p><span class="fieldlabel">${label}:</span>${display_value}</p>
+			% else:
+				<p>${display_value}</p>
+			% endif
+
         % endif
 
 
@@ -844,7 +830,8 @@
     % endfor
 
   % endif
-##}
+
+	</div>
 </%def>
 #------------------------------------------------------------------------------------------------------
 
@@ -857,7 +844,7 @@
 
   % if field in c.further_relations :
     % if 'image' in field :
-      <% 
+      <%
         self.display_images( field, listall )
       %>
 
@@ -891,21 +878,21 @@
 <%def name="display_images( field, list_all_for_one_manif=False )">
 ##{
   <%
-  ## Double-check that 'further relations' dictionary contains images
-  if not c.further_relations:
-    return
-  elif len( c.further_relations ) == 0:
-    return
-  elif field not in c.further_relations:
-    return
-  
-  ## Initalise fieldnames
-  image_source_fieldname = h.get_image_source_fieldname()
-  uri_fieldname = h.get_uri_fieldname()
+	  ## Double-check that 'further relations' dictionary contains images
+	  if not c.further_relations:
+		return
+	  elif len( c.further_relations ) == 0:
+		return
+	  elif field not in c.further_relations:
+		return
 
-  ## Get image data such as filename and order in which images should be displayed
-  raw_img_data_in_random_order = c.further_relations[ field ].values()
-  sorted_img_data = self.sort_images( raw_img_data_in_random_order )
+	  ## Initalise fieldnames
+	  image_source_fieldname = h.get_image_source_fieldname()
+	  uri_fieldname = h.get_uri_fieldname()
+
+	  ## Get image data such as filename and order in which images should be displayed
+	  raw_img_data_in_random_order = c.further_relations[ field ].values()
+	  sorted_img_data = self.sort_images( raw_img_data_in_random_order )
   %>
 
   % if list_all_for_one_manif :
@@ -913,7 +900,7 @@
     ## IMAGE profile page: all images are shown down left-hand side, with one enlarged on right.
     ## Here we just do the left-hand set of images. The big enlarged one is done in image.mako.
     ##------------------------------------------------------------------------------------------
-    <%img_count=0%>
+    <% img_count=0 %>
 		<div class="profilepart"><br/>
     <ul class="small-block-grid-2 medium-block-grid-4 large-block-grid-2">
     % for one_img_dict in sorted_img_data:
@@ -1055,24 +1042,26 @@
 #------------------------------------------------------------------------------------------------------
 
 <%def name="decode_uncertainty_flags( fieldname_root )" >
-  <%
+<%
   flags = []
   flagstring = ''
 
   endings = [ 'inferred', 'uncertain', 'approximate' ]
-  fieldnames = [ fieldname_root+ending for ending in endings ]
+  fieldnames = [fieldname_root + ending for ending in endings]
 
-  index = -1
-  for fieldname in fieldnames:
-    index += 1
+  for index, fieldname in enumerate(fieldnames):
     if fieldname in c.profile:
-      flags.append( endings[ index ] )
+      flags.append( endings[index] )
 
-  if len( flags ) > 0:
-    flagstring  = "(" + ', '.join( flags ) + ")"
+  if len( flags ) == 1 :
+    flagstring  = flags[0]
+  elif len( flags ) == 2 :
+    flagstring  = flags[0] + " and " + flags[1]
+  elif len( flags ) == 3 :
+    flagstring  = flags[0] + ", " + flags[1] + " and " + flags[2]
 
   return flagstring
-  %>
+%>
 </%def>
 
 #----------------------------------------------------------------------------------------------------
@@ -1297,88 +1286,79 @@
   ## Link through to the Works Search Results from each total.
   ## ('Sorted list' will have been produced by function 'works_list()')
   ##====================================================================
-  <% 
-  ## Count up the letters that we have retrieved in a dictionary, e.g. { 1670: 5, 1660: 2 }
-  ## and also get a list of all the separate years in numerical order.
+  <%
+	  ## Count up the letters that we have retrieved in a dictionary, e.g. { 1670: 5, 1660: 2 }
+	  ## and also get a list of all the separate years in numerical order.
 
-  ##====================================================================================
-  ## N.B. TODO!!! STILL NEED TO CHECK FOR LETTERS WITH AN 'END DATE' BUT NO 'START DATE'
-  ##====================================================================================
+	  ##====================================================================================
+	  ## N.B. TODO!!! STILL NEED TO CHECK FOR LETTERS WITH AN 'END DATE' BUT NO 'START DATE'
+	  ##====================================================================================
 
-  ( distinct_years, year_counts ) = self.count_works_per_year( sorted_list )
+	  ( distinct_years, year_counts ) = self.count_works_per_year( sorted_list )
 
-  # Prepare to link through to Works Search Results: work out which field to search on.
-  fields_crossref = {
-    'person': { 
-      h.get_works_created_fieldname():            h.get_author_uri_fieldname(),
-      h.get_letters_received_fieldname():         h.get_addressee_uri_fieldname(),
-      h.get_works_in_which_mentioned_fieldname(): h.get_relations_to_people_mentioned_fieldname()
-    },
+	  # Prepare to link through to Works Search Results: work out which field to search on.
+	  fields_crossref = {
+		'person': {
+		  h.get_works_created_fieldname():            h.get_author_uri_fieldname(),
+		  h.get_letters_received_fieldname():         h.get_addressee_uri_fieldname(),
+		  h.get_works_in_which_mentioned_fieldname(): h.get_relations_to_people_mentioned_fieldname()
+		},
 
-    'location': { 
-      h.get_works_with_origin_fieldname():        h.get_origin_uri_fieldname(),
-      h.get_works_with_destination_fieldname():   h.get_destination_uri_fieldname(),
-      h.get_works_in_which_mentioned_fieldname(): h.get_relations_to_places_mentioned_fieldname()
-    },
+		'location': {
+		  h.get_works_with_origin_fieldname():        h.get_origin_uri_fieldname(),
+		  h.get_works_with_destination_fieldname():   h.get_destination_uri_fieldname(),
+		  h.get_works_in_which_mentioned_fieldname(): h.get_relations_to_places_mentioned_fieldname()
+		},
 
-    'institution': { 
-      h.get_repository_contents_fieldname():      'repository', ## use the form field and repository name
-    },
-  }
+		'institution': {
+		  h.get_repository_contents_fieldname():      'repository', ## use the form field and repository name
+		},
+	  }
 
-  search_field = ''
-  core_href = ''
-  href = ''
+	  search_field = ''
+	  core_href = ''
+	  href = ''
 
-  object_type = c.profile[ 'object_type' ]
-  if fields_crossref.has_key( object_type ): #{
-    search_fields = fields_crossref[ object_type ]
-    if search_fields.has_key( field ): #{
-      search_field = search_fields[ field ]
-    #}
-  #}
+	  object_type = c.profile[ 'object_type' ]
+	  if fields_crossref.has_key( object_type ): #{
+		search_fields = fields_crossref[ object_type ]
+		if search_fields.has_key( field ): #{
+		  search_field = search_fields[ field ]
+		#}
+	  #}
 
-  if search_field != '': #{
-    if object_type == 'institution': #{
-      repository_name = c.profile[ h.get_main_displayable_fieldname( object_type ) ]
-      core_href='/forms/advanced?' + search_field + '=' + repository_name
-    #}
-    else: #{
-      uri_value = h.strip_value_prefix( c.profile[ h.get_uri_fieldname() ], h.get_uri_value_prefix() )
-      core_href='/forms/advanced?' + search_field + '=' + uri_value
-    #}
-  #}
+	  if search_field != '': #{
+		if object_type == 'institution': #{
+		  repository_name = c.profile[ h.get_main_displayable_fieldname( object_type ) ]
+		  core_href='/forms/advanced?' + search_field + '=' + repository_name
+		#}
+		else: #{
+		  uri_value = h.strip_value_prefix( c.profile[ h.get_uri_fieldname() ], h.get_uri_value_prefix() )
+		  core_href='/forms/advanced?' + search_field + '=' + uri_value
+		#}
+	  #}
   %>
 
-  <%prev_decade = 0%>
-  <table>
-  <tr>
-  <th>Decade</th>
-  <th>Letters per year</th>
-  </tr>
-  <tr>
-  <td>
+  <% prev_decade = 0 %>
+  <table><tr><th>Decade</th><th>Letters per year</th></tr>
+  <tr><td>
   % for year in distinct_years:
     <%
-    # Put unknown year at the end
-    if year == 9999:
-      continue
+		# Put unknown year at the end
+		if year == 9999:
+		  continue
 
-    letter_count = year_counts[ year ]
-    decade = year - (year % 10)
+		letter_count = year_counts[ year ]
+		decade = year - (year % 10)
     %>
 
     % if decade != prev_decade and prev_decade > 0: 
-      </td>
-      </tr>
-      <tr>
-      <td>
+      </td></tr><tr><td>
     % endif
 
     % if decade != prev_decade: 
       ${decade}s
-      </td>
-      <td>
+      </td><td>
     % else:
       &diams; 
     % endif
@@ -1397,10 +1377,9 @@
       </a>
     % endif
 
-    <%prev_decade = decade%>
+    <% prev_decade = decade %>
   % endfor
-  </td>
-  </tr>
+  </td></tr>
 
   % if year_counts.has_key( 9999 ):
     <tr><td>????</td><td>
@@ -1424,25 +1403,25 @@
 
 <%def name="get_max_works_per_section_of_profile()">
   <%
-  return 25
+  	return 25
   %>
 </%def>
 #----------------------------------------------------------------------------------------------------
 
 <%def name="is_short_enough_to_show_every_row( list_of_data )">
   <%
-  ## Depending on how long a list of data you have got,
-  ## decide whether to show a detailed list or just a summary by year.
+	  ## Depending on how long a list of data you have got,
+	  ## decide whether to show a detailed list or just a summary by year.
 
-  row_count = len( list_of_data )
+	  row_count = len( list_of_data )
 
-  if row_count <= self.get_max_works_per_section_of_profile(): # can show every work, with description
-    show_every_row = True
+	  if row_count <= self.get_max_works_per_section_of_profile(): # can show every work, with description
+		show_every_row = True
 
-  else: # must show just a summary with totals by year
-    show_every_row = False
+	  else: # must show just a summary with totals by year
+		show_every_row = False
 
-  return show_every_row
+	  return show_every_row
   %>
 </%def>
 #----------------------------------------------------------------------------------------------------
@@ -1450,65 +1429,65 @@
 <%def name="get_works_summary_sorted_by_date( field )">
 ##{
   <%
-  if not field in c.profile :
-    return []
+	  if not field in c.profile :
+		return []
 
-  if field == h.get_repository_contents_fieldname(): ## this has manifestation IDs, need to look up works
-    work_uris = self.get_works_in_repository() 
-  else:
-    work_uris = c.profile[ field ]
+	  if field == h.get_repository_contents_fieldname(): ## this has manifestation IDs, need to look up works
+		work_uris = self.get_works_in_repository()
+	  else:
+		work_uris = c.profile[ field ]
 
-  show_every_row = self.is_short_enough_to_show_every_row( work_uris )
+	  show_every_row = self.is_short_enough_to_show_every_row( work_uris )
 
-  if show_every_row: #{ # get year, full date and description
-    fields_to_get = [ h.get_start_year_fieldname(),
-                      'started_date_sort', 
-                      h.get_main_displayable_fieldname( 'work' ) ]
-  #}
-  else:  #{ # get year only
-    fields_to_get = [ h.get_end_year_fieldname(),
-                      h.get_start_year_fieldname() ]
-  #}
-  work_details = h.get_records_from_solr( work_uris, fields_to_get )
+	  if show_every_row: #{ # get year, full date and description
+		fields_to_get = [ h.get_start_year_fieldname(),
+						  'started_date_sort',
+						  h.get_main_displayable_fieldname( 'work' ) ]
+	  #}
+	  else:  #{ # get year only
+		fields_to_get = [ h.get_end_year_fieldname(),
+						  h.get_start_year_fieldname() ]
+	  #}
+	  work_details = h.get_records_from_solr( work_uris, fields_to_get )
 
 
-  # Sort works by date.
-  to_be_sorted = []
-  item = { 'rel': None, 'obj': None, 'sort': None }
+	  # Sort works by date.
+	  to_be_sorted = []
+	  item = { 'rel': None, 'obj': None, 'sort': None }
 
-  for uuid, obj in work_details.iteritems(): #{
-    stripped_uuid = h.strip_value_prefix( uuid, h.get_uuid_value_prefix() )
-    uri = 'http://localhost/work/' + stripped_uuid
-    link = h.profile_url_from_uri( uri )
+	  for uuid, obj in work_details.iteritems(): #{
+		stripped_uuid = h.strip_value_prefix( uuid, h.get_uuid_value_prefix() )
+		uri = 'http://localhost/work/' + stripped_uuid
+		link = h.profile_url_from_uri( uri )
 
-    if not obj.has_key( h.get_start_year_fieldname() ): #{
-      ## If the main date field is missing (i.e. *start* year of range), check for the *end* of the range:
-      ## we may have a record dated something like 'On or before 15 Sep 1659'.
-      if obj.has_key( h.get_end_year_fieldname() ): #{
-        obj[ h.get_start_year_fieldname() ] = obj[ h.get_end_year_fieldname() ]
-      #}
-      else: #{
-        obj[ h.get_start_year_fieldname() ] = 9999
-      #}
-    #}
+		if not obj.has_key( h.get_start_year_fieldname() ): #{
+		  ## If the main date field is missing (i.e. *start* year of range), check for the *end* of the range:
+		  ## we may have a record dated something like 'On or before 15 Sep 1659'.
+		  if obj.has_key( h.get_end_year_fieldname() ): #{
+			obj[ h.get_start_year_fieldname() ] = obj[ h.get_end_year_fieldname() ]
+		  #}
+		  else: #{
+			obj[ h.get_start_year_fieldname() ] = 9999
+		  #}
+		#}
 
-    if show_every_row:
-      sortval = obj[ 'started_date_sort' ]
-    else:
-      sortval = obj[ h.get_start_year_fieldname() ]
+		if show_every_row:
+		  sortval = obj[ 'started_date_sort' ]
+		else:
+		  sortval = obj[ h.get_start_year_fieldname() ]
 
-    item = { 'rel'    : link, \
-             'obj'    : obj, \
-             'sort'   : sortval
-           }
-    to_be_sorted.append( item )
-  #}
+		item = { 'rel'    : link, \
+				 'obj'    : obj, \
+				 'sort'   : sortval
+			   }
+		to_be_sorted.append( item )
+	  #}
 
-  sorted_list = sorted( to_be_sorted, key=lambda item : item['sort'], reverse=False )
+	  sorted_list = sorted( to_be_sorted, key=lambda item : item['sort'], reverse=False )
   %>
 
   <%
-  return sorted_list
+  	return sorted_list
   %>
 ##}
 </%def>
@@ -1524,26 +1503,26 @@
   ## In turn, 'obj' is itself a dictionary with fieldname keys, e.g. h.get_start_year_fieldname().
   ##==============================================================================================
   <%
-  year_counts = {}
-  distinct_years = []
-  prev_year = 0
+	  year_counts = {}
+	  distinct_years = []
+	  prev_year = 0
 
-  for item in sorted_list: #{
-    obj = item['obj'] 
-    year = obj.get( h.get_start_year_fieldname(), 9999 )
+	  for item in sorted_list: #{
+		obj = item['obj']
+		year = obj.get( h.get_start_year_fieldname(), 9999 )
 
-    if year_counts.has_key( year ):
-      year_counts[ year ] += 1
-    else:
-      year_counts[ year ] = 1
+		if year_counts.has_key( year ):
+		  year_counts[ year ] += 1
+		else:
+		  year_counts[ year ] = 1
 
-    if year != prev_year:
-      distinct_years.append( year )
+		if year != prev_year:
+		  distinct_years.append( year )
 
-    prev_year = year
-  #}
+		prev_year = year
+	  #}
 
-  return ( distinct_years, year_counts )
+	  return ( distinct_years, year_counts )
   %>
 ##}
 </%def>
@@ -1552,63 +1531,63 @@
 
 <%def name="get_works_in_repository()">
   <%
-  ## Repository contents is a list of manifestation IDs.
-  ## Convert these to a list of work IDs and return the list.
+	  ## Repository contents is a list of manifestation IDs.
+	  ## Convert these to a list of work IDs and return the list.
 
-  work_uris = []
+	  work_uris = []
 
-  if c.profile.has_key( h.get_repository_contents_fieldname() ): #{
-    manifs = c.profile[ h.get_repository_contents_fieldname() ]
-    fields_to_get = [ h.get_relations_to_work_fieldname() ]
+	  if c.profile.has_key( h.get_repository_contents_fieldname() ): #{
+		manifs = c.profile[ h.get_repository_contents_fieldname() ]
+		fields_to_get = [ h.get_relations_to_work_fieldname() ]
 
-    response  = h.get_records_from_solr( manifs, fields_to_get )
+		response  = h.get_records_from_solr( manifs, fields_to_get )
 
-    for manif_id in manifs: #{
-      manif_id = h.uuid_from_uri( manif_id, full=True )
-      solr_record = response[ manif_id ]
-      if solr_record.has_key( h.get_relations_to_work_fieldname() ): #{
-        work_uri = solr_record[ h.get_relations_to_work_fieldname() ][0]
-        work_uris.append( work_uri )
-      #}
-    #}
-  #}
+		for manif_id in manifs: #{
+		  manif_id = h.uuid_from_uri( manif_id, full=True )
+		  solr_record = response[ manif_id ]
+		  if solr_record.has_key( h.get_relations_to_work_fieldname() ): #{
+			work_uri = solr_record[ h.get_relations_to_work_fieldname() ][0]
+			work_uris.append( work_uri )
+		  #}
+		#}
+	  #}
 
-  return work_uris
+	  return work_uris
   %>
 </%def>
 #----------------------------------------------------------------------------------------------------
 
 <%def name="get_displayable_image_types()">
   <%
-  displayable_types = [ 'jpg', 'png', 'gif' ]
-  return displayable_types
+  	displayable_types = [ 'jpg', 'png', 'gif' ]
+  	return displayable_types
   %>
 </%def>
 #----------------------------------------------------------------------------------------------------
 
 <%def name="is_displayable_image_type( image_source_url )">
   <%
-  is_displayable_image = False
-  displayable_image_types = self.get_displayable_image_types()
-  for displayable_image_type in displayable_image_types: #{
-    if image_source_url.lower().endswith( displayable_image_type ): #{
-      is_displayable_image = True
-      break
-    #}
-  #}
-  return is_displayable_image
+	  is_displayable_image = False
+	  displayable_image_types = self.get_displayable_image_types()
+	  for displayable_image_type in displayable_image_types: #{
+		if image_source_url.lower().endswith( displayable_image_type ): #{
+		  is_displayable_image = True
+		  break
+		#}
+	  #}
+	  return is_displayable_image
   %>
 </%def>
 #----------------------------------------------------------------------------------------------------
 
 <%def name="link_text_for_non_displayable_image( image_source_url )">
   <%
-  file_type = 'Image file'
-  if image_source_url.lower().endswith( 'pdf' ):
-    file_type = 'PDF'
-  elif image_source_url.lower().endswith( 'tif' ) or image_source_url.lower().endswith( 'tiff' ):
-    file_type = 'TIFF'
-  return file_type 
+	  file_type = 'Image file'
+	  if image_source_url.lower().endswith( 'pdf' ):
+		file_type = 'PDF'
+	  elif image_source_url.lower().endswith( 'tif' ) or image_source_url.lower().endswith( 'tiff' ):
+		file_type = 'TIFF'
+	  return file_type
   %>
 </%def>
 #----------------------------------------------------------------------------------------------------

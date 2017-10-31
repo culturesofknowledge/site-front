@@ -335,9 +335,9 @@ class ProfileController(BaseController):
                   further_relations_data[relation][uri_id] = results[uri_id]
 
 
-          print '--------------- further relations ---------------'
-          print further_relations_data
-          print '-----------------------------------------'
+          # print '--------------- further relations ---------------'
+          # print further_relations_data
+          # print '-----------------------------------------'
           
           return further_relations_data
       
