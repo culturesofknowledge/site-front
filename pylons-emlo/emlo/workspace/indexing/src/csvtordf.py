@@ -1221,15 +1221,15 @@ conversions = [
         },
       'manifestation_receipt_date_year':
         {
-          predicate: fieldmap.get_manifestation_receipt_date_year_fn(),
+          predicate: fieldmap.get_fieldname_manifestation_receipt_date_year(),
         },
       'manifestation_receipt_date_month':
         {
-          predicate: fieldmap.get_manifestation_receipt_date_month_fn(),
+          predicate: fieldmap.get_fieldname_manifestation_receipt_date_month(),
         },
       'manifestation_receipt_date_day':
         {
-          predicate: fieldmap.get_manifestation_receipt_date_day_fn(),
+          predicate: fieldmap.get_fieldname_manifestation_receipt_date_day(),
         },
       'manifestation_receipt_date_inferred':
         {
