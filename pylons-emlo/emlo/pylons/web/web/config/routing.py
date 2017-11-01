@@ -56,11 +56,11 @@ def make_map(config):
     map.connect('/catalogue', controller='emlo_collections', action='index')
     map.connect('/catalogues', controller='emlo_collections', action='index')
 
-    map.connect('/{controller}/{action}/{id}') # profile/{action}/id
-    map.connect('/{controller}/{action}') # search/results, browse/{action}
+    map.connect('/{controller}/{action}/{id}')  # profile/{action}/id
+    map.connect('/{controller}/{action}')  # search/results, browse/{action}
 
-    map.connect('/{controller}/', action='index') # contribute, technical, about, home, search, browse
-    map.connect('/{controller}', action='index') # contribute, technical, about, home, search, browse
+    map.connect('/{controller}/', action='index')  # contribute, technical, about, home, search, browse
+    map.connect('/{controller}', action='index')  # contribute, technical, about, home, search, browse
 
     # Short URL redirects
     map.connect('/p/{ipersonid}', controller='profile', action='p')  # person

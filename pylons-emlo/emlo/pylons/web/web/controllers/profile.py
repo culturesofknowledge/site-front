@@ -27,11 +27,11 @@ import solrconfig
 
 log = logging.getLogger(__name__)
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
 class ProfileController(BaseController):
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def index(self):
       iworkid = request.params.get( 'iwork_id', None )
@@ -83,7 +83,7 @@ class ProfileController(BaseController):
       sol.close()
 
       if sol_response.numFound > 0:
-         id = sol_response.results[0]['uuid']
+         uuid = sol_response.results[0]['uuid']
 
       return redirect( url(controller='profile', action='work', id=uuid) )
 
@@ -132,56 +132,56 @@ class ProfileController(BaseController):
       c.profile = {}
       return render('/main/profile.mako')
  
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def comment(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'comments', 'comment' )
       return render( template )
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def location(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'locations', 'location' )
       return render( template )
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def institution(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'institutions', 'institution' )
       return render( template )
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def image(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'images', 'image' )
       return render( template )
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
 
    def manifestation(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'manifestations', 'manifestation' )
       return render( template )
       
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def work(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'works', 'work' )
       return render( template )
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def resource(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'resources', 'resource' )
       return render( template )
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def person(self, id='0'):
       c.profile, c.relations, c.further_relations, template = self.profile(id, 'people', 'person' )
       return render( template )
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def locations(self):
       return self._handleRedirect( 'location', request )
@@ -202,7 +202,7 @@ class ProfileController(BaseController):
    def persons(self):
       return self._handleRedirect( 'person', request )
 
-   #------------------------------------------------------------------------------------------------
+   # ------------------------------------------------------------------------------------------------
 
    def profile(self, uid, solr_name, object ):
 
@@ -295,7 +295,7 @@ class ProfileController(BaseController):
 
       return this_profile, relations, further_relations, '/main/profiles/' + object + '.mako'
 
-#------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------
 
    def further_relations(self, relations, object):
       #'--------------- further relations ---------------'
