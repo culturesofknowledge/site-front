@@ -679,7 +679,39 @@
     # Tweak display of these
     if obj.has_key( h.get_manifestation_receipt_date_fn() ) :
 
-      obj[h.get_manifestation_receipt_date_fn()] = obj[h.get_manifestation_receipt_date_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
+      # obj[h.get_manifestation_receipt_date_fn()] = obj[h.get_manifestation_receipt_date_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
+      date = ''
+      if obj.has_key(h.get_fieldname_manifestation_receipt_date_year()) :
+        date += str(obj[h.get_fieldname_manifestation_receipt_date_year()])
+        del obj[h.get_fieldname_manifestation_receipt_date_year()]
+      else :
+        date += '????'
+
+      if obj.has_key(h.get_fieldname_manifestation_receipt_date_month()) and \
+         obj[h.get_fieldname_manifestation_receipt_date_month()] != 0:
+        if obj[h.get_fieldname_manifestation_receipt_date_month()] < 10 :
+          date += " - 0" + str(obj[h.get_fieldname_manifestation_receipt_date_month()])
+        else :
+          date += " - " + str(obj[h.get_fieldname_manifestation_receipt_date_month()])
+      else :
+        date += ' - ??'
+
+      if obj.has_key(h.get_fieldname_manifestation_receipt_date_day()) and \
+         obj[h.get_fieldname_manifestation_receipt_date_day()] != 0:
+        if obj[h.get_fieldname_manifestation_receipt_date_day()] < 10 :
+          date += " - 0" + str(obj[h.get_fieldname_manifestation_receipt_date_day()])
+        else :
+          date += " - " + str(obj[h.get_fieldname_manifestation_receipt_date_day()])
+      else :
+        date += ' - ??'
+
+      if obj.has_key(h.get_fieldname_manifestation_receipt_date_month()) :
+        del obj[h.get_fieldname_manifestation_receipt_date_month()]
+      if obj.has_key(h.get_fieldname_manifestation_receipt_date_day()) :
+        del obj[h.get_fieldname_manifestation_receipt_date_day()]
+
+      obj[h.get_manifestation_receipt_date_fn()] = date
+
       if obj.has_key( h.get_manifestation_receipt_date_inferred_fn() ) or obj.has_key( h.get_manifestation_receipt_date_uncertain_fn() ) or obj.has_key( h.get_manifestation_receipt_date_approx_fn() ):
         obj[h.get_manifestation_receipt_date_fn()] += "  ("
         if obj.has_key( h.get_manifestation_receipt_date_inferred_fn() ) :
@@ -718,9 +750,9 @@
           link = ''
 
           if field_to_display == h.get_opened_fn() :
-	        if field_value == "Opened":
-	          continue
-	          
+            if field_value == "Opened":
+              continue
+
           elif type( field_value ) == unicode or type( field_value ) == str: #{
             if field_value.startswith( 'http' ): #{
               related_uri = field_value
@@ -731,7 +763,7 @@
             #}
           #}
           elif field_to_display == h.get_is_translation_fieldname():
-            if field_value == False:
+            if not field_value:
               continue
 
           if related_uri == '': #{

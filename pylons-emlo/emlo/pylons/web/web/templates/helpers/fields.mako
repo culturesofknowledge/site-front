@@ -125,9 +125,14 @@
 				h.get_postage_costs_fn(),
 				h.get_non_delivery_reason_fn(),
 				h.get_date_of_receipt_as_marked_fn(),
+
+				#h.get_fieldname_manifestation_receipt_date_day(),
+				#h.get_fieldname_manifestation_receipt_date_month(),
+				#h.get_fieldname_manifestation_receipt_date_year(),
 				h.get_manifestation_receipt_calendar_fn(),
 				h.get_manifestation_receipt_date_fn(),
-				h.get_manifestation_receipt_date_gregorian_fn(),
+				#h.get_manifestation_receipt_date_gregorian_fn(),
+
 				h.get_manifestation_receipt_date_inferred_fn(),
 				h.get_manifestation_receipt_date_uncertain_fn(),
 				h.get_manifestation_receipt_date_approx_fn(),
