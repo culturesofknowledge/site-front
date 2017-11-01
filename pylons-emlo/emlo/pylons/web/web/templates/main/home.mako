@@ -40,27 +40,34 @@
 ##===================================================================================================
 
 <%def name="body()">
-##{
-<!-- EMLO intro -->
-    <div class="row">
-      <div class="large-3 columns">
-        <br>
-      </div>
-      <div class="large-9 columns">
-      <br>
-      <h1>Welcome to Early Modern Letters Online</h1>
 
-      <p>Created by the Cultures of Knowledge Project with generous funding from The Andrew W. Mellon Foundation, Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence. </p>  
-			<!--<p style="color:red">Please note that EMLO will be unavailable from 4pm Monday, 7th December through 12pm Tuesday, 8th December. </p>
-      </div>--><br/>
-    </div>
 
-<!-- end of intro -->
+## -- EMLO intro --
+	<div class="row">
+
+		<div class="large-3 columns"><!-- dummy column -->&nbsp;</div>
+
+		<div class="large-9 columns">
+			<br/>
+			<h1>Welcome to Early Modern Letters Online</h1>
+
+			<p>Created by the Cultures of Knowledge Project with generous funding from The Andrew W. Mellon Foundation, Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence. </p>
+
+			% if c.stats['people']['number'] == 0 or c.stats['locations']['number'] == 0 or c.stats['works']['number'] == 0:
+				<p style="color:red;margin-bottom:10px">Please note that the EMLO records are currently unavailable. They will be back online shortly. Thank you.</p>
+			% else:
+				<br/>
+			% endif
+
+		</div>
+	</div>
+
+## -- end of intro --
 
 ##===================================================================================================
 
-<!-- Search -->
-<div class="panel" style="margin-top:183px;"><!-- just to add grey background with full width of grid -->
+## -- Search --
+<div class="panel" style=""><!-- just to add grey background with full width of grid -->
     <div class="row ">
 
       <h2 style="margin-left:15px">Search</h2>
@@ -181,7 +188,7 @@
 
 ##===================================================================================================
 
-    <!-- Catalogue statistics -->
+## -- Catalogue statistics --
 	<div class="row">
 		<div class="large-12 columns">
 			<ul class="small-block-grid-2 medium-block-grid-5 large-block-grid-10">
