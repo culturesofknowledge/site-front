@@ -71,7 +71,7 @@ class ProfileController(BaseController):
       if sol_response.numFound > 0:
          uuid = sol_response.results[0]['uuid']
 
-      return redirect( url(controller='profile', action='person', id=uuid) )
+      return redirect( url(controller='profile', action='person', id=uuid), code=301 )
 
 
    def w(self, iworkid):
@@ -85,7 +85,7 @@ class ProfileController(BaseController):
       if sol_response.numFound > 0:
          uuid = sol_response.results[0]['uuid']
 
-      return redirect( url(controller='profile', action='work', id=uuid) )
+      return redirect( url(controller='profile', action='work', id=uuid), code=301 )
 
    def l(self, locationid):
 
@@ -99,7 +99,7 @@ class ProfileController(BaseController):
       if sol_response.numFound > 0:
          uuid = sol_response.results[0]['uuid']
 
-      return redirect( url(controller='profile', action='location', id=uuid) )
+      return redirect( url(controller='profile', action='location', id=uuid), code=301 )
 
    def r(self, institutionid):
 
@@ -113,7 +113,7 @@ class ProfileController(BaseController):
       if sol_response.numFound > 0:
          uuid = sol_response.results[0]['uuid']
 
-      return redirect( url(controller='profile', action='institution', id=uuid) )
+      return redirect( url(controller='profile', action='institution', id=uuid), code=301 )
 
 
    def i(self, id):
@@ -127,7 +127,7 @@ class ProfileController(BaseController):
 
          if sol_response.numFound > 0:
 
-            return redirect( url(controller='profile', action=sol_response.results[0]['object_type'], id=uuid) )
+            return redirect( url(controller='profile', action=sol_response.results[0]['object_type'], id=uuid), code=301 )
 
       c.profile = {}
       return render('/main/profile.mako')
