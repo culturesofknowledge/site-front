@@ -1073,13 +1073,13 @@ def get_manifestation_receipt_date_fn() :
 def get_manifestation_receipt_date_gregorian_fn() :
   return 'ox_manifestation_receipt_date_gregorian'
 
-def get_manifestation_receipt_date_year_fn() :
+def get_fieldname_manifestation_receipt_date_year() :
   return 'ox_manifestation_receipt_date_year'
 
-def get_manifestation_receipt_date_month_fn() :
+def get_fieldname_manifestation_receipt_date_month() :
   return 'ox_manifestation_receipt_date_month'
 
-def get_manifestation_receipt_date_day_fn() :
+def get_fieldname_manifestation_receipt_date_day() :
   return 'ox_manifestation_receipt_date_day'
 
 def get_manifestation_receipt_date_inferred_fn() :
