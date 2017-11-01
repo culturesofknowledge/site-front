@@ -348,10 +348,10 @@
 						<p><span class="flags">Origin is ${flags_decoded}</span></p>
 					% endif
 
-		  			% if c.profile.has_key( h.get_relations_to_comments_on_origin_fieldname() ):
+		  			% if c.profile.has_key( h.get_fieldname_comments_on_origin_of_work() ):
 						<div class="comment">
 							<p><span class="fieldlabel">Comments about the origin:</span></p>
-							${self.simple_relations( h.get_relations_to_comments_on_origin_fieldname(), "list-style: none;")}
+							${self.simple_relations( h.get_fieldname_comments_on_origin_of_work(), "list-style: none;")}
 						</div>
 					% endif
 				</div>
@@ -372,10 +372,10 @@
 					<p><span class="flags">Destination is ${flags_decoded}</span></p>
 				% endif
 
-				% if c.profile.has_key( h.get_relations_to_comments_on_destination_fieldname() ):
+				% if c.profile.has_key( h.get_fieldname_comments_on_destination_of_work() ):
 					<div class="comment">
 						<p><span class="fieldlabel">Comments about the destination:</span></p>
-						${self.simple_relations( h.get_relations_to_comments_on_destination_fieldname(), "list-style: none;" )}
+						${self.simple_relations( h.get_fieldname_comments_on_destination_of_work(), "list-style: none;" )}
 					</div>
 				% endif
 			</div>
@@ -388,6 +388,15 @@
 		  		${self.h4_relations_list( h.get_relations_to_places_mentioned_fieldname() )}
 			</div>
 		  % endif
+
+			##=============================== route ==================================
+		  % if c.profile.has_key( h.get_fieldname_comments_on_route_of_work() ) :
+			<h4>Route</h4>
+			<div class="locations route">
+				${self.simple_relations( h.get_fieldname_comments_on_route_of_work(), "list-style: none;" )}
+			</div>
+		% endif
+
 		</div><!-- class:workspacing  content -->
 	  </div>
 

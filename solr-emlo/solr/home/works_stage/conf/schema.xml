@@ -413,10 +413,10 @@
 <!--          -->
 <!-- required -->
 <!--          -->
-	 <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
+  <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
   <field name="id"  type="string"  indexed="true"  stored="true"  required="true"  />
-	<field name="uuid"  type="uuid"  indexed="true"  stored="true"  required="true"  />
-	 <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
+  <field name="uuid"  type="uuid"  indexed="true"  stored="true"  required="true"  />
+  <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
@@ -479,14 +479,15 @@
   <field name="ox_addresseeAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_addressee -->
   <field name="ox_authorAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_author -->
   <field name="ox_dateAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
-	 <field name="ox_dateReceiptAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
+  <field name="ox_dateReceiptAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
   <field name="ox_agentsReferencedAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
   <field name="mail_recipient-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
   <field name="mail_origin-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
   <field name="mail_destination-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
 
-	 <field name="ox_originAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_origin -->
-	 <field name="ox_destinationAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_destination -->
+  <field name="ox_originAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_origin -->
+  <field name="ox_destinationAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_destination -->
+  <field name="ox_routeAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_destination -->
 
   <field name="mail_replyTo-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
   <field name="mail_hasReply-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
