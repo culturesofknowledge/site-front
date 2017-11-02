@@ -96,6 +96,11 @@
 				h.get_printed_edition_details_fieldname(),
 
 				h.get_relations_to_comments_fieldname(),
+
+				h.get_creation_date_fieldname(), # a dummy fieild to insert date
+				# h.get_creation_date_year_fieldname(),
+				# h.get_creation_date_month_fieldname(),
+				# h.get_creation_date_day_fieldname(),
 				h.get_relations_to_comments_on_date_fieldname(),
 
 				h.get_handwritten_by_fieldname(),
@@ -126,12 +131,12 @@
 				h.get_non_delivery_reason_fn(),
 				h.get_date_of_receipt_as_marked_fn(),
 
-				#h.get_fieldname_manifestation_receipt_date_day(),
-				#h.get_fieldname_manifestation_receipt_date_month(),
-				#h.get_fieldname_manifestation_receipt_date_year(),
+				# h.get_fieldname_manifestation_receipt_date_day(),
+				# h.get_fieldname_manifestation_receipt_date_month(),
+				# h.get_fieldname_manifestation_receipt_date_year(),
 				h.get_manifestation_receipt_calendar_fn(),
 				h.get_manifestation_receipt_date_fn(),
-				#h.get_manifestation_receipt_date_gregorian_fn(),
+				# h.get_manifestation_receipt_date_gregorian_fn(),
 
 				h.get_manifestation_receipt_date_inferred_fn(),
 				h.get_manifestation_receipt_date_uncertain_fn(),

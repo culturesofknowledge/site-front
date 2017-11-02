@@ -610,15 +610,12 @@
 
     relations_list = c.profile[ field ]
 
-    #if field == h.get_relations_to_manifestation_fieldname(): #{ # they're a random mess, sort them!
-    #  sorted_relations = h.sort_manifs_by_type( relations_list )
-    #  relations_list = []
-    #  for manif_tuple in sorted_relations: #{  # consists of URI, manif type, manif type for sorting
-    #    manif_uri = manif_tuple[0]
-    #    relations_list.append( manif_uri )
-    #  #}
-    #}
-
+    if field == h.get_relations_to_manifestation_fieldname(): #{ # they're a random mess, sort them!
+      sorted_relations = h.sort_manifs_by_type( relations_list )
+      relations_list = []
+      for manif_tuple in sorted_relations: #{  # consists of URI, manif type, manif type for sorting
+        manif_uri = manif_tuple[0]
+        relations_list.append( manif_uri )
     %>
 
 	<div class="detailed_relations">
@@ -638,7 +635,7 @@
 
 <%def name="display_details_of_one_object( obj, nested )">
 ##{
-	<div class="display_details_of_one_object ${nested}">
+  <div class="display_details_of_one_object ${nested}">
   <%
   uri_fieldname = h.get_uri_fieldname()
 
@@ -676,35 +673,28 @@
             obj[h.get_manifestation_receipt_calendar_fn()] == 'JM':
         obj[h.get_manifestation_receipt_calendar_fn()] = "Julian"
 
+
+    if obj.has_key( h.get_creation_date_year_fieldname() ) or \
+                   ( obj.has_key( h.get_creation_date_month_fieldname() ) and obj[h.get_creation_date_month_fieldname()] != 0 ) or \
+                   ( obj.has_key( h.get_creation_date_day_fieldname() ) and obj[h.get_creation_date_day_fieldname()] != 0 ):
+
+       date = date_full( obj.get( h.get_creation_date_year_fieldname() ),
+                               obj.get( h.get_creation_date_month_fieldname() ),
+                               obj.get( h.get_creation_date_day_fieldname() )  )
+
+       obj[h.get_creation_date_fieldname()] = date
+
+
     # Tweak display of these
     if obj.has_key( h.get_manifestation_receipt_date_fn() ) :
 
       # obj[h.get_manifestation_receipt_date_fn()] = obj[h.get_manifestation_receipt_date_fn()].isoformat()[:10]#strftime("%d %B") + obj[h.get_manifestation_receipt_date_fn()].year
-      date = ''
+      date = date_full( obj.get( h.get_fieldname_manifestation_receipt_date_year() ),
+                              obj.get( h.get_fieldname_manifestation_receipt_date_month() ),
+                              obj.get( h.get_fieldname_manifestation_receipt_date_day() )  )
+
       if obj.has_key(h.get_fieldname_manifestation_receipt_date_year()) :
-        date += str(obj[h.get_fieldname_manifestation_receipt_date_year()])
         del obj[h.get_fieldname_manifestation_receipt_date_year()]
-      else :
-        date += '????'
-
-      if obj.has_key(h.get_fieldname_manifestation_receipt_date_month()) and \
-         obj[h.get_fieldname_manifestation_receipt_date_month()] != 0:
-        if obj[h.get_fieldname_manifestation_receipt_date_month()] < 10 :
-          date += " - 0" + str(obj[h.get_fieldname_manifestation_receipt_date_month()])
-        else :
-          date += " - " + str(obj[h.get_fieldname_manifestation_receipt_date_month()])
-      else :
-        date += ' - ??'
-
-      if obj.has_key(h.get_fieldname_manifestation_receipt_date_day()) and \
-         obj[h.get_fieldname_manifestation_receipt_date_day()] != 0:
-        if obj[h.get_fieldname_manifestation_receipt_date_day()] < 10 :
-          date += " - 0" + str(obj[h.get_fieldname_manifestation_receipt_date_day()])
-        else :
-          date += " - " + str(obj[h.get_fieldname_manifestation_receipt_date_day()])
-      else :
-        date += ' - ??'
-
       if obj.has_key(h.get_fieldname_manifestation_receipt_date_month()) :
         del obj[h.get_fieldname_manifestation_receipt_date_month()]
       if obj.has_key(h.get_fieldname_manifestation_receipt_date_day()) :
@@ -866,6 +856,33 @@
 	</div>
 </%def>
 #------------------------------------------------------------------------------------------------------
+<%def name="date_full( year, month, day )">
+<%
+	date = ''
+	if year :
+		date += str(year)
+	else :
+		date += '????'
+
+	if month and month != 0:
+		if month < 10 :
+			date += " - 0" + str(month)
+		else :
+			date += " - " + str(month)
+	else :
+		date += ' - ??'
+
+	if day and day != 0:
+		if day < 10 :
+			date += " - 0" + str(day)
+		else :
+			date += " - " + str(day)
+	else :
+		date += ' - ??'
+
+	return date
+%>
+</%def>
 
 <%def name="further_relations( field, listall=False, style='', link=True )">
 

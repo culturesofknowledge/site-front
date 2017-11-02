@@ -282,11 +282,12 @@ class ProfileController(BaseController):
       # path = url(controller='profile', action=solr_name, id=uid)  # God damn directing to the wrong thing for years!
       page_url = "http://%s/profile/%s/%s" % (config['base_url'], object, uid)
 
+      c.tinyurl = ''
       try:
-         t = Tinyurl()
-         c.tinyurl = t.get(page_url)
+        t = Tinyurl()
+        c.tinyurl = t.get(page_url)
       except (ConnectionError, ServerNotFoundError):
-         c.tinyurl = "Service not available"
+        c.tinyurl = "Service not available"
 
       c.iidUrl = self._get_emlo_iid( object, this_profile )
       c.normalUrl = "/" + uid

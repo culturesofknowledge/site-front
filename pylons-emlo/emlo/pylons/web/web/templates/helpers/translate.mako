@@ -91,7 +91,7 @@
 		h.get_relations_to_works_mentioned_fieldname().lower().strip():  'Letters mentioned',
 		h.get_relations_to_comments_on_author_fieldname().lower().strip():  'Comments on author',
 		h.get_relations_to_comments_on_addressee_fieldname().lower().strip():  'Comments on addressee',
-		h.get_relations_to_comments_on_date_fieldname().lower().strip():  'Comments on date',
+		h.get_relations_to_comments_on_date_fieldname().lower().strip():  'Comments on creation date',
 		h.get_relations_to_comments_on_receipt_date_fieldname().lower().strip(): 'Comments on receipt date',
 		h.get_fieldname_comments_on_origin_of_work().lower().strip():  'Comments on origin',
 		h.get_fieldname_comments_on_destination_of_work().lower().strip():  'Comments on destination',
