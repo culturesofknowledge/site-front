@@ -1124,7 +1124,7 @@
     #endif
     %>
     <span onclick="${funcname}( '${detail_url}' )" title="Display ${detail_desc} in new window">
-    <img src="${icon_file}" alt="Record has ${detail_desc}" style="${flagstyle}" >
+    <img src="${icon_file}" alt="Record has ${detail_desc}" style="width:70px;${flagstyle}" >
     </span>
   % endfor
   </td>
