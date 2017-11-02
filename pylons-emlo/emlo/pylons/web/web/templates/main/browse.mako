@@ -124,6 +124,14 @@
 
 	% if shopping_basket_enabled :
 
+		<%
+			shopping_item_count = 0
+			if len( shopping_items ) > 0:
+				shopping_list = shopping_items.split( ',' )
+				shopping_item_count = len( shopping_list )
+
+		%>
+
 
                  ##======================================================================================
                  ## Write scripts to add items to the shopping list by ticking the checkboxes beside the
@@ -132,75 +140,80 @@
                  ## that appear next to the 'shopping list' that you have built up.
                  ##======================================================================================
                  <script type="text/javascript">
+					var sb = { // shopping basket
+						curr_items: ${shopping_item_count},
+						max_items: ${max_shopping_items},
 
-                   function remove_uuid_from_search( uuid, query_string ) {
+						removeUuid: function (uuid, q)
+						{
+							// removeUuid_from_search
+							if (q.indexOf(',' + uuid) > 0) {
+								q = q.replace(',' + uuid, '');
+							}
+							else if (q.indexOf(uuid + ',') > 0) {
+								q = q.replace(uuid + ',', '');
+							}
+							else {
+								q = q.replace(uuid, '');
+							}
+							return q;
+						},
 
-                     if( query_string.indexOf( ',' + uuid ) > 0 ) {
-                       query_string = query_string.replace( ',' + uuid, '' );
-                     }
-                     else if( query_string.indexOf( uuid + ',' ) > 0 ) {
-                       query_string = query_string.replace( uuid + ',', '' );
-                     }
-                     else {
-                       query_string = query_string.replace( uuid, '' );
-                     }
-                     return query_string;
-                   }
+						removeItem: function(uuid) { // remove uuid from current window location
 
-                   function remove_item_from_basket( uuid ) { // remove uuid from current window location
+							var query_string = window.location.search;
+							query_string = query_string.toLowerCase(); // eliminate problems with %3A vs. %3a
+							var orig_query_string = query_string;
 
-                     var query_string = window.location.search;
-                     query_string = query_string.toLowerCase(); // eliminate problems with %3A vs. %3a
-                     var orig_query_string = query_string;
+							query_string = sb.removeUuid(uuid, query_string);
 
-                     query_string = remove_uuid_from_search( uuid, query_string );
+							if (orig_query_string == query_string) {  // failed to change
+								uuid = uuid.replace(':', '%3a');       // try again with URL-encoding
+								query_string = sb.removeUuid(uuid, query_string);
+							}
+							window.location.search = query_string;
+						},
 
-                     if( orig_query_string == query_string ) {  // failed to change
-                       uuid = uuid.replace( ':', '%3a' );       // try again with URL-encoding
-                       query_string = remove_uuid_from_search( uuid, query_string );
-                     }
-                     window.location.search = query_string;
-                   }
-
-                   function add_or_remove_item_from_basket( chkbox, curr_items, max_items ) {
-                     if( chkbox.checked == true ) { // they are just adding it now
-                       if( curr_items >= max_items ) {
-                         alert( 'Sorry, you have already made the maximum number of selections.' );
-                         chkbox.checked = false;
-                         return;
-                       }
-                       else { // add the uuid to the current window location
-                         var uuid = chkbox.value;
-                         var query_string = window.location.search;
-                         var shopping_start = 'shopping_basket='
-                         if( curr_items == 0 ) {
-                           if( query_string.indexOf( shopping_start ) == -1 ) {
-                             query_string = query_string + '&' + shopping_start;
-                             query_string = query_string + uuid;
-                           }
-                           else {
-                             new_start = shopping_start + uuid;
-                             query_string = query_string.replace( shopping_start, new_start );
-                           }
-                         }
-                         else {
-                           new_start = shopping_start + uuid + ',';
-                           query_string = query_string.replace( shopping_start, new_start );
-                         }
-                         window.location.search = query_string;
-                       }
-                     }
-                     else {  // remove the uuid from the current window location
-                       remove_item_from_basket( chkbox.value )
-                     }
-                   }
+						updateBasket: function (chkbox) {
+							if (chkbox.checked) { // they are just adding it now
+								if (sb.curr_items >= sb.max_items) {
+									alert('Sorry, you have already made the maximum number of selections.');
+									chkbox.checked = false;
+								}
+								else { // add the uuid to the current window location
+									var uuid = chkbox.value,
+											query_string = window.location.search,
+											shopping_start = 'shopping_basket=',
+											new_start;
+									if (sb.curr_items === 0) {
+										if (query_string.indexOf(shopping_start) === -1) {
+											query_string = query_string + '&' + shopping_start;
+											query_string = query_string + uuid;
+										}
+										else {
+											new_start = shopping_start + uuid;
+											query_string = query_string.replace(shopping_start, new_start);
+										}
+									}
+									else {
+										new_start = shopping_start + uuid + ',';
+										query_string = query_string.replace(shopping_start, new_start);
+									}
+									window.location.search = query_string;
+								}
+							}
+							else {  // remove the uuid from the current window location
+								sb.removeItem(chkbox.value)
+							}
+						}
+					}
                  </script>
 
 		% if shopping_items != '' :
 
 		##******************* On left: start menu of data types e.g. people, places ********************
 		##******************* Underneath that, display 'shopping basket' selection  ********************
-		<div class="small-12 large-2 columns side" style="margin-top:228px;">
+		<div class="small-12 large-3 columns side" style="margin-top:228px;">
 
 		<%
 			if object_type == '': # something odd going on here! Disable the shopping basket!
@@ -228,10 +241,6 @@
                                            + '&letter=' + c.current_letter.lower() \
                                            + shopping_querystring 
 
-                 if len( shopping_items ) > 0: #{
-                   shopping_list = shopping_items.split( ',' )
-                   shopping_item_count = len( shopping_list ) 
-                 #}
                  %>
  
                  ##==========================================
@@ -257,11 +266,7 @@
                    #}
                    %>
 
-                   <h3 style="padding-bottom:10px;">
-                   Your current selection
-                   <br />
-                   (${shopping_item_count} ${selection_type_desc}):
-                   </h3>
+                   <h3 style="padding-bottom:0px;">Current selection:</h3>
                  % endif
 
                  <%
@@ -269,11 +274,11 @@
                  ## to find the place to insert the values. But now reverse the order of the list
                  ## so that the items are displayed in the same order that the user chose them.
                  reversed_list = []
-                 while len( shopping_list ) > 0: #{
-                   elem = shopping_list.pop()
-                   reversed_list.append( elem )
+                 #while len( shopping_list ) > 0: #{
+                 #  elem = shopping_list.pop()
+                 #  reversed_list.append( elem )
                  #}
-                 shopping_list = reversed_list
+                 shopping_list = shopping_list[::-1]  #reversed_list
                  %>
 
                  % for i in range( max_shopping_items ):
@@ -284,7 +289,7 @@
                    if shopping_item_count > i: #{
 
                      item_uuid = shopping_list[i]
-                     results = h.get_records_from_solr( [item_uuid], [main_displayable_fieldname] )
+                     results = h.get_records_from_solr( [item_uuid], [main_displayable_fieldname] ) # This is so bad I want to kill myself. Why get a single item at a time?????!!!!! ffs. I'm glad noone uses this functionality
 
                      # Results come back as two dictionaries nested inside each other.
                      # The outer dictionary is keyed on uuid, the inner one on fieldname
@@ -301,9 +306,8 @@
                      % if i > 0:
                        <br />
                      % endif
-                     <input type="checkbox" name="selection${i+1}" title="Remove item from your selection" 
-                     value="${item_uuid}" CHECKED onclick="remove_item_from_basket( this.value )" />
-                     ${item_label}
+                     <input type="checkbox" name="selection${i+1}" title="Remove item from your selection" CHECKED onclick="sb.removeItem( '${item_uuid}' )" />
+						 <label for="selection${i+1}"><span onclick="sb.removeItem( '${item_uuid}' )">${item_label}</span></label>
                    % endif
                  % endfor
 
@@ -311,8 +315,8 @@
                  ## Display a link taking you from shopping basket through to Results List
                  ##=======================================================================
                  % if shopping_item_count > 0:
-                   <br/>
-                   <a name="deliver_the_shopping" id="deliver_the_shopping" title="Show Letters"
+				   <br/><br/>
+                   <a class="button" name="deliver_the_shopping" id="deliver_the_shopping" title="Show Letters"
                    href="${deliver_the_shopping_href}">Show Letters</a>
 
                    <script type="text/javascript">
@@ -328,7 +332,7 @@
 
     	##******************* On right: START alphabet then entries for selected letter **************
 		% if shopping_items != '' :
-			<div class="small-12 large-10 columns">
+			<div class="small-12 large-9 columns">
 		% else :
 		  <div class="small-12 columns">
   	% endif ## shopping basket
@@ -510,8 +514,12 @@
       gender = extra['fieldvalue']
 		
   main_displayable_field = item['main_displayable_field']
-  profile_url = h.profile_url_from_uri( item['main_uri'] )
-  uuid = h.uuid_from_uri( item['main_uri'], full=True )
+
+  #profile_url = h.profile_url_from_uri( item['main_uri'] )
+  #uuid =h.uuid_from_uri( item['main_uri'], True )
+  uuid = h.uuid_from_uri( item['main_uri'] )
+  profile_url = '/' + uuid # use short one to reduce page size
+  uuid = 'uuid_' + uuid
 
   # Prepare to output an 'Add to/remove from basket' checkbox
   if shopping_basket_enabled: #{
@@ -536,20 +544,17 @@
   % if shopping_basket_enabled:
 <td>\
 ${self.normal_checkbox( fieldname = checkbox_fieldname, value = uuid, \
-                            onclick = "add_or_remove_item_from_basket( this, " \
-                                    + unicode( shopping_item_count ) + ", " \
-                                    + unicode( max_shopping_items ) + " )" )}
+                            onclick = "sb.updateBasket( this )" )}
     % if already_selected:
 <script>document.getElementById( "${checkbox_fieldname}").checked=true;</script>
     % endif
 </td>\
   % endif
-<td><a href="${profile_url}" title="${main_displayable_field}">${main_displayable_field}</a></td>\
+<td><a href="${profile_url}" title="Person">${main_displayable_field}</a></td>\
 \
   % if len( item[ 'link_fields' ]) > 0:
 \
     % for link_field in item[ 'link_fields' ]:
-\
 <%
       value_for_display = link_field[ 'fieldvalue' ]
       search_on_fieldname = link_field[ 'search_on_fieldname' ]
@@ -569,7 +574,6 @@ ${self.normal_checkbox( fieldname = checkbox_fieldname, value = uuid, \
            + '&return_to_anchor=' + uuid
       title = 'View list of ' + tran.translate( link_field[ 'fieldname' ] ).lower()
 %>
-\
 <td>\
       % if len( search_on_fieldname ) > 0 and value_for_display:
 <a href="${href}" title="${title}">${value_for_display}</a>\
