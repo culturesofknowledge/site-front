@@ -911,21 +911,26 @@
 ##{
   <%
 	  ## Double-check that 'further relations' dictionary contains images
-	  if not c.further_relations:
-		return
-	  elif len( c.further_relations ) == 0:
-		return
-	  elif field not in c.further_relations:
+	  if not c.further_relations or len( c.further_relations ) == 0 or field not in c.further_relations:
 		return
 
 	  ## Initalise fieldnames
 	  image_source_fieldname = h.get_image_source_fieldname()
+	  image_thumnbnail_fn = h.get_thumbnail_fieldname()
 	  uri_fieldname = h.get_uri_fieldname()
 
 	  ## Get image data such as filename and order in which images should be displayed
 	  raw_img_data_in_random_order = c.further_relations[ field ].values()
 	  sorted_img_data = self.sort_images( raw_img_data_in_random_order )
   %>
+
+	<!-- DEBUG
+	 ${image_source_fieldname}
+	 ${uri_fieldname}
+     ${raw_img_data_in_random_order}
+	 ${sorted_img_data}
+
+	 -->
 
   % if list_all_for_one_manif :
     ##------------------------------------------------------------------------------------------
@@ -937,11 +942,15 @@
     <ul class="small-block-grid-2 medium-block-grid-4 large-block-grid-2">
     % for one_img_dict in sorted_img_data:
       <%
-      image_source = one_img_dict.get( image_source_fieldname, '' )
-      image_source_url = h.image_url( image_source )
-      is_displayable_image = self.is_displayable_image_type( image_source_url )
-      selected_image_style="border:2px solid #800000"
-      img_count += 1
+		image_source = one_img_dict.get( image_thumnbnail_fn, None )
+		if not image_source :
+			image_source = one_img_dict.get( image_source_fieldname, '' )
+
+
+		image_source_url = h.image_url( image_source )
+		is_displayable_image = self.is_displayable_image_type( image_source_url )
+		selected_image_style="border:6px solid #800000"
+		img_count += 1
       %>
 
 
@@ -951,7 +960,7 @@
       % if one_img_dict[ uri_fieldname ] == c.profile[ uri_fieldname ] :
 
         % if is_displayable_image:
-         <li><img style="${selected_image_style}" src="${image_source_url}" /></li>
+         <li><img style="width:100%;${selected_image_style}" src="${image_source_url}" /></li>
         % endif
         
       ##-------------------------------------------------------------------------------
@@ -966,7 +975,7 @@
         % if is_displayable_image:
 
           <a href="${profile_page_url}">
-          <img src="${image_source_url}" />
+          	<img style="width:100%;" src="${image_source_url}" />
           </a>
 
         % else:
@@ -1015,7 +1024,10 @@
       #}
 
       if num_images_for_manif > 0: #{
-        image_source = first_img_dict.get( image_source_fieldname, '' )
+        image_source = one_img_dict.get( image_thumnbnail_fn, None )
+        if not image_source :
+            image_source = first_img_dict.get( image_source_fieldname, '' )
+
         image_source_url = h.image_url( image_source )
         is_displayable_image = self.is_displayable_image_type( image_source_url )
 
@@ -1040,7 +1052,7 @@
           <a href="${profile_page_url}">
 
           % if is_displayable_image:
-            <img src="${image_source_url}" />
+            <img style="max-width: 100%;min-width: 100px;" src="${image_source_url}" />
           % else:
             ${self.link_text_for_non_displayable_image( image_source_url )} 
           % endif
