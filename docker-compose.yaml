@@ -20,6 +20,7 @@ pylons:
 
   volumes:
    - ./data/:/data/
+   - ./cache:/emlo/pylons/web/cache
 
 nginx:
   build: ./nginx-emlo

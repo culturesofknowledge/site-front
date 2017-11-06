@@ -32,6 +32,7 @@ pylons:
   volumes:
    - ./pylons-emlo/emlo:/emlo
    - ./data:/data
+   - ./cache:/emlo/pylons/web/cache
 
   command: ["paster", "serve", "--reload", "development.ini"]
 
