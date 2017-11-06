@@ -233,14 +233,25 @@ if __name__ == '__main__':
 		index = index_all
 		if "ask" in sys.argv :
 			index = None
-		elif "locations" in sys.argv :
-			index = ["locations"]
-		elif "comments" in sys.argv :
-			index = ["comments"]
-		elif "people" in sys.argv :
-			index = ["people"]
-		elif "manifestations" in sys.argv :
-			index = ["manifestations"]
+		elif "locations" in sys.argv or "comments" in sys.argv  or "people" in sys.argv  or "manifestations" in sys.argv  or  "images" in sys.argv  or "institutions" in sys.argv  or "resources" in sys.argv  or "works" in sys.argv :
+			index = []
+			if "locations" in sys.argv :
+				index.append("locations")
+			if "comments" in sys.argv :
+				index.append("comments")
+			if "people" in sys.argv :
+				index.append("people")
+			if "manifestations" in sys.argv :
+				index.append("manifestations")
+			if "images" in sys.argv :
+				index.append("images")
+			if "institutions" in sys.argv :
+				index.append("institutions")
+			if "resources" in sys.argv :
+				index.append("resources")
+			if "works" in sys.argv :
+				index.append("works")
+
 
 		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv )
 
