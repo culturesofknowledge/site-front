@@ -12,6 +12,7 @@ from web.lib.fieldmap import *
 import web.lib.relations
 from web.lib.tinyurl import Tinyurl
 from web.lib.restful_lib2 import ConnectionError
+
 from pylons import config
 
 from collections import defaultdict
@@ -37,7 +38,7 @@ class ProfileController(BaseController):
       iworkid = request.params.get( 'iwork_id', None )
 
       if iworkid:
-         return redirect( url(controller='profile', action='w', id=id) )
+         return redirect( url(controller='profile', action='w', iworkid=id) )
 
       profile_type = request.params.get( 'type', None )
       emlo_edit_id = request.params.get( 'id', None )
@@ -45,16 +46,16 @@ class ProfileController(BaseController):
       if profile_type and emlo_edit_id:
 
          if profile_type == "person" or profile_type == "people" or profile_type == "persons" :
-            return redirect( url(controller='profile', action='p', id=emlo_edit_id) )
+            return redirect( url(controller='profile', action='p', ipersonid=emlo_edit_id) )
 
          if profile_type == "work" or profile_type == "works":
-            return redirect( url(controller='profile', action='w', id=emlo_edit_id) )
+            return redirect( url(controller='profile', action='w', iworkid=emlo_edit_id) )
 
          if profile_type == "institution" or profile_type == "repository" :
-            return redirect( url(controller='profile', action='r', id=emlo_edit_id) )
+            return redirect( url(controller='profile', action='r', institutionid=emlo_edit_id) )
 
          if profile_type == "location" or profile_type == "locations" :
-            return redirect( url(controller='profile', action='l', id=emlo_edit_id) )
+            return redirect( url(controller='profile', action='l', locationid=emlo_edit_id) )
 
       c.profile = {}
 
@@ -244,39 +245,23 @@ class ProfileController(BaseController):
 
       sol.close()
 
-      if profile_too_big: #{
+
+      if profile_too_big:
          # Don't get any more data, as things will grind to a halt.
          relations = []
          further_relations = {}
 
-      else: #{
+      else:
          # Proceed to populate fields as normal
          relation_fields = web.lib.relations.object_relation_fields[object]
         
          relations = []
-         for relation in relation_fields: #{
-            uris = this_profile.get(relation, None)
-            if uris: #{
-
-               # Relations defined as multiValued in the Solr schema are returned as a list, even if
-               # there is only one entry in the list. However, non-multiValued relations seem to return
-               # a (Unicode) string. But the function get_records_from_solr() expects a LIST, so convert.
-
-               if type( uris ) == unicode or type( uris ) == str: #{
-                  uris = [ uris ]
-                  this_profile[ relation ] = uris
-               #}
-
-               # The c.profile variable already has a list of URIs e.g. pointing at works created by person
-               # Copy related URIs from c.profile into a list which will be expanded into full objects
-               for uri in uris : #{
-                  relations.append( uri )
-               #}
-            #}
-         #}
+         for relation in relation_fields:
+            relations.extend( this_profile.get( relation, [] ) )
 
          relations = get_records_from_solr( relations )
          further_relations = self.further_relations(relations, object)
+
 
       # Get Tinyurl
       # path = url(controller='profile', action=solr_name, id=uid)  # God damn directing to the wrong thing for years!
@@ -284,8 +269,8 @@ class ProfileController(BaseController):
 
       c.tinyurl = ''
       try:
-        t = Tinyurl()
-        c.tinyurl = t.get(page_url)
+         t = Tinyurl()
+         c.tinyurl = t.get(page_url)
       except (ConnectionError, ServerNotFoundError):
         c.tinyurl = "Service not available"
 
