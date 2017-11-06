@@ -29,6 +29,12 @@ import fieldmap
 reload(sys)
 sys.setdefaultencoding("utf8")
 
+
+lat_min = decimal.Decimal("-90")
+lat_max = decimal.Decimal("90")
+long_min = decimal.Decimal("-180")
+long_max = decimal.Decimal("180")
+
    
 def plural_to_singular( plural ):
     if plural == 'people' :
@@ -260,6 +266,33 @@ def StoreRelations( _, red_rel, red_ids ):
     return error
 
 
+def generateAdditional(singular, record, solr_item):
+
+    if singular == "location" :
+
+        if "latitude" in record and "longitude" in record:
+
+            latitude = record["latitude"]
+            longitude = record["longitude"]
+
+            if latitude != "" and longitude != "" :
+                latitude_dec = decimal.Decimal(latitude)
+                longitude_dec = decimal.Decimal(longitude)
+
+                if lat_min <= latitude_dec <= lat_max and long_min <= longitude_dec <= long_max:
+                    add_solr( solr_item, "geo", record["latitude"] + "," + record["longitude"] )
+                    # TODO: Add a uncertainty over a position, i.e. a radius ofa cirlce around a point. Large for just countries, small for streets and houses. Solr fieldneeds library adding.
+                    #add_solr( solr_item, "geo_rpt", "Circle(" + record["latitude"] + "," + record["longitude"] + " d=0.01)" )
+
+                else:
+                    print( "Incorrect Lat/Long: ", latitude_dec, longitude_dec, "for", id )
+
+
+        if "location_name" in record:
+            country = record["location_name"]
+        else :
+            country = "unknown"
+
 
 def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
     #
@@ -272,11 +305,6 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
     core_id_name = fieldmap.get_core_id_fieldname()
     uri_prefix = fieldmap.get_uri_value_prefix()
     date_added_name = fieldmap.get_date_added_fieldname()
-
-    lat_min = decimal.Decimal("-90")
-    lat_max = decimal.Decimal("90")
-    long_min = decimal.Decimal("-180")
-    long_max = decimal.Decimal("180")
 
     for con in csvtordf.conversions:
     
@@ -405,22 +433,6 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                                             add_solr( solr_item, translation[csvtordf.solr], data )
 
 
-                    if singular == "location" and "latitude" in record and "longitude" in record:
-                        latitude = record["latitude"]
-                        longitude = record["longitude"]
-                        if latitude != "" and longitude != "" :
-
-                            latitude_dec = decimal.Decimal(latitude)
-                            longitude_dec = decimal.Decimal(longitude)
-
-                            if lat_min <= latitude_dec <= lat_max and long_min <= longitude_dec <= long_max:
-                                add_solr( solr_item, "geo", record["latitude"] + "," + record["longitude"] )
-                                # TODO: Add a uncertainty over a position, i.e. a radius ofa cirlce around a point. Large for just countries, small for streets and houses. Solr fieldneeds library adding.
-                                #add_solr( solr_item, "geo_rpt", "Circle(" + record["latitude"] + "," + record["longitude"] + " d=0.01)" )
-
-                            else:
-                                print( "Incorrect Lat/Long: ", latitude_dec, longitude_dec, "for", id )
-
                     #
                     # Add additional predicates not in CSV files
                     #
@@ -428,7 +440,11 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     for predicate, obj in additional.iteritems():
                         add( entity, solr_item, uri, predicate, obj )
 
-                   
+
+                    # create additional fields from existing
+                    generateAdditional( singular, record, solr_item )
+
+
                     #
                     # Add relationships
                     #

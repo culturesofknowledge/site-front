@@ -195,7 +195,7 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	# Done!
 	#
 	timeFinished = time.time()
-	print "Conversion completed in %0.1f seconds." % ( (timeFinished-timeBegin))
+	print "Conversion completed in %0.1f seconds (%0.1f minutes)." % ( (timeFinished-timeBegin), (timeFinished-timeBegin)/60 )
 
 
 if __name__ == '__main__':
