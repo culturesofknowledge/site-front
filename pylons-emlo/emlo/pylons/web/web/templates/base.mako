@@ -529,27 +529,36 @@
 ##------------------------------------------------------------------------------------------
 
 <%def name="normal_checkbox( fieldname, title='', css_class='checkbox', value = 'true', onclick = '' )">\
-<input id="${fieldname}" value="${value}" class="${css_class}" type="checkbox" title="${title}" onclick="${onclick}"/><%
+<input type="checkbox" id="${fieldname}" name="${fieldname}" value="${value}" class="${css_class}"\
+	% if title != '' :
+ title="${title}"\
+	% endif
+	% if onclick != '' :
+ onclick="${onclick}"\
+	% endif
+/><%
   ## See if they are trying to refine an existing search
   search_term = self.get_search_term( fieldname )
   self.set_checkbox_from_search_term( fieldname, search_term )
-%></%def>
+%>
+</%def>
 ##------------------------------------------------------------------------------------------
 
 <%def name="set_checkbox_from_search_term( fieldname, search_term = '' )">
 % if search_term != '':
-  <script type="text/javascript">document.getElementById( '${fieldname}' ).checked = true;</script>
+<script type="text/javascript">document.getElementById( '${fieldname}' ).checked = true;</script>
 % endif
 </%def>
 ##------------------------------------------------------------------------------------------
 
 <%def name="start_normal_select( fieldname, title='', css_class='' )">
-<select id="${fieldname}" name="${fieldname}" title="${title}" class="${css_class}"></%def>
+<select id="${fieldname}" name="${fieldname}" title="${title}" class="${css_class}">
+</%def>
 
 ##------------------------------------------------------------------------------------------
 
 <%def name="end_normal_select( fieldname )">
-  </select><%
+</select><%
   ## See if they are trying to refine an existing search
   search_term = self.get_search_term( fieldname )
   self.set_select_from_search_term( fieldname, search_term )
