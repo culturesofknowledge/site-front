@@ -96,7 +96,7 @@ def get_uri_fieldname():
   
   # Gets prefixed to the actual value of the field, as well as being a suffix to the name.
   suffix = get_uri_value_prefix()
-  return get_core_id_fieldname() + '-' + suffix
+  return get_core_id_fieldname() + '-' + suffix  #  'dcterms_identifier-uri_'
 
 # --------------------------------------------------------------------------------------------------
 
