@@ -205,6 +205,8 @@
 	 <field name="uuid"  type="uuid"  indexed="true"  stored="true"  required="true"  />
 	 <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
+	 <field name="uuid_related"  type="uuid"  indexed="true"  stored="false"  required="true" multiValued="true" />
+
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-edit_"  type="string"  indexed="true"  stored="true"  required="true"  /> <!-- institution_id -->
