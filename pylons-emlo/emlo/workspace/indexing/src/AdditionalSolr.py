@@ -148,7 +148,7 @@ def AdditionalWorksData( use_staging=True ) : #{
   works = solr_works.query( "*:*", fields="*", start=start, rows=batch, score=False)
   total = works.numFound
 
-  print "Updating " + str(total) + " works with links"
+  print "Updating " + str(total) + " works with data from other objects"
   print "Working . ",
 
   updated_count = 0
