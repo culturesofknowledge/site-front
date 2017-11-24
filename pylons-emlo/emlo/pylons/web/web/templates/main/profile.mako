@@ -475,7 +475,7 @@
     sorted_list = sorted( sort_list, key=lambda item : item['sort'], reverse=False )
     %>
 
-    % if display_label:
+    % if display_label and len(sorted_list) > 0:
       <dt>${sorted_list[0]['label']}</dt><dd>
     % endif
 

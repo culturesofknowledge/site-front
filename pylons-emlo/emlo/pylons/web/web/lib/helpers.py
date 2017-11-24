@@ -807,10 +807,11 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
 
       limit = 100
       count = 0
-   
+      q = "uuid:("
+
       while total > count :
 
-        res = sol.query( "uuid:(" + " ".join(uuids_ids[count:count+limit]) + ")",
+        res = sol.query( q + " ".join(uuids_ids[count:count+limit]) + ")",
                          score=False, rows=limit, start=0, fields=selected_fields )
 
         for result in res.results:
@@ -823,7 +824,50 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
    return results
 #}
 #-----------------------------------------------------------------------------------------------------
-      
+
+
+def get_related_records_from_solr( uuids_ids, selected_fields='*' ): #{
+
+    # You must pass in the 'uids' parameter as a list of uuids only.
+
+    # By default this function returns all fields, but optionally you can pass in 'selected_fields'
+    # as a comma-separated string or a list.
+
+    # Results come back as two dictionaries nested inside each other.
+    # The outer dictionary is keyed on uuid, the inner one on fieldname.
+
+    results = {}
+
+    total = len( uuids_ids )
+    if total > 0 :
+
+        # Make sure that list of selected fields includes 'id', which is essential.
+        if selected_fields != '*':
+            selected_fields.append( 'id' )
+
+        sol = solr.SolrConnection( solrconfig.solr_urls["all"] )
+
+        limit = 100
+        count = 0
+        q = "uuid_related:("
+
+        while total > count :
+
+            res = sol.query( q + " ".join(uuids_ids[count:count+limit]) + ")",
+                             score=False, rows=999999, start=0, fields=selected_fields )  # Note: This can theoretically return a LOT of results - use it wisely...
+
+            for result in res.results:
+                results[result['id']] = result
+
+            count += limit
+
+        sol.close()
+
+    return results
+#}
+#-----------------------------------------------------------------------------------------------------
+
+
 def profile_url_from_uri( uri_profile ): #{
 
    uri = uri_profile.replace( "uri_http://localhost", "/profile" )
