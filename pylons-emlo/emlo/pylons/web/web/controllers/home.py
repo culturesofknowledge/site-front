@@ -103,10 +103,10 @@ class HomeController(BaseController):
 
 
        # tweak numbers - none of these numbers will change frequently, if ever. ("Number of everything" minus "Number of ones we want")
-       c.stats['people']['number'] -= (25482-19857)  # Remove people who have no connection to a letter
-       c.stats['organisations']['number'] -= (1364-802)  # Remove orginisations who have no connection to a letter
-       c.stats['images']['number'] -= (59951-48661)    # Remove images of the bodleian card catalogue
-       c.stats['locations']['number'] -= (5931-5196)    # Remove locations which have no connection to a letter
+       c.stats['people']['number'] -= (21985-20097)  # Remove people who have no connection to a letter
+       c.stats['organisations']['number'] -= (948-806)  # Remove orginisations who have no connection to a letter
+       c.stats['images']['number'] -= (48661)    # Remove images of the bodleian card catalogue
+       c.stats['locations']['number'] -= (5931-5190)    # Remove locations which have no connection to a letter
         
        return render( '/main/home.mako' )
 
