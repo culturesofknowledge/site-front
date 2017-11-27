@@ -275,12 +275,13 @@
 
   <field name="foaf_gender"  type="string"  indexed="true"  stored="true"  default="unknown"  />
   <field name="ox_isOrganisation"  type="boolean"  indexed="true"  stored="true"  default="false"  />
-  <field name="ox_totalWorksByAgent"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox_totalWorksAddressedToAgent"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox_totalWorksMentioningAgent"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_totalWorksByAgent"  type="int"  indexed="true"  stored="true"  />
+  <field name="ox_totalWorksAddressedToAgent"  type="int"  indexed="true"  stored="true"  />
+  <field name="ox_totalWorksMentioningAgent"  type="int"  indexed="true"  stored="true"  />
+
+  <field name="ox_internalAdded"  type="tdate"  indexed="false"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="false"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="false"  stored="true"  /> <!-- change_timestamp -->
   <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
 
