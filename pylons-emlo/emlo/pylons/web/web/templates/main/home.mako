@@ -53,7 +53,10 @@
 
 			<p>Created by the Cultures of Knowledge Project with generous funding from The Andrew W. Mellon Foundation, Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence. </p>
 
-			% if c.stats['people']['number'] == 0 or c.stats['locations']['number'] == 0 or c.stats['works']['number'] == 0:
+			% if not 'people' in c.stats or not 'locations' in c.stats or not 'works' in c.stats \
+				or c.stats['people']['number'] == 0 \
+				or c.stats['locations']['number'] == 0 \
+				or c.stats['works']['number'] == 0:
 				<p style="color:red;margin-bottom:10px">Please note that the EMLO records are currently unavailable. They will be back online shortly. Thank you.</p>
 			% else:
 				<br/>
@@ -203,7 +206,7 @@
 						## alphabetically at this point, and then re-label, the order would look random.
 						stat_keys = []
 						sorted_stat_keys = [ 'people', 'locations', 'organisations', 'repositories',
-											 'Catalogues', 'works', 'manifestations', 'images',
+											 'catalogues', 'works', 'manifestations', 'images',
 											 'comments', 'related resources' ]
 						for stat_key in sorted_stat_keys: #{
 						  if c.stats.has_key( stat_key ): #{
@@ -216,36 +219,29 @@
             		## i.e. currently People, Locations, Organisations and Repositories.
 
 					% for stat in stat_keys :
-              			<% data = c.stats[stat] %>
-						% if data.has_key('url') :
-							<li class="stats-text text-center">
-<img src="../img/icon-stats-${stat}.png" alt="${stat} icon" class="stats-icon"/><br>\
-${data['number']}<br>\
-<a href="${data['url']}"> ${stat.capitalize()}</a>
-							</li>
-						% endif
+					<%
+						data = c.stats[stat]
+
+						desc = stat.capitalize()
+						if desc == 'Works':
+								desc = 'Letters'
+						elif desc == 'Manifestations':
+								desc = 'Letter Versions'
+
+						if stat == 'catalogues' :
+							stat = 'Catalogues'
+					%>
+						<li class="stats-text text-center">
+							<img src="../img/icon-stats-${stat}.png" alt="${desc} icon" class="stats-icon"/><br/>
+							${data['number']}<br/>
+			                % if data.has_key('url') :
+								<a href="${data['url']}"> ${stat.capitalize()}</a>
+							% else:
+								${stat.capitalize()}
+							% endif
+						</li>
 					% endfor
 
-					## Now list the object types without a link through to the Browse page,
-					## i.e. currently Catalogues, Comments, Images, Manifestations, Related Resources and Works.
-            		% for stat in stat_keys :
-              			<%
-							data = c.stats[stat]
-
-							desc = stat.capitalize()
-							if desc == 'Works':
-								desc = 'Letters'
-							elif desc == 'Manifestations':
-								desc = 'Letter Versions'
-						%>
-              			% if not data.has_key('url') :
-               				<li class="stats-text text-center">
-<img src="../img/icon-stats-${stat}.png" alt="${stat} icon" class="stats-icon" /><br>\
-${data['number']}<br>\
-${desc}
-							</li>
-             		 	% endif
-           			% endfor
           		% endif
 			</ul> <!-- end block grid -->
 		</div> <!-- div column -->
