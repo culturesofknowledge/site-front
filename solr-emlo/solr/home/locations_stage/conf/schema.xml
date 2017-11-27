@@ -437,12 +437,13 @@
   <field name="ox_locationAlternateName"  type="text"  indexed="true"  stored="true"  />
   <field name="geo_lat"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
   <field name="geo_long"  type="string"  indexed="true"  stored="true"  multiValued="false"  />
-  <field name="ox_totalWorksSentFromPlace"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox_totalWorksSentToPlace"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox_totalWorksMentioningPlace"  type="int"  indexed="false"  stored="true"  />
-  <field name="ox_internalAdded"  type="tdate"  indexed="true"  stored="true"  />
-  <field name="ox_internalCreated"  type="tdate"  indexed="true"  stored="true"  /> <!-- creation_timestamp -->
-  <field name="ox_internalModified"  type="tdate"  indexed="true"  stored="true"  /> <!-- change_timestamp -->
+  <field name="ox_totalWorksSentFromPlace"  type="int"  indexed="true"  stored="true"  />
+  <field name="ox_totalWorksSentToPlace"  type="int"  indexed="true"  stored="true"  />
+  <field name="ox_totalWorksMentioningPlace"  type="int"  indexed="true"  stored="true"  />
+
+  <field name="ox_internalAdded"  type="tdate"  indexed="false"  stored="true"  />
+  <field name="ox_internalCreated"  type="tdate"  indexed="false"  stored="true"  /> <!-- creation_timestamp -->
+  <field name="ox_internalModified"  type="tdate"  indexed="false"  stored="true"  /> <!-- change_timestamp -->
   <field name="ox_internalModifiedByUser"  type="string"  indexed="false"  stored="true"  /> <!-- change_user -->
 
      <field name="geo"  type="location"  indexed="true" stored="true" />
