@@ -237,7 +237,7 @@
 			                % if data.has_key('url') :
 								<a href="${data['url']}"> ${stat.capitalize()}</a>
 							% else:
-								${stat.capitalize()}
+								${desc}
 							% endif
 						</li>
 					% endfor
