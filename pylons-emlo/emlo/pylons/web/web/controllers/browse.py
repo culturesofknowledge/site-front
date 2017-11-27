@@ -4,7 +4,7 @@ from pylons import request, response, session, tmpl_context as c, url
 from pylons.controllers.util import abort, redirect
 
 from web.lib.base import BaseController, render
-from web.lib.fieldmap import *
+import web.lib.fieldmap as fn
 from web.lib.helpers import escape_colons, uuid_from_uri, get_records_from_solr, \
                             get_default_year_for_browse
 
@@ -32,27 +32,27 @@ class BrowseController(BaseController):
 
   def get_browse_display_fields( self, browsing ): #{
 
-    display_fields = { 'people': [ get_person_name_fieldname(),
-                                   get_alias_fieldname(),
-                                   get_person_titles_or_roles_fieldname(),
-                                   get_gender_fieldname()],
+    display_fields = { 'people': [ fn.get_person_name_fieldname(),
+                                   fn.get_alias_fieldname(),
+                                   fn.get_person_titles_or_roles_fieldname(),
+                                   fn.get_gender_fieldname()],
 
-                       'organisations': [ get_person_name_fieldname(),
-                                          get_alias_fieldname(),
-                                          get_person_titles_or_roles_fieldname() ],
+                       'organisations': [ fn.get_person_name_fieldname(),
+                                          fn.get_alias_fieldname(),
+                                          fn.get_person_titles_or_roles_fieldname() ],
 
-                       'locations': [ get_location_name_fieldname(),
-                                      get_location_synonyms_fieldname(),
-                                      get_latitude_fieldname(),
-                                      get_longitude_fieldname() ],
+                       'locations': [ fn.get_location_name_fieldname(),
+                                      fn.get_location_synonyms_fieldname(),
+                                      fn.get_latitude_fieldname(),
+                                      fn.get_longitude_fieldname() ],
 
-                       'works':     [ get_work_description_fieldname() ],
+                       'works':     [ fn.get_work_description_fieldname() ],
 
-                       'institutions': [ get_repository_name_fieldname(),
-                                         get_repository_alternate_name_fieldname(),
-                                         get_repository_city_fieldname(),
-                                         get_repository_alternate_city_fieldname(),
-                                         get_repository_country_fieldname() ] }
+                       'institutions': [ fn.get_repository_name_fieldname(),
+                                         fn.get_repository_alternate_name_fieldname(),
+                                         fn.get_repository_city_fieldname(),
+                                         fn.get_repository_alternate_city_fieldname(),
+                                         fn.get_repository_country_fieldname() ] }
 
     if display_fields.has_key( browsing ):
       return display_fields[ browsing ]
@@ -62,41 +62,41 @@ class BrowseController(BaseController):
 
   ##-----------------------------------------------------------------------------
 
-  def get_browse_link_details( self, browsing ): #{
+  def get_browse_link_details( self, browsing ):
 
     link_details = { 
 
-      'people': [ { 'field_for_link_text': get_total_works_written_by_agent_fieldname(),
-                    'search_on_fieldname': get_author_uri_fieldname() },
+      'people': [ { 'field_for_link_text': fn.get_total_works_written_by_agent_fieldname(),
+                    'search_on_fieldname': fn.get_author_uri_fieldname() },
 
-                  { 'field_for_link_text': get_total_works_recd_by_agent_fieldname(),
-                    'search_on_fieldname': get_addressee_uri_fieldname() },
+                  { 'field_for_link_text': fn.get_total_works_recd_by_agent_fieldname(),
+                    'search_on_fieldname': fn.get_addressee_uri_fieldname() },
 
-                  { 'field_for_link_text': get_total_works_mentioning_agent_fieldname(),
-                    'search_on_fieldname': get_relations_to_people_mentioned_fieldname() }
+                  { 'field_for_link_text': fn.get_total_works_mentioning_agent_fieldname(),
+                    'search_on_fieldname': fn.get_relations_to_people_mentioned_fieldname() }
                 ],
 
-      'organisations':  [ { 'field_for_link_text': get_total_works_written_by_agent_fieldname(),
-                            'search_on_fieldname': get_author_uri_fieldname() },
+      'organisations':  [ { 'field_for_link_text': fn.get_total_works_written_by_agent_fieldname(),
+                            'search_on_fieldname': fn.get_author_uri_fieldname() },
 
-                          { 'field_for_link_text': get_total_works_recd_by_agent_fieldname(),
-                            'search_on_fieldname': get_addressee_uri_fieldname() },
+                          { 'field_for_link_text': fn.get_total_works_recd_by_agent_fieldname(),
+                            'search_on_fieldname': fn.get_addressee_uri_fieldname() },
 
-                          { 'field_for_link_text': get_total_works_mentioning_agent_fieldname(),
-                            'search_on_fieldname': get_relations_to_people_mentioned_fieldname() }
+                          { 'field_for_link_text': fn.get_total_works_mentioning_agent_fieldname(),
+                            'search_on_fieldname': fn.get_relations_to_people_mentioned_fieldname() }
                         ],
 
-      'locations': [ { 'field_for_link_text': get_total_works_sent_from_place_fieldname(),
-                       'search_on_fieldname': get_origin_uri_fieldname() },
+      'locations': [ { 'field_for_link_text': fn.get_total_works_sent_from_place_fieldname(),
+                       'search_on_fieldname': fn.get_origin_uri_fieldname() },
 
-                     { 'field_for_link_text': get_total_works_sent_to_place_fieldname(),
-                       'search_on_fieldname': get_destination_uri_fieldname() },
+                     { 'field_for_link_text': fn.get_total_works_sent_to_place_fieldname(),
+                       'search_on_fieldname': fn.get_destination_uri_fieldname() },
 
-                     { 'field_for_link_text': get_total_works_mentioning_place_fieldname(),
-                       'search_on_fieldname': get_relations_to_places_mentioned_fieldname() }
+                     { 'field_for_link_text': fn.get_total_works_mentioning_place_fieldname(),
+                       'search_on_fieldname': fn.get_relations_to_places_mentioned_fieldname() }
                    ],
 
-      'institutions': [ { 'field_for_link_text': get_total_docs_in_repos_fieldname(),
+      'institutions': [ { 'field_for_link_text': fn.get_total_docs_in_repos_fieldname(),
                           'search_on_fieldname': 'repository' }
                       ],
     }
@@ -105,7 +105,7 @@ class BrowseController(BaseController):
       return link_details[ browsing ]
     else:
       return []
-  #}
+
 
 ##-----------------------------------------------------------------------------
     
@@ -113,11 +113,11 @@ class BrowseController(BaseController):
     
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
-    is_org_field = escape_colons( get_is_organisation_fieldname())
+    is_org_field = escape_colons( fn.get_is_organisation_fieldname())
     q = "%s:false AND browse:%s* AND (" + \
-        get_works_created_fieldname() + ":[* TO *] OR " + \
-        get_letters_received_fieldname() + ":[* TO *] OR " + \
-        get_works_in_which_mentioned_fieldname() + ":[* TO *])"
+        fn.get_works_created_fieldname() + ":[* TO *] OR " + \
+        fn.get_letters_received_fieldname() + ":[* TO *] OR " + \
+        fn.get_works_in_which_mentioned_fieldname() + ":[* TO *])"
 
     q = q % ( is_org_field, letter )
     
@@ -151,7 +151,7 @@ class BrowseController(BaseController):
   def organisations(self):
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
-    is_org_field = escape_colons( get_is_organisation_fieldname())
+    is_org_field = escape_colons( fn.get_is_organisation_fieldname())
     q = "%s:true AND browse:%s*"% ( is_org_field, letter )
     
     display_fields = self.get_browse_display_fields( 'organisations' )
@@ -187,9 +187,9 @@ class BrowseController(BaseController):
 
     c.current_year = year = request.params.get( 'year', default_year )
     
-    q = '(' + escape_colons( get_start_year_fieldname()) + ':(' + year + ')' \
+    q = '(' + escape_colons( fn.get_start_year_fieldname()) + ':(' + year + ')' \
       + ' OR ' \
-      + escape_colons( get_end_year_fieldname()) + ':(' + year + '))'
+      + escape_colons( fn.get_end_year_fieldname()) + ':(' + year + '))'
     
     display_fields = self.get_browse_display_fields( 'works' )
 
@@ -207,7 +207,7 @@ class BrowseController(BaseController):
 
     # Tell Solr to return the URI identifying the record, e.g. the person URI if you're browsing people.
     fields = []
-    uri_fieldname = get_uri_fieldname()
+    uri_fieldname = fn.get_uri_fieldname()
     fields.append( uri_fieldname )
 
     # Tell Solr to return the fields listed in 'display fields'
@@ -221,7 +221,7 @@ class BrowseController(BaseController):
     #}
 
     # Tell Solr to return related resources
-    fields.append( get_relations_to_resource_fieldname() )
+    fields.append( fn.get_relations_to_resource_fieldname() )
 
     # TODO: What are we going to do about names that start with letters containing an accent??? -
     # e.g. Ile de France (there should be a circumflex over that I). No option for I-circumflex on list.
@@ -289,17 +289,15 @@ class BrowseController(BaseController):
                                    } )
 
       # Add a list of related resources, if any
-      if result.has_key( get_relations_to_resource_fieldname() ): #{
+      if fn.get_relations_to_resource_fieldname() in result :
         resource_uuids = []
-        resource_dict = {}
-        for resource_uri in result[ get_relations_to_resource_fieldname() ]: #{
+
+        for resource_uri in result[ fn.get_relations_to_resource_fieldname() ]:
           resource_uuids.append( uuid_from_uri( resource_uri, True ) )
-        #}
-        resource_results = {} #get_records_from_solr( resource_uuids,  ## TODO : REMOVE FROM INSIDE LOOPP!!!!!!!!!!!!!!
-                               #                   selected_fields=[ get_resource_title_fieldname(),
-                                #                                    get_resource_url_fieldname(),
-                                 #                                   get_resource_details_fieldname() ] )
-        for resource_key, resource_dict in resource_results.iteritems(): #{
+
+        resource_results = {}
+
+        for resource_key, resource_dict in resource_results.iteritems():
           resource_fields.append( resource_dict )
 
 
