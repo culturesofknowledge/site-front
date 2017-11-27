@@ -329,6 +329,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
             # Keep track of what is happening with these
             timeStart = time.time()
             record_count = 0
+            record_skip = 0
            
             id_field = singular + "_id"
             uri_base_with_type = uri_base + singular + "/"
@@ -449,23 +450,36 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                     # Add relationships
                     #
                     members = red_temp.smembers( uid )
-                   
-                    if len( members ) > 0 :
+
+                    if members :
                         # if entity :
                         #     entity.add_namespaces( relationships.namespaces )
 
+                        uuid_related = []
+
                         for member in members:
 
-                            parts = member.split("::")
+                            relation, uid_related, type_related = member.split("::")
 
-                            uri_relationship = create_uri( uri_base, parts[2], parts[1] )
-                            add( entity, solr_item, uri, parts[0] , uri_relationship, relationship=parts[2] )
+                            uri_relationship = create_uri( uri_base, type_related, uid_related )
+                            add( entity, solr_item, uri, relation , uri_relationship, relationship=type_related )
 
-                  
-                    # if entity:
-                    #    entity.commit()
-                    # print solr_item
-                    solr_list.append(solr_item)
+                            uuid_related.append( uid_related )
+
+                        add( entity, solr_item, uri, "uuid_related" , uuid_related )
+
+                        # if entity:
+                        #    entity.commit()
+
+                        # print solr_item
+                    else :
+                       if singular == 'work' :
+                           add( entity, solr_item, uri, "uuid_related" , [] )
+
+                    if members or singular == 'work' :
+                        solr_list.append(solr_item) # only add it if it is related to something or a work on it's own...
+                    else :
+                        record_skip += 1
 
                     if record_count % 5000 == 0:
                         print "  - add to solr to", record_count
@@ -487,7 +501,7 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                 csv_codec_file.close()
 
 
-            print "  - committing", record_count
+            print "  - committing", record_count-record_skip, "from", record_count
             sol.commit()
             sol_all.commit()
 

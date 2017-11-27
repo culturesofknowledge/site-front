@@ -113,7 +113,7 @@ class BrowseController(BaseController):
     
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
-    is_org_field = escape_colons( fn.get_is_organisation_fieldname())
+    is_org_field = escape_colons( fn.get_is_organisation_fieldname() )
     q = "%s:false AND browse:%s* AND (" + \
         fn.get_works_created_fieldname() + ":[* TO *] OR " + \
         fn.get_letters_received_fieldname() + ":[* TO *] OR " + \
@@ -168,7 +168,7 @@ class BrowseController(BaseController):
   def institutions(self):
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
-    q = "browse:%s*"% (letter)
+    q = "browse:%s*" % (letter)
     
     display_fields = self.get_browse_display_fields( 'institutions' )
 
@@ -249,14 +249,14 @@ class BrowseController(BaseController):
       # and the field to be used in a subsequent search, e.g. the 'Author URI' fieldname 
       # to sllow you to link to all letters written by a person.
  
-      field_for_link_text = ''
-      search_on_fieldname = ''
+      # field_for_link_text = ''
+      # search_on_fieldname = ''
 
       if len( link_details ) > 0: #{
         for one_link_details in link_details: #{
           field_for_link_text = one_link_details[ 'field_for_link_text' ]
 
-          if result.has_key( field_for_link_text ):  #{
+          if field_for_link_text in result:  #{
             value_of_link_text = result[ field_for_link_text ]
             search_on_fieldname = one_link_details[ 'search_on_fieldname' ]
           #}

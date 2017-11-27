@@ -7,7 +7,7 @@ from pylons.controllers.util import abort, redirect
 from web.lib.base import BaseController, render
 
 from web.lib.helpers import get_records_from_solr, profile_url_from_uri, escape_colons, \
-                            get_max_relations_for_profile, uuid_from_uri
+                            get_max_relations_for_profile, uuid_from_uri, get_related_records_from_solr
 from web.lib.fieldmap import *
 import web.lib.relations
 from web.lib.tinyurl import Tinyurl
@@ -252,14 +252,8 @@ class ProfileController(BaseController):
          further_relations = {}
 
       else:
-         # Proceed to populate fields as normal
-         relation_fields = web.lib.relations.object_relation_fields[object]
-        
-         relations = []
-         for relation in relation_fields:
-            relations.extend( this_profile.get( relation, [] ) )
 
-         relations = get_records_from_solr( relations )
+         relations = get_related_records_from_solr( [uid] )
          further_relations = self.further_relations(relations, object)
 
 

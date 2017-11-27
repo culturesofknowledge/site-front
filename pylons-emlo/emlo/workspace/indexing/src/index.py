@@ -178,8 +178,13 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	# Update Works if needed
 	#
 	if 'works' in indexing :
+
+		timeStart = time.time()
+
 		AdditionalSolr.AdditionalWorksData()
 
+		timeEnd = time.time()
+		print "  - Done (in %0.1f seconds)." % (timeEnd-timeStart)
 	#
 	# Switch from the staging cores to real ones.
 	#
