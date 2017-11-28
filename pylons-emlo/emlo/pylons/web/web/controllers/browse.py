@@ -30,35 +30,47 @@ class BrowseController(BaseController):
 
 ##-----------------------------------------------------------------------------
 
-  def get_browse_display_fields( self, browsing ): #{
+  def get_browse_display_fields( self, browsing ):
 
-    display_fields = { 'people': [ fn.get_person_name_fieldname(),
-                                   fn.get_alias_fieldname(),
-                                   fn.get_person_titles_or_roles_fieldname(),
-                                   fn.get_gender_fieldname()],
+    display_fields = {
+        'people': [
+            fn.get_person_name_fieldname(),
+            fn.get_alias_fieldname(),
+            fn.get_person_titles_or_roles_fieldname(),
+            fn.get_gender_fieldname()
+        ],
 
-                       'organisations': [ fn.get_person_name_fieldname(),
-                                          fn.get_alias_fieldname(),
-                                          fn.get_person_titles_or_roles_fieldname() ],
+        'organisations': [
+            fn.get_person_name_fieldname(),
+            fn.get_alias_fieldname(),
+            fn.get_person_titles_or_roles_fieldname()
+        ],
 
-                       'locations': [ fn.get_location_name_fieldname(),
-                                      fn.get_location_synonyms_fieldname(),
-                                      fn.get_latitude_fieldname(),
-                                      fn.get_longitude_fieldname() ],
+        'locations': [
+            fn.get_location_name_fieldname(),
+            fn.get_location_synonyms_fieldname(),
+            fn.get_latitude_fieldname(),
+            fn.get_longitude_fieldname()
+        ],
 
-                       'works':     [ fn.get_work_description_fieldname() ],
+        'works':     [
+            fn.get_work_description_fieldname()
+        ],
 
-                       'institutions': [ fn.get_repository_name_fieldname(),
-                                         fn.get_repository_alternate_name_fieldname(),
-                                         fn.get_repository_city_fieldname(),
-                                         fn.get_repository_alternate_city_fieldname(),
-                                         fn.get_repository_country_fieldname() ] }
+        'institutions': [
+            fn.get_repository_name_fieldname(),
+            fn.get_repository_alternate_name_fieldname(),
+            fn.get_repository_city_fieldname(),
+            fn.get_repository_alternate_city_fieldname(),
+            fn.get_repository_country_fieldname()
+        ]
+    }
 
-    if display_fields.has_key( browsing ):
+    if browsing in display_fields:
       return display_fields[ browsing ]
-    else:
-      return []
-  #}
+
+    return []
+
 
   ##-----------------------------------------------------------------------------
 
@@ -66,100 +78,114 @@ class BrowseController(BaseController):
 
     link_details = { 
 
-      'people': [ { 'field_for_link_text': fn.get_total_works_written_by_agent_fieldname(),
-                    'search_on_fieldname': fn.get_author_uri_fieldname() },
+      'people': [
+          {
+              'field_for_link_text': fn.get_total_works_written_by_agent_fieldname(),
+              'search_on_fieldname': fn.get_author_uri_fieldname()
+          },
+          {
+              'field_for_link_text': fn.get_total_works_recd_by_agent_fieldname(),
+              'search_on_fieldname': fn.get_addressee_uri_fieldname()
+          },
+          {
+              'field_for_link_text': fn.get_total_works_mentioning_agent_fieldname(),
+              'search_on_fieldname': fn.get_relations_to_people_mentioned_fieldname()
+          }
+      ],
 
-                  { 'field_for_link_text': fn.get_total_works_recd_by_agent_fieldname(),
-                    'search_on_fieldname': fn.get_addressee_uri_fieldname() },
+      'organisations': [
+          {
+              'field_for_link_text': fn.get_total_works_written_by_agent_fieldname(),
+              'search_on_fieldname': fn.get_author_uri_fieldname()
+          },
 
-                  { 'field_for_link_text': fn.get_total_works_mentioning_agent_fieldname(),
-                    'search_on_fieldname': fn.get_relations_to_people_mentioned_fieldname() }
-                ],
+          {
+              'field_for_link_text': fn.get_total_works_recd_by_agent_fieldname(),
+              'search_on_fieldname': fn.get_addressee_uri_fieldname()
+          },
 
-      'organisations':  [ { 'field_for_link_text': fn.get_total_works_written_by_agent_fieldname(),
-                            'search_on_fieldname': fn.get_author_uri_fieldname() },
+          {
+              'field_for_link_text': fn.get_total_works_mentioning_agent_fieldname(),
+              'search_on_fieldname': fn.get_relations_to_people_mentioned_fieldname()
+          }
+      ],
 
-                          { 'field_for_link_text': fn.get_total_works_recd_by_agent_fieldname(),
-                            'search_on_fieldname': fn.get_addressee_uri_fieldname() },
+      'locations': [
+          {
+              'field_for_link_text': fn.get_total_works_sent_from_place_fieldname(),
+              'search_on_fieldname': fn.get_origin_uri_fieldname()
+          },
 
-                          { 'field_for_link_text': fn.get_total_works_mentioning_agent_fieldname(),
-                            'search_on_fieldname': fn.get_relations_to_people_mentioned_fieldname() }
-                        ],
+          {
+              'field_for_link_text': fn.get_total_works_sent_to_place_fieldname(),
+              'search_on_fieldname': fn.get_destination_uri_fieldname()
+          },
 
-      'locations': [ { 'field_for_link_text': fn.get_total_works_sent_from_place_fieldname(),
-                       'search_on_fieldname': fn.get_origin_uri_fieldname() },
+          {
+              'field_for_link_text': fn.get_total_works_mentioning_place_fieldname(),
+              'search_on_fieldname': fn.get_relations_to_places_mentioned_fieldname()
+          }
+      ],
 
-                     { 'field_for_link_text': fn.get_total_works_sent_to_place_fieldname(),
-                       'search_on_fieldname': fn.get_destination_uri_fieldname() },
-
-                     { 'field_for_link_text': fn.get_total_works_mentioning_place_fieldname(),
-                       'search_on_fieldname': fn.get_relations_to_places_mentioned_fieldname() }
-                   ],
-
-      'institutions': [ { 'field_for_link_text': fn.get_total_docs_in_repos_fieldname(),
-                          'search_on_fieldname': 'repository' }
-                      ],
+      'institutions': [
+          {
+              'field_for_link_text': fn.get_total_docs_in_repos_fieldname(),
+              'search_on_fieldname': 'repository'
+          }
+      ]
     }
 
-    if link_details.has_key( browsing ):
+    if browsing in link_details:
       return link_details[ browsing ]
-    else:
-      return []
+
+    return []
 
 
-##-----------------------------------------------------------------------------
+  ##-----------------------------------------------------------------------------
     
   def people(self):
     
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
     is_org_field = escape_colons( fn.get_is_organisation_fieldname() )
-    q = "%s:false AND browse:%s* AND (" + \
-        fn.get_works_created_fieldname() + ":[* TO *] OR " + \
-        fn.get_letters_received_fieldname() + ":[* TO *] OR " + \
-        fn.get_works_in_which_mentioned_fieldname() + ":[* TO *])"
+    q = is_org_field + ":false AND browse:" + letter + "* AND (" + \
+        fn.get_total_works_written_by_agent_fieldname() + ":[1 TO *] OR " + \
+        fn.get_total_works_recd_by_agent_fieldname() + ":[1 TO *] OR " + \
+        fn.get_total_works_mentioning_agent_fieldname() + ":[1 TO *])"
 
-    q = q % ( is_org_field, letter )
-    
-    display_fields = self.get_browse_display_fields( 'people' )
-
-    link_details = self.get_browse_link_details( 'people' )
-
-    c.browse = self.browse( q, 'people', display_fields, link_details )
+    c.browse = self.browse( q, 'people' )
     c.browsing = "people"
 
     return render('/main/browse.mako')
 
-##-----------------------------------------------------------------------------
+  ##-----------------------------------------------------------------------------
+
+  def organisations(self):
+    c.current_letter = letter = request.params.get( 'letter', 'a' )
+
+    is_org_field = escape_colons( fn.get_is_organisation_fieldname())
+    q = is_org_field + ":true AND browse:" + letter + "* AND (" + \
+        fn.get_total_works_written_by_agent_fieldname() + ":[1 TO *] OR " + \
+        fn.get_total_works_recd_by_agent_fieldname() + ":[1 TO *] OR " + \
+        fn.get_total_works_mentioning_agent_fieldname() + ":[1 TO *])"
+
+    c.browse = self.browse( q, 'people', real_object='organisations' )
+    c.browsing = "organisations"
+
+    return render('/main/browse.mako')
+
+  ##-----------------------------------------------------------------------------
     
   def locations(self):
     c.current_letter = letter = request.params.get( 'letter', 'a' )
     
-    q = "browse:%s*" % letter
-    
-    display_fields = self.get_browse_display_fields( 'locations' )
+    q = "browse:" + letter + "* AND (" + \
+        fn.get_total_works_sent_from_place_fieldname() + ":[1 TO *] OR " + \
+        fn.get_total_works_sent_to_place_fieldname() + ":[1 TO *] OR " + \
+        fn.get_total_works_mentioning_place_fieldname() + ":[1 TO *])"
 
-    link_details = self.get_browse_link_details( 'locations' )
-
-    c.browse = self.browse( q, 'locations', display_fields, link_details )
+    c.browse = self.browse( q, 'locations' )
     c.browsing = "locations"
-
-    return render('/main/browse.mako')
-
-##-----------------------------------------------------------------------------
-    
-  def organisations(self):
-    c.current_letter = letter = request.params.get( 'letter', 'a' )
-    
-    is_org_field = escape_colons( fn.get_is_organisation_fieldname())
-    q = "%s:true AND browse:%s*"% ( is_org_field, letter )
-    
-    display_fields = self.get_browse_display_fields( 'organisations' )
-
-    link_details = self.get_browse_link_details( 'organisations' )
-
-    c.browse = self.browse( q, 'people', display_fields, link_details )
-    c.browsing = "organisations"
 
     return render('/main/browse.mako')
 
@@ -167,14 +193,18 @@ class BrowseController(BaseController):
     
   def institutions(self):
     c.current_letter = letter = request.params.get( 'letter', 'a' )
-    
-    q = "browse:%s*" % (letter)
-    
-    display_fields = self.get_browse_display_fields( 'institutions' )
 
-    link_details = self.get_browse_link_details( 'institutions' )
+    "-browse:a* AND -browse:b* -browse:c* AND -browse:d* AND -browse:e* AND -browse:f* AND " \
+        "-browse:g* AND -browse:h* -browse:i* AND -browse:j* AND -browse:k* AND -browse:l* AND " \
+        "-browse:m* AND -browse:n* -browse:o* AND -browse:p* AND -browse:q* AND -browse:r* AND " \
+        "-browse:s* AND -browse:t* -browse:u* AND -browse:v* AND -browse:w* AND -browse:x* AND " \
+        "-browse:y* AND -browse:z*"
 
-    c.browse = self.browse( q, 'institutions', display_fields, link_details )
+    # -browse:a* AND -browse:b* -browse:c* AND -browse:d* AND -browse:e* AND -browse:f* AND -browse:g* AND -browse:h* -browse:i* AND -browse:j* AND -browse:k* AND -browse:l* AND -browse:m* AND -browse:n* -browse:o* AND -browse:p* AND -browse:q* AND -browse:r* AND -browse:s* AND -browse:t* -browse:u* AND -browse:v* AND -browse:w* AND -browse:x* AND -browse:y* AND -browse:z*
+
+    q = "browse:" + letter + "*"
+
+    c.browse = self.browse( q, 'institutions' )
     c.browsing = "institutions"
 
     return render('/main/browse.mako')
@@ -190,25 +220,23 @@ class BrowseController(BaseController):
     q = '(' + escape_colons( fn.get_start_year_fieldname()) + ':(' + year + ')' \
       + ' OR ' \
       + escape_colons( fn.get_end_year_fieldname()) + ':(' + year + '))'
-    
-    display_fields = self.get_browse_display_fields( 'works' )
 
-    link_details = self.get_browse_link_details( 'works' )
-
-    c.browse = self.browse( q, 'works', display_fields, link_details, sortfield='started_date_sort asc' )
+    c.browse = self.browse( q, 'works', sortfield='started_date_sort asc' )
     c.browsing = "works"
 
     return render('/main/browse.mako')
 
 ##-----------------------------------------------------------------------------
 
-  def browse(self, q, object, display_fields, link_details, sortfield = 'browse asc'):
-
+  def browse(self, q, object, sortfield = 'browse asc', real_object=None):
 
     # Tell Solr to return the URI identifying the record, e.g. the person URI if you're browsing people.
     fields = []
     uri_fieldname = fn.get_uri_fieldname()
     fields.append( uri_fieldname )
+
+    display_fields = self.get_browse_display_fields( real_object or object )
+    link_details = self.get_browse_link_details( real_object or object )
 
     # Tell Solr to return the fields listed in 'display fields'
     fields.extend( display_fields )
