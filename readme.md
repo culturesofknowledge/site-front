@@ -1,7 +1,7 @@
 # EMLO Server
 A server to build emlo.bodleian.ox.ac.uk
 
-## Prerequists
+## Prerequisites
 You'll need Docker and Docker-compose installed. 
 
 A copy of this git repository needs to be cloned.
