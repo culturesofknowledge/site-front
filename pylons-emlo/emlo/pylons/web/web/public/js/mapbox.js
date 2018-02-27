@@ -1,6 +1,6 @@
 
 var colours = [
-	'#31eef6', '#57b5d8', '#df65b0', '#dd1c77', '#980043' // default
+	'#31ccf6', '#37b5d8', '#df65b0', '#dd1c77', '#980043' // default
 ];
 
 (function() {
@@ -193,10 +193,19 @@ var colours = [
 
 var coloursDiv = document.getElementById("colours");
 //coloursDiv.appendChild(document.createTextNode("Key: "));
-coloursDiv.appendChild(document.createTextNode(" Least "));
+
+var spanLeast = document.createElement("span");
+spanLeast.setAttribute("style", "margin-right:10px;vertical-align:bottom;/*bottom?*/display:inline-block;height:39px;");
+spanLeast.appendChild(document.createTextNode("Least"));
+
+var spanMost = document.createElement("span");
+spanMost.setAttribute("style", "margin-left:10px;vertical-align:bottom;/*bottom?*/display:inline-block;height:39px;");
+spanMost.appendChild(document.createTextNode("Most"));
+
+coloursDiv.appendChild(spanLeast);
 for( var colour=0, end=colours.length; colour<end;colour++ ) {
 	var div = document.createElement("div");
-	div.setAttribute("style", "display:inline-block;width:20px;height:20px;background-color:"+colours[colour]);
+	div.setAttribute("style", "display:inline-block;width:20px;height:39px;background-color:"+colours[colour]);
 	coloursDiv.appendChild(div)
 }
-coloursDiv.appendChild(document.createTextNode(" Most "));
+coloursDiv.appendChild(spanMost);
