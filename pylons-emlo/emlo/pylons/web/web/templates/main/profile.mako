@@ -241,7 +241,7 @@
 				<!-- end of short URL code -->
 
 				<!-- Report this page link    -->
-				<p><img src="/img/icon-send-comment.png" class="opacity50 icon-tweak"  /> <a href="/comment/index?id=${c.profile['id'].replace('uuid:','')}">Send Comment</a></p>
+				<p><img src="/img/icon-send-comment.png" class="opacity50 icon-tweak"  /> <a href="/comment/index?id=${c.profile['id'].replace('uuid_','')}">Send Comment</a></p>
 
 				<!-- AddThis Button BEGIN - sharing-->
 				<div class="addthis_toolbox addthis_default_style " style="border-bottom:1px solid #efc319; padding-bottom: 10px; padding-top:5px">
