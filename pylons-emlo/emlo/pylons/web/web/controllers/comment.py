@@ -79,15 +79,15 @@ class CommentController(BaseController):
 					email_body += "======================\n"
 					email_body += "\n"
 					email_body += "Comment on record: "
-					email_body += " http://emlo.bodleian.ox.ac.uk/profile/" + record['object_type'] + "/" + record['id'].replace("uuid:", '') + '\n'
+					email_body += " http://emlo.bodleian.ox.ac.uk/profile/" + record['object_type'] + "/" + record['id'].replace("uuid_", '') + '\n'
 					email_body += "\n"
 					email_body += "From: " + requests['name'] + "\n"
 					email_body += "Email: " + requests['email'] + "\n"
 					email_body += "Message follows:\n" + requests['comment'] + "\n\n"
 
-					self._sendmail( 'emlo@bodleian.ox.ac.uk', email_body )
+					#self._sendmail( 'emlo@bodleian.ox.ac.uk', email_body )
 
-					return redirect( url(controller='thanks', action='index') + '?id=' + record['id'].replace("uuid:", '') )
+					return redirect( url(controller='thanks', action='index') + '?id=' + record['id'].replace("uuid_", '') )
 
 				else:
 
@@ -123,7 +123,7 @@ class CommentController(BaseController):
 
 					c.messages = messages
 
-					return render('/main/comment.mako')#?id=' + record['id'].replace('uuid:',''))
+					return render('/main/comment.mako')#?id=' + record['id'].replace('uuid_',''))
 
 		return redirect( url(controller='home') )
 

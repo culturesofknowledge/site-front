@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 <%!
 	nav_selected = ''
-	main_title = ''
+	main_title = 'Map'
 %>
 <%inherit file="/base.mako" />
 
