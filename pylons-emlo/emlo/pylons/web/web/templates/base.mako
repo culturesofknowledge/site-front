@@ -17,7 +17,7 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
+		<meta name="Description" content="Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence">
 		<link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
 		<link rel="stylesheet" href="/css/app.css" />
 
