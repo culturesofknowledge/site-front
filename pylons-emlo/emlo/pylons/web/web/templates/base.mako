@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 <!doctype html>
 <html class="no-js" lang="en">
 <%namespace file="header.mako" import="*"/>
@@ -19,18 +18,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
+		<link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
 		<link rel="stylesheet" href="/css/app.css" />
 
-		##<script src="/bower_components/modernizr/modernizr.js"></script>
 		<script src="/bower_components/modernizr/modernizr.min.mat.js"></script>
-
-		## For emlo-stage.bodleian:
-		## <script src="//use.typekit.net/rdk6qkf.js"></script>
-		## For emlo.bodleian:
-		<script src="//use.typekit.net/axz4cgy.js"></script>
-
-		<script>try{Typekit.load();}catch(e){}</script>
-
     ${self.for_head()}
 
 	</head>
