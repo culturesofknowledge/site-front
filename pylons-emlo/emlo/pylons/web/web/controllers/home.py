@@ -91,7 +91,12 @@ class HomeController(BaseController):
          elif stat == 'work':
              c.stats['works']['number'] = num
 
-       c.stats['organisations']['number'] = sol_response_all.facet_counts['facet_fields'][organisation_fn]['true']
+
+       if "true" in sol_response_all.facet_counts['facet_fields'][organisation_fn] :
+          c.stats['organisations']['number'] = sol_response_all.facet_counts['facet_fields'][organisation_fn]['true']
+       else:
+           c.stats['organisations']['number'] = 0
+
        c.stats['people']['number'] = sol_response_all.facet_counts['facet_fields']['object_type']['person'] - c.stats['organisations']['number']
 
 
