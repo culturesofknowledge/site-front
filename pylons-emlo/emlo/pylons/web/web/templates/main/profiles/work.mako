@@ -98,8 +98,20 @@
   #---------
   %>
 
-  <dl style="margin-top:25px;">
+  <dl style="-margin-top:25px;">
     ##---------------------- Start left-hand panel -------------------------------
+
+	  <% field = h.get_relations_to_resource_fieldname() %>
+	  % if c.profile.has_key( field ) :
+	  <% label = trans.translate(field) %>
+		  <dt>
+			  ${label}
+		  </dt>
+		  <dd>
+			  ${self.resource_relations( field )}
+		  </dd>
+	  % endif
+
 
 		## Source
     % if c.profile.has_key( h.get_source_of_data_fieldname() ):
