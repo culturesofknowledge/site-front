@@ -71,3 +71,11 @@ ul.pagination li {
 	border-radius: 2px;
 	text-align: center;
 }
+@media only screen and (max-width: 40.063em) {
+	#main .column {
+		border-top: 3px solid #efc319;
+	}
+	.side {
+		border-top: 5px solid #efc319;
+	}
+}

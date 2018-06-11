@@ -232,31 +232,6 @@
 
 			<div class="columns large-3 large-pull-9 side">
 
-				## <h3 class="record-tools">Record Tools</h3>
-				<%
-					tinyer_url = c.tinyurl[7:]
-				%>
-				<!-- Get short URL code, now using tinyURL -->
-				<p><img src="/img/icon-short-url.png" class="opacity50 icon-tweak" /> Short URL:  <span class="showLink"><a href="${c.tinyurl}">${tinyer_url}</a></span> </p>
-				<!-- end of short URL code -->
-
-				<!-- Report this page link    -->
-				<p><img src="/img/icon-send-comment.png" class="opacity50 icon-tweak"  /> <a href="/comment/index?id=${c.profile['id'].replace('uuid_','')}">Send Comment</a></p>
-
-				<!-- AddThis Button BEGIN - sharing-->
-				<div class="addthis_toolbox addthis_default_style " style="border-bottom:1px solid #efc319; padding-bottom: 10px; padding-top:5px">
-					<span style="text-align:center;"><a class="addthis_button_preferred_1" style="border-bottom:none;"></a>
-					<a class="addthis_button_preferred_2" style="border-bottom:none;"></a>
-					<a class="addthis_button_preferred_3" style="border-bottom:none;"></a>
-					<a class="addthis_button_preferred_4" style="border-bottom:none;"></a>
-					<a class="addthis_button_compact" style="border-bottom:none;"></a>
-					<a class="addthis_counter addthis_bubble_style" style="border-bottom:none;"></a></span>
-				</div>
-
-				<!-- script moved to end of body function -->
-				<!-- AddThis Button END -->
-				<br/>
-
 				<%
 					object_type_desc = trans.translate( object_type )
 
@@ -286,9 +261,34 @@
 					else:
 						imageSrc = "/images/resources_icon.png"
 				%>
-				<div>
-					<img src="${imageSrc}" id="profile-icon" style="float:left;height:25px;width:25px;margin-right:5px;"><div>Record type: ${theTitle}</div>
+				<div style="border-bottom:1px solid #efc319; padding-bottom: 21px; padding-top:5px">
+					<img src="${imageSrc}" id="profile-icon" style="float:left;height:25px;width:25px;margin-right:15px;"><div><strong>${theTitle}</strong></div>
+				</div><br/>
+
+				## <h3 class="record-tools">Record Tools</h3>
+				<%
+					tinyer_url = c.tinyurl[7:]
+				%>
+				<!-- Get short URL code, now using tinyURL -->
+				<p><img src="/img/icon-short-url.png" class="opacity50 icon-tweak" /> Short URL:  <span class="showLink"><a href="${c.tinyurl}">${tinyer_url}</a></span> </p>
+				<!-- end of short URL code -->
+
+				<!-- Report this page link    -->
+				<p><img src="/img/icon-send-comment.png" class="opacity50 icon-tweak"  /> <a href="/comment/index?id=${c.profile['id'].replace('uuid_','')}">Send Comment</a></p>
+
+				<!-- AddThis Button BEGIN - sharing-->
+				<div class="addthis_toolbox addthis_default_style " style="border-bottom:1px solid #efc319; padding-bottom: 10px; padding-top:5px">
+					<span style="text-align:center;"><a class="addthis_button_preferred_1" style="border-bottom:none;"></a>
+					<a class="addthis_button_preferred_2" style="border-bottom:none;"></a>
+					<a class="addthis_button_preferred_3" style="border-bottom:none;"></a>
+					<a class="addthis_button_preferred_4" style="border-bottom:none;"></a>
+					<a class="addthis_button_compact" style="border-bottom:none;"></a>
+					<a class="addthis_counter addthis_bubble_style" style="border-bottom:none;"></a></span>
 				</div>
+
+				<!-- script moved to end of body function -->
+				<!-- AddThis Button END -->
+				<br/>
 
 				${next.profileRight()}
 
