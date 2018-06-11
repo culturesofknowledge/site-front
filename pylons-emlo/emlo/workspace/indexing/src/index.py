@@ -105,21 +105,23 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 			csv_file_location = csvtordf.common['csv_source_directory_root'] + csvtordf.csv_files[csv_file_name][0]
 			new_csv_file_location = csv_file_location + ".new"
 
-			print "   -", csv_file_location
+			if os.path.isfile(csv_file_location) :
 
-			stat_info = os.stat(csv_file_location)
-			with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
+				print "   -", csv_file_location
 
-				with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
+				stat_info = os.stat(csv_file_location)
+				with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
 
-					for line in csv_file_original:
+					with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
 
-						line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
-						csv_file.write(line)
+						for line in csv_file_original:
 
-			os.rename( csv_file_location, csv_file_location + '.bak' ) # original file to backup
-			os.rename( csv_file_location + '.new', csv_file_location ) # new file to original
-			os.chown( csv_file_location, stat_info.st_uid, stat_info.st_gid )
+							line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
+							csv_file.write(line)
+
+				os.rename( csv_file_location, csv_file_location + '.bak' ) # original file to backup
+				os.rename( csv_file_location + '.new', csv_file_location ) # new file to original
+				os.chown( csv_file_location, stat_info.st_uid, stat_info.st_gid )
 
 		timeEnd = time.time()
 		print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))

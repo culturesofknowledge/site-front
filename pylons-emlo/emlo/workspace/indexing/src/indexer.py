@@ -13,6 +13,7 @@ import sys
 import time
 import urllib
 import io
+import os.path
 
 import solr
 import fastcsv
@@ -138,16 +139,18 @@ def GenerateIds( _, red_ids ):
             #    errored = True
             #    print "Error - Can't open file=" + csv_file_location
 
-            with fastcsv.Reader(io.open(csv_file_location)) as reader :
-                csv_row = reader.next()
+            if os.path.isfile(csv_file_location) :
 
-                idPosition = csv_row.index(id_field)
-                uuidPosition = csv_row.index("uuid")
+                with fastcsv.Reader(io.open(csv_file_location)) as reader :
+                    csv_row = reader.next()
 
-                for csv_row in reader:
+                    idPosition = csv_row.index(id_field)
+                    uuidPosition = csv_row.index("uuid")
 
-                    editid = csv_row[idPosition].strip()
-                    red_ids.set( editid, csv_row[uuidPosition] )
+                    for csv_row in reader:
+
+                        editid = csv_row[idPosition].strip()
+                        red_ids.set( editid, csv_row[uuidPosition] )
 
 
         # Rest a while, you've worked hard enough
@@ -295,6 +298,14 @@ def generateAdditional(singular, record, solr_item):
 
 
 def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
+
+    # We no longer generate RDF.
+    FillSolr( indexing, red_ids, red_temp, create_file_entities )
+
+#
+# open / create the file entity store for each type
+#
+def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
     #
     # open / create the file entity store for each type
     #
@@ -345,10 +356,14 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
                 csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
                 print "  - CSV file:  " + csv_file_location
 
-                csv_codec_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
-                csv_records = csv.DictReader( csv_codec_file, restval="" )
+                csv_records = []
+                csv_codec_file = None
 
-                csv_fields = csv_records.fieldnames
+                if os.path.isfile(csv_file_location) :
+                   csv_codec_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
+                   csv_records = csv.DictReader( csv_codec_file, restval="" )
+
+                   csv_fields = csv_records.fieldnames
                
                 translation_errors = []
                 solr_list = []
@@ -498,7 +513,8 @@ def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
 
                 del solr_list[:]
 
-                csv_codec_file.close()
+                if csv_codec_file is not None:
+                    csv_codec_file.close()
 
 
             print "  - committing", record_count-record_skip, "from", record_count
