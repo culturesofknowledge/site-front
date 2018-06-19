@@ -95,6 +95,12 @@ var colours = [
 		return query;
 	};
 
+	var tileClick = function(e) {
+		var z = map.getZoom();
+		//map.setView( e.latlng, z+2);
+		map.setZoomAround(e.latlng,z+2);
+		//console.log(e,z);
+	};
 
 	jQuery('#placelist').on("change", function () {
 		var index = jQuery('#placelist').val();
@@ -147,8 +153,14 @@ var colours = [
 		solr.refresh();
 	});
 
+	/*jQuery("path.leaflet-clickable").on( "click", function () {
+		console.log("Test clicking an area.")
+	});*/
+
 	function resetSolr() {
 		"use strict";
+
+		console.log("resetSolr");
 
 		var colorMap = colours;
 		var solrURL = window.location.origin + '/solr/locations';
@@ -157,7 +169,7 @@ var colours = [
 			map.removeLayer(solr);
 		}
 
-		solr = L.solrHeatmap( solrURL, {
+		solr = L.solrHeatmap(solrURL, {
 
 			field: "geo_rpt",
 			type: "geojsonGrid",
@@ -168,6 +180,7 @@ var colours = [
 			solrErrorHandler: solrErrorHandler,
 			solrSuccessHandler: solrSuccessHandler,
 			renderCompleteHandler: renderCompleteHandler,
+			tileClick: tileClick,
 
 			popupHighlight: true,
 			showGlobalResults: false,
@@ -185,7 +198,38 @@ var colours = [
 
 			solrQueryCreate: solrQueryCreate
 		})
-			.addTo(map);
+		.addTo(map);
+
+		L.solrHeatmap(solrURL, {
+
+			field: "geo_rpt",
+			type: "clusters",
+
+			colors: colorMap,
+			maxSampleSize: 400,
+
+			solrErrorHandler: null,//solrErrorHandler,
+			solrSuccessHandler: null,//solrSuccessHandler,
+			renderCompleteHandler: null,//renderCompleteHandler,
+			tileClick: null,//tileClick,
+
+			popupHighlight: true,
+			showGlobalResults: false,
+			fixedOpacity: 100,
+
+			limitFields: [
+				'g:geo',
+				'n:geonames_name',
+				'i:id',
+				'f:ox_totalWorksSentFromPlace',
+				't:ox_totalWorksSentToPlace',
+				'm:ox_totalWorksMentioningPlace'
+			],
+			maxDocs: 10000,
+
+			solrQueryCreate: solrQueryCreate
+		})
+		.addTo(map);
 	}
 
 	resetSolr();
@@ -195,17 +239,17 @@ var coloursDiv = document.getElementById("colours");
 //coloursDiv.appendChild(document.createTextNode("Key: "));
 
 var spanLeast = document.createElement("span");
-spanLeast.setAttribute("style", "margin-right:10px;vertical-align:bottom;/*bottom?*/display:inline-block;height:39px;");
-spanLeast.appendChild(document.createTextNode("Least"));
+spanLeast.setAttribute("style", "margin-right:10px;vertical-align:bottom;display:inline-block;height:39px;");
+spanLeast.appendChild(document.createTextNode("Least in view"));
 
 var spanMost = document.createElement("span");
-spanMost.setAttribute("style", "margin-left:10px;vertical-align:bottom;/*bottom?*/display:inline-block;height:39px;");
-spanMost.appendChild(document.createTextNode("Most"));
+spanMost.setAttribute("style", "margin-left:10px;vertical-align:bottom;display:inline-block;height:39px;");
+spanMost.appendChild(document.createTextNode("Most in view"));
 
 coloursDiv.appendChild(spanLeast);
 for( var colour=0, end=colours.length; colour<end;colour++ ) {
 	var div = document.createElement("div");
-	div.setAttribute("style", "display:inline-block;width:20px;height:39px;background-color:"+colours[colour]);
+	div.setAttribute("style", "display:inline-block;width:30px;height:39px;background-color:"+colours[colour]);
 	coloursDiv.appendChild(div)
 }
 coloursDiv.appendChild(spanMost);

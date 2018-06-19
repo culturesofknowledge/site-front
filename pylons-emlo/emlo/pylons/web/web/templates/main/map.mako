@@ -37,6 +37,10 @@
 
 		#clear { height: 35px; padding: 9px 20px; }
 
+		path.leaflet-clickable:hover {
+			stroke: white;
+			stroke-width: 2px;
+		}
 	</style>
 </%def>
 

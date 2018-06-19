@@ -163,7 +163,12 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			});
 		}
 
-		_this.addData(geojson);
+		_this.addData(geojson).on('click', function(e) {
+			if (_this.options.tileClick) {
+				_this.options.tileClick(e);
+			}
+		});
+
 		classifications = _this._getClassifications(_this.options.colors.length);
 		_this._styleByCount(classifications);
 		_this._setRenderTime();
