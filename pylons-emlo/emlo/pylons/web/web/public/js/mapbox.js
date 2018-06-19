@@ -8,6 +8,9 @@ var colours = [
 		placesData = [],
 		popupHighlight = null;
 
+	var heatmapType = "geojsonGrid",
+		gridLayer, clusterLayer;
+
 	var monica = true;
 
 	if( monica ) {
@@ -39,6 +42,11 @@ var colours = [
 	};
 
 	var solrSuccessHandler = function (data, textStatus, jqXHR) {
+		console.log("solrSuccessHandler",data);
+
+		var dataGrid = data.facet_counts.facet_heatmaps.geo_rpt[15];
+		console.log(dataGrid);
+
 		var placeNames = [];
 		placesData = [];
 		for (var i = 0, iEnd = data.response.docs.length; i < iEnd; i++) {
@@ -92,14 +100,15 @@ var colours = [
 		else {
 			query = field + "*";
 		}
+
+		console.log(query);
+
 		return query;
 	};
 
 	var tileClick = function(e) {
 		var z = map.getZoom();
-		//map.setView( e.latlng, z+2);
 		map.setZoomAround(e.latlng,z+2);
-		//console.log(e,z);
 	};
 
 	jQuery('#placelist').on("change", function () {
@@ -169,67 +178,92 @@ var colours = [
 			map.removeLayer(solr);
 		}
 
-		solr = L.solrHeatmap(solrURL, {
 
-			field: "geo_rpt",
-			type: "geojsonGrid",
+		map.on('zoomend', function(e) {
+			console.log(e);
+			updateMap(e.target._zoom);
+		});
 
-			colors: colorMap,
-			maxSampleSize: 400,
+		gridLayer = L.solrHeatmap(solrURL, {
 
-			solrErrorHandler: solrErrorHandler,
-			solrSuccessHandler: solrSuccessHandler,
-			renderCompleteHandler: renderCompleteHandler,
-			tileClick: tileClick,
+				field: "geo_rpt",
+				type: "geojsonGrid",
 
-			popupHighlight: true,
-			showGlobalResults: false,
-			fixedOpacity: 100,
+				colors: colorMap,
+				maxSampleSize: 400,
 
-			limitFields: [
-				'g:geo',
-				'n:geonames_name',
-				'i:id',
-				'f:ox_totalWorksSentFromPlace',
-				't:ox_totalWorksSentToPlace',
-				'm:ox_totalWorksMentioningPlace'
-			],
-			maxDocs: 10000,
+				solrErrorHandler: solrErrorHandler,
+				solrSuccessHandler: solrSuccessHandler,
+				renderCompleteHandler: renderCompleteHandler,
+				tileClick: tileClick,
 
-			solrQueryCreate: solrQueryCreate
-		})
-		.addTo(map);
+				popupHighlight: true,
+				showGlobalResults: false,
+				fixedOpacity: 100,
 
-		L.solrHeatmap(solrURL, {
+				limitFields: [
+					'g:geo',
+					'n:geonames_name',
+					'i:id',
+					'f:ox_totalWorksSentFromPlace',
+					't:ox_totalWorksSentToPlace',
+					'm:ox_totalWorksMentioningPlace'
+				],
+				maxDocs: 10000,
 
-			field: "geo_rpt",
-			type: "clusters",
+				solrQueryCreate: solrQueryCreate
+			})
 
-			colors: colorMap,
-			maxSampleSize: 400,
 
-			solrErrorHandler: null,//solrErrorHandler,
-			solrSuccessHandler: null,//solrSuccessHandler,
-			renderCompleteHandler: null,//renderCompleteHandler,
-			tileClick: null,//tileClick,
+		clusterLayer = L.solrHeatmap(solrURL, {
 
-			popupHighlight: true,
-			showGlobalResults: false,
-			fixedOpacity: 100,
+				field: "geo_rpt",
+				type: "clusters",
 
-			limitFields: [
-				'g:geo',
-				'n:geonames_name',
-				'i:id',
-				'f:ox_totalWorksSentFromPlace',
-				't:ox_totalWorksSentToPlace',
-				'm:ox_totalWorksMentioningPlace'
-			],
-			maxDocs: 10000,
+				colors: colorMap,
+				maxSampleSize: 400,
 
-			solrQueryCreate: solrQueryCreate
-		})
-		.addTo(map);
+				solrErrorHandler: solrErrorHandler,
+				solrSuccessHandler: solrSuccessHandler,
+				renderCompleteHandler: null,//renderCompleteHandler
+
+				popupHighlight: true,
+				showGlobalResults: false,
+				fixedOpacity: 100,
+
+				limitFields: [
+					'g:geo',
+					'n:geonames_name',
+					'i:id',
+					'f:ox_totalWorksSentFromPlace',
+					't:ox_totalWorksSentToPlace',
+					'm:ox_totalWorksMentioningPlace'
+				],
+				maxDocs: 10000,
+
+				solrQueryCreate: solrQueryCreate
+			})
+
+		updateMap();
+	}
+
+	function updateMap(zoom) {
+		if(!zoom) {
+			zoom = map.getZoom();
+		}
+
+		if( zoom < 6 ) {
+			if( map.hasLayer(clusterLayer)) {
+				map.removeLayer(clusterLayer);
+			}
+			solr = gridLayer.addTo(map);
+		}
+		else {
+			if( map.hasLayer(gridLayer)) {
+				map.removeLayer(gridLayer);
+			}
+			solr = clusterLayer.addTo(map);
+		}
 	}
 
 	resetSolr();

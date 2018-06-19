@@ -163,11 +163,15 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			});
 		}
 
-		_this.addData(geojson).on('click', function(e) {
-			if (_this.options.tileClick) {
-				_this.options.tileClick(e);
-			}
-		});
+		_this.addData(geojson)
+			.on('click', function(e) {
+				if (_this.options.tileClick) {
+					_this.options.tileClick(e);
+				}
+			})
+			.on('zoomend', function(e) {
+				console.log("zoomend");
+			});
 
 		classifications = _this._getClassifications(_this.options.colors.length);
 		_this._styleByCount(classifications);
@@ -210,7 +214,16 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		var options = {radius: cellSize, gradient: gradient, minOpacity: .1, fixedOpacity: _this.options.fixedOpacity};
 		var heatmapLayer = L.heatLayer(heatmapCells, options);
 		//heatmapLayer.setOptions(options);
-		heatmapLayer.addTo(map);
+		heatmapLayer.addTo(map)
+			.on('click', function(e) {
+				if (_this.options.tileClick) {
+					_this.options.tileClick(e);
+				}
+			})
+			.on('zoomend', function(e) {
+				console.log("zoomend");
+			});
+
 		_this.heatmapLayer = heatmapLayer;
 		_this._setRenderTime();
 	},
@@ -282,7 +295,18 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			});
 		});
 
-		_this._map.addLayer(_this.clusterMarkers);
+		try {
+			_this._map.addLayer(_this.clusterMarkers)
+				.on('click', function(e) {
+					if (_this.options.tileClick) {
+						_this.options.tileClick(e);
+					}
+				})
+		} catch(error)
+		{
+			console.log("addLayerError: ", error, _this);
+		}
+
 		_this._setRenderTime();
 	},
 
