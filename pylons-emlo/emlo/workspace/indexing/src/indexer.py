@@ -43,22 +43,23 @@ def plural_to_singular( plural ):
    
     return plural[:-1]
 
-# def add_entity( entity, resource, predicate, object ):
-#     entity.add_triple( resource, predicate, object )
-#     return
-
 def add_solr( item, key, value ):
     if key in item :
-        currentitem = item[key]
-        if isinstance( currentitem, list) :
+        try:
             item[key].append( value )
-        else :
-            item[key] = [currentitem, value]
+        except AttributeError:
+            item[key] = [item[key], value]
+
+        #currentitem = item[key]
+        #if isinstance( currentitem, list) :
+        #    item[key].append( value )
+        #else :
+        #    item[key] = [currentitem, value]
     else :
         item[key] = value
-    return
 
-def add( entity, solr_item, resource, predicate, object, prefix=None, transient=None, relationship=None ):
+
+def add( solr_item, predicate, object, prefix=None, transient=None, relationship=None ):
     
     if transient :
         solr_key = "%s-%s" % ( transient[csvtordf.predicate], predicate )
@@ -75,15 +76,6 @@ def add( entity, solr_item, resource, predicate, object, prefix=None, transient=
         solr_key = "%s-%s" % ( solr_key, relationship )
          
     add_solr( solr_item, solr_key, solr_value )
-    
-    # if entity:
-    #     if transient != None:
-    #         transient_uri = "%s/%s" % ( resource, transient[csvtordf.transient] )
-    #
-    #         add_entity( entity, resource, transient[csvtordf.predicate], transient_uri ) # this can be repeatedly created but it is safely ignored by rdfobject code
-    #         add_entity( entity, transient_uri, predicate, object )
-    #     else:
-    #         add_entity( entity, resource, predicate, object )
         
     return
 
@@ -125,29 +117,20 @@ def GenerateIds( _, red_ids ):
             
             csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
 
-            # csv_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
-            # csv_data = csv.DictReader( csv_file, restval="" )
-            #
-            # if csv_file is not None:
-            #
-            #    for csv_row in csv_data:
-            #
-            #        editid = csv_row[id_field].strip()
-            #        red_ids.set( editid, csv_row["uuid"] )
-            #
-            # else:
-            #    errored = True
-            #    print "Error - Can't open file=" + csv_file_location
-
             if os.path.isfile(csv_file_location) :
 
                 with fastcsv.Reader(io.open(csv_file_location)) as reader :
+
                     csv_row = reader.next()
 
                     idPosition = csv_row.index(id_field)
                     uuidPosition = csv_row.index("uuid")
+                    published = csv_row.index("published")
 
                     for csv_row in reader:
+
+                        if csv_row[published] != "1" :
+                            continue
 
                         editid = csv_row[idPosition].strip()
                         red_ids.set( editid, csv_row[uuidPosition] )
@@ -210,6 +193,7 @@ def SolrOptimize( indexing ):
 def StoreRelations( _, red_rel, red_ids ):
     #
     # open the relationship file and store the relations
+    # using the UUID's and not the silly id in the file...
     #
     print " - Clearing old relationships."
     red_rel.flushdb( )
@@ -231,15 +215,19 @@ def StoreRelations( _, red_rel, red_ids ):
             leftValPosition = csv_row.index("left_id_value")
             rightValPosition = csv_row.index("right_id_value")
             typePosition = csv_row.index("relationship_type")
+            publishedPosition = csv_row.index("published")
 
             record_count = 0
             for record in reader:
+
+                if record[publishedPosition] != "1":
+                    continue
 
                 record_count += 1
 
                 if record_count % 10000 == 0:
                     print str(record_count),
-                    time.sleep( 0.1 )  # 0.1 seconds (10  seconds in total)
+                    time.sleep( 0.1 )  # 0.1 seconds (about 10 seconds in total)
 
                 left_thing = record[leftNamePosition][11:]  # remove "cofk_union_"
                 right_thing = record[rightNamePosition][11:]  # remove "cofk_union_"
@@ -300,15 +288,13 @@ def generateAdditional(singular, record, solr_item):
 def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
 
     # We no longer generate RDF.
-    FillSolr( indexing, red_ids, red_temp, create_file_entities )
+    FillSolr( indexing, red_temp )
 
-#
-# open / create the file entity store for each type
-#
-def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
-    #
-    # open / create the file entity store for each type
-    #
+
+def FillSolr( indexing, red_temp ):
+    """
+    Generate a solr entry for each object
+    """
     
     uri_base = csvtordf.common['file_entity_uri_base']
     sol_all = solr.SolrConnection( solrconfig.solr_urls_stage['all'] )
@@ -325,16 +311,7 @@ def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
             plural = con[csvtordf.title_plural]
            
             print "- Converting " + plural
-           
-            if create_file_entities :
-                print "Warning: We are NOT creating entities anymore!"
-                # uri_entity_base = uri_base + singular
-                # entitystore_directory = csvtordf.common['file_entity_storage_root'] + plural
-           
-                # fileEntity = rdfobject.FileEntityFactory(uri_base=uri_entity_base,
-                #                                storage_dir = entitystore_directory,
-                #                                prefix = csvtordf.common['file_entity_prefix'] )
-           
+
             sol = solr.SolrConnection( solrconfig.solr_urls_stage[plural] )
            
             # Keep track of what is happening with these
@@ -371,30 +348,12 @@ def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
                 for record in csv_records :
 
                     record_count += 1
-                   
-                    editid = record[id_field]
-                    # Get ID, create uri then start editid_relnew entity
-                    # uid = red_ids.get( editid )
-                    uid = record["uuid"]
 
+                    if record["published"] != "1":
+                        continue
+
+                    uid = record["uuid"]
                     uri = create_uri_quick( uri_base_with_type, uid )
-                    
-                    entity = None
-                    # if create_file_entities :
-                    #     try:
-                    #         entity = fileEntity.get(uri)
-                    #     except Exception as ex:
-                    #         print "Error - UID = " + uid + " URI = " + uri + " Exception:" + str(ex)
-                   
-                    #
-                    # Add common object predicates
-                    #
-                   
-                    # if entity :
-                    #     entity.add_namespaces({
-                    #         'dcterms' : 'http://dublincore.org/documents/dcmi-terms/',
-                    #         'ox'      : 'http://vocab.ox.ac.uk/'
-                    #     })
 
                     solr_item = {
                         "uuid" : uid,
@@ -403,8 +362,7 @@ def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
                         date_added_name : now
                     }
 
-                    add( entity, solr_item, uri, core_id_name, uri, uri_prefix )
-                    # add( entity, solr_item, uri, date_added_name, now )
+                    add( solr_item, core_id_name, uri, uri_prefix )
                    
                     #
                     # Add predicates and objects from csv
@@ -443,7 +401,7 @@ def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
                                             prefix = translation.get( csvtordf.prefix, None )
                                             transient = translation.get( csvtordf.transient, None )
                                           
-                                            add( entity, solr_item, uri, translation[csvtordf.predicate], data, prefix=prefix, transient=transient )    
+                                            add( solr_item, translation[csvtordf.predicate], data, prefix=prefix, transient=transient )
                                       
                                         else:  # translation[csvtordf.solr]:
                                             add_solr( solr_item, translation[csvtordf.solr], data )
@@ -454,7 +412,7 @@ def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
                     #
                     additional = con[csvtordf.additional]
                     for predicate, obj in additional.iteritems():
-                        add( entity, solr_item, uri, predicate, obj )
+                        add( solr_item, predicate, obj )
 
 
                     # create additional fields from existing
@@ -477,11 +435,11 @@ def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
                             relation, uid_related, type_related = member.split("::")
 
                             uri_relationship = create_uri( uri_base, type_related, uid_related )
-                            add( entity, solr_item, uri, relation , uri_relationship, relationship=type_related )
+                            add( solr_item, relation , uri_relationship, relationship=type_related )
 
                             uuid_related.append( uid_related )
 
-                        add( entity, solr_item, uri, "uuid_related" , uuid_related )
+                        add( solr_item, "uuid_related" , uuid_related )
 
                         # if entity:
                         #    entity.commit()
@@ -489,7 +447,7 @@ def FillSolr( indexing, red_ids, red_temp, create_file_entities ):
                         # print solr_item
                     else :
                        if singular == 'work' :
-                           add( entity, solr_item, uri, "uuid_related" , [] )
+                           add( solr_item, "uuid_related" , [] )
 
                     if members or singular == 'work' :
                         solr_list.append(solr_item) # only add it if it is related to something or a work on it's own...
