@@ -42,10 +42,23 @@ var colours = [
 	};
 
 	var solrSuccessHandler = function (data, textStatus, jqXHR) {
-		console.log("solrSuccessHandler",data);
+		/*console.log("solrSuccessHandler",data);
 
 		var dataGrid = data.facet_counts.facet_heatmaps.geo_rpt[15];
+		var dgColumns = data.facet_counts.facet_heatmaps.geo_rpt[3]*1;
 		console.log(dataGrid);
+
+		var empty = [];
+		for(var dgc=0, z=dgColumns; dgc<z;dgc++){
+			empty.push(0);
+		}
+
+		for( var dg=0,z=dataGrid.length;dg<z;dg++) {
+			if(!dataGrid[dg]) {
+				dataGrid[dg] = empty;
+			}
+		}
+		console.log(dataGrid);*/
 
 		var placeNames = [];
 		placesData = [];
