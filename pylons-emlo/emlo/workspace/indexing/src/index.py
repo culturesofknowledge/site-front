@@ -78,7 +78,7 @@ def GetSelection():
 	return indexing, skip_id_gen, ""
 
 
-def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=False, skip_clean=False ) :
+def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=False, skip_clean=False, skip_delete_previous_solr=False ) :
 
 	if indexing is None :
 		indexing, __skip_id_generation, message = GetSelection()
@@ -144,11 +144,6 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 			print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
 
 	#
-	# Clear Settings
-	#
-	indexer.ClearSolrData( indexing )
-
-	#
 	# Store relationships
 	#
 	if not skip_store_relations:
@@ -166,6 +161,11 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 
 
 	#
+	# Clear old data (if exists)
+	#
+	indexer.ClearSolrData( indexing )
+
+	#
 	# open redis relations database
 	#
 	red_relations = redis.Redis(host=redisconfig.host, db=redisconfig.db_temp_cofk_create)
@@ -173,7 +173,7 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	#
 	# Save the RDF and output to Solr
 	#
-	indexer.FillRdfAndSolr( indexing, None, red_relations, False )
+	indexer.FillSolr( indexing, red_relations )
 
 
 	#
@@ -193,10 +193,11 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	indexer.SolrOptimize( indexing )
 	indexer.SwitchSolrCores( indexing )
 
-	#
-	# We don't need to keep the old data so clear it out.
-	#
-	indexer.ClearSolrData( indexing )
+	if not skip_delete_previous_solr:
+		#
+		# We don't need to keep the old data so clear it out.
+		#
+		indexer.ClearSolrData( indexing )
 
 	#
 	# Done!
@@ -260,5 +261,5 @@ if __name__ == '__main__':
 				index.append("works")
 
 
-		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv )
+		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv, "skipsolrdelete" in sys.argv )
 
