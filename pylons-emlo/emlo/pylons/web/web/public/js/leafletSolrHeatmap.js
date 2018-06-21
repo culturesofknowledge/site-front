@@ -11,6 +11,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		solrNearbyErrorHandler: null,
 		solrNearbySuccessHandler: null,
 		renderCompleteHandler: null,
+		tileClick: null,
 		popupHighlight: false,
 		fixedOpacity: false,
 		showGlobalResults: false,
@@ -24,65 +25,52 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	initialize: function(url, options) {
 		var _this = this;
 		options = L.setOptions(_this, options);
+
 		_this._solrUrl = url;
 		_this._layers = {};
 		_this.timeOfLastClick = 0;
-		globalSolrStart = 0;
+
 		_this._filterQueries = [];
-		if (options.filterQuery)
+		if (options.filterQuery) {
 			_this._filterQueries.push(options.filterQuery);
+		}
 	},
 
 	onAdd: function (passedMap) {
+
+		console.log("onAdd");
+
+		this._map = passedMap;
+
 		var _this = this;
-		_this._map = passedMap;
-		_this._map.on('moveend', function() {
+		this._moveEnd = function() {
 			_this._clearLayers();
-			globalSolrStart = 0;
 			_this._getData();
-		});
-		if (_this.options.popupDisplay)
-		{
-			if (typeof _this.options.popupDisplay === "string")
-				if (_this.options.popupDisplay.indexOf(",") > -1)
-				// easier for angular to pass in string
-					_this.options.popupDisplay = _this.options.popupDisplay.split(',');
-			_this.heatmapLayerListener =  _this._map.on('click', function(e) {
-				_this.timeOfLastClick = Date.now();
-				globalSolrStart = 0;
-				_this._getNearbyData(e.latlng);
-			});
-		}
-		_this._getData();
+		};
+
+		this._map.on('moveend', this._moveEnd );
+
+		this._getData();
 	},
 
 	onRemove: function(passedMap)
 	{
-		var _this = this;
-		try
-		{
-			passedMap.off('moveend');
-			if (_this.heatmapLayer)
-			{
-				passedMap.removeLayer(_this.heatmapLayer);
-				map.off("click"); // will this remove click handlers that it shouldn't
-			}
-			_this._clearLayers();
-		}
-		catch (e)
-		{
-			// perhaps there was an error during initialization
-			console.log('exception in onRemove cleanup');
-		}
+		console.log("onRemove");
 
+		passedMap.off('moveend', this._moveEnd );
+		if (this.heatmapLayer)
+		{
+			passedMap.removeLayer(this.heatmapLayer);
+			// map.off("click"); // will this remove click handlers that it shouldn't
+		}
+		this._clearLayers();
 	},
 
 	refresh: function() {
-		globalSolrStart = 0;
+		console.log("refresh()");
 		this._clearLayers();
 		this._getData();
 	},
-
 
 	_computeHeatmapObject: function(data) {
 		var _this = this,
@@ -111,10 +99,12 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			case 'geojsonGrid':
 				_this.clearLayers();
 				break;
+
 			case 'clusters':
 				if (_this.clusterMarkers)
 					_this.clusterMarkers.clearLayers();
 				break;
+
 			case 'heatmap':
 				if (_this._map)
 					_this._map.removeLayer(_this.heatmapLayer);
@@ -168,9 +158,6 @@ L.SolrHeatmap = L.GeoJSON.extend({
 				if (_this.options.tileClick) {
 					_this.options.tileClick(e);
 				}
-			})
-			.on('zoomend', function(e) {
-				console.log("zoomend");
 			});
 
 		classifications = _this._getClassifications(_this.options.colors.length);
@@ -219,9 +206,6 @@ L.SolrHeatmap = L.GeoJSON.extend({
 				if (_this.options.tileClick) {
 					_this.options.tileClick(e);
 				}
-			})
-			.on('zoomend', function(e) {
-				console.log("zoomend");
 			});
 
 		_this.heatmapLayer = heatmapLayer;
@@ -230,29 +214,31 @@ L.SolrHeatmap = L.GeoJSON.extend({
 
 	// heatmap display need hash of scaled counts value, color pairs
 	_getGradient: function (classifications){
+		var _this = this;
 		var gradient = {};
 		var maxValue = classifications[classifications.length - 1];
 		var colors = _this.options.colors;
 		// skip first lower bound, assumed to be 0 from Jenks
-		for (var i = 1 ; i < classifications.length ; i++)
+		for (var i = 1 ; i < classifications.length ; i++) {
 			gradient[classifications[i] / maxValue] = colors[i];
+		}
 		return gradient;
 	},
 
 	// compute size of heatmap cells in pixels
 	_getCellSize: function(){
-		_this = this;
+		var _this = this;
 		try
 		{
-			var mapSize = _this._map.getSize();  // should't we use solr returned map extent?
-			var widthInPixels = mapSize.x;
-			var heightInPixels = mapSize.y;
-			var heatmapRows = _this.facetHeatmap.rows;
-			var heatmapColumns = _this.facetHeatmap.columns;
-			var sizeX = widthInPixels / heatmapColumns;
-			var sizeY = heightInPixels / heatmapRows;
-			var size = Math.ceil(Math.max(sizeX, sizeY));
-			return size;
+			var mapSize = _this._map.getSize(),  // should't we use solr returned map extent?
+				widthInPixels = mapSize.x,
+				heightInPixels = mapSize.y,
+				heatmapRows = _this.facetHeatmap.rows,
+				heatmapColumns = _this.facetHeatmap.columns,
+				sizeX = widthInPixels / heatmapColumns,
+				sizeY = heightInPixels / heatmapRows;
+
+			return Math.ceil(Math.max(sizeX, sizeY));
 		}
 		catch (e)
 		{
@@ -295,17 +281,18 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			});
 		});
 
-		try {
+		//try {
 			_this._map.addLayer(_this.clusterMarkers)
 				.on('click', function(e) {
 					if (_this.options.tileClick) {
 						_this.options.tileClick(e);
 					}
-				})
-		} catch(error)
-		{
-			console.log("addLayerError: ", error, _this);
-		}
+				});
+		//}
+		//catch(error)
+		//{
+		//	console.log("addLayerError: ", error, _this);
+		//}
 
 		_this._setRenderTime();
 	},
@@ -331,19 +318,20 @@ L.SolrHeatmap = L.GeoJSON.extend({
 
 	_getClassifications: function(howMany)
 	{
-		var _this = this;
-		var one_d_array = [];
+		var _this = this,
+			one_d_array = [];
+
 		if (_this.facetHeatmap.counts_ints2D === null) return;
 		for(var i = 0; i < _this.facetHeatmap.counts_ints2D.length; i++) {
 			if (_this.facetHeatmap.counts_ints2D[i] !== null) {
 				one_d_array = one_d_array.concat(_this.facetHeatmap.counts_ints2D[i]);
 			}
 		}
-		var sampled_array = _this._sampleCounts(one_d_array);
 
+		var sampled_array = _this._sampleCounts(one_d_array);
 		var series = new geostats(sampled_array);
-		var classifications = series.getClassJenks(howMany);
-		return classifications;
+
+		return series.getClassJenks(howMany);
 	},
 
 	_styleByCount: function(classifications) {
@@ -434,7 +422,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	{
 		var _this = this;
 		if (_this._map === null) {
-			console.log('leafletSolrHeatmap._getNearbyData null map warning');
+			console.warn('leafletSolrHeatmap._getNearbyData null map warning');
 			return;
 		}
 		if (!startRow) {
@@ -512,16 +500,13 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	// display solr data in popup with highighlighting
 	_createPopup: function(data, latlng, nextFunctionName)
 	{
-		var solrItems = data.response.docs,
+		var _this = this,
+			solrItems = data.response.docs,
 			lines = "", i, id;
+
 		_this.tmpIdToSolr = {};
-		if (solrItems.length === 0)
-		{
-			if (globalPopup)
-			{
-				globalPopup.setContent("No More Results");
-				globalPopup.update();
-			}
+
+		if (solrItems.length === 0) {
 			return;
 		}
 
@@ -540,16 +525,8 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			lines += "<a href='javascript:" + nextFunctionName + "();'>More</a>";
 		}
 
-		leafletSolrHeatmap = _this;
-		globalLatLng = latlng;
-
-
 		// offset the popup so it doesn't cover highlighting
-		var popup = L.popup({offset: L.point(0, -20)});
-		popup.setLatLng(latlng);
-		popup.setContent(lines);
-		popup.openOn(map);
-		globalPopup = popup;
+
 		// scroll bar on div with class leaflet-popup-content
 		// use div.outerHeight to get document size estimate
 		// use div.scrollTop to get where scrollbar is
@@ -637,7 +614,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 			_this.highlightRectangle.bringToFront();
 		}
 		else
-			console.log("can not highlight ", rpt);
+			console.warn("can not highlight ", rpt);
 	},
 
 	// format all displayed fields in the single passed solr doucment
@@ -701,6 +678,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	},
 
 	_getData: function(startCount) {
+
 		var _this = this;
 		var startTime = Date.now();
 		if (!startCount) {
@@ -739,7 +717,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 				var solrTime = Date.now() - startTime;
 				if (data.response === null)
 				{
-					console.log("warning, invalid solr result");
+					console.warn("warning, invalid solr result");
 					return;
 				}
 				_this.docsCount = data.response.numFound;
@@ -802,11 +780,8 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	_solrQuery: function() {
 		var fqs = "";
 		var _this = this;
-		for (var i = 0 ; i < _this._filterQueries.length ; i++)
-		{
-			var current = _this._filterQueries[i];
-			var fq = "&fq=" + current;
-			fqs += fq;
+		for (var i = 0 ; i < _this._filterQueries.length ; i++) {
+			fqs += "&fq=" + _this._filterQueries[i];
 		}
 		return '/' + this.options.solrRequestHandler + '?' + this.options.field + fqs;
 	}
@@ -827,7 +802,7 @@ L.LatLngBounds.prototype.getEast = function() {
 };
 
 // Check if L.MarkerCluster is included
-if (typeof L.MarkerCluster !== 'undefined') {
+/*if (typeof L.MarkerCluster !== 'undefined') {
 	L.MarkerCluster.prototype.initialize = function(group, zoom, a, b) {
 
 		L.Marker.prototype.initialize.call(this, a ? (a._cLatLng || a.getLatLng()) : new L.LatLng(0, 0), { icon: this });
@@ -850,33 +825,4 @@ if (typeof L.MarkerCluster !== 'undefined') {
 			this._childCount = b.options.count;
 		}
 	};
-}
-
-
-// the popups include a 'More' button to show the next set of Solr results
-// the popup can be displayed by either click on the map (a get nearby request)
-//   or a pan/zoom which shows documents on the map
-// the popups use Leaflet.popup, they expect its contents to be a string
-// this prevents us from having the popup contain references to actual JavaScript objects
-// for now, we use a couple global functions and variables to respond to deal with More
-
-var globalSolrStart;
-var globalPopup;
-var leafletSolrHeatmap;
-var globalLatLng;
-
-function solrGetNext()
-{
-	globalSolrStart += 20;
-	globalPopup.setContent("Loading...");
-	globalPopup.update();
-	leafletSolrHeatmap._getData(globalSolrStart);
-
-}
-function solrGetNextNearby()
-{
-	globalSolrStart += 20;
-	globalPopup.setContent("Loading...");
-	globalPopup.update();
-	leafletSolrHeatmap._getNearbyData(globalLatLng, globalSolrStart);
-}
+}*/
