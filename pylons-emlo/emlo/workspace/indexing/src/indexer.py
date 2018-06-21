@@ -125,11 +125,14 @@ def GenerateIds( _, red_ids ):
 
                     idPosition = csv_row.index(id_field)
                     uuidPosition = csv_row.index("uuid")
-                    published = csv_row.index("published")
+                    try :
+                        published = csv_row.index("published")
+                    except:
+                        published = -1
 
                     for csv_row in reader:
 
-                        if csv_row[published] != "1" :
+                        if published != -1 and csv_row[published] != "1" :
                             continue
 
                         editid = csv_row[idPosition].strip()
@@ -215,12 +218,16 @@ def StoreRelations( _, red_rel, red_ids ):
             leftValPosition = csv_row.index("left_id_value")
             rightValPosition = csv_row.index("right_id_value")
             typePosition = csv_row.index("relationship_type")
-            publishedPosition = csv_row.index("published")
+
+            try :
+                publishedPosition = csv_row.index("published")
+            except:
+                publishedPosition = -1
 
             record_count = 0
             for record in reader:
 
-                if record[publishedPosition] != "1":
+                if publishedPosition != -1 and record[publishedPosition] != "1":
                     continue
 
                 record_count += 1
@@ -341,6 +348,8 @@ def FillSolr( indexing, red_temp ):
                    csv_records = csv.DictReader( csv_codec_file, restval="" )
 
                    csv_fields = csv_records.fieldnames
+
+                   published_flag = "published" in csv_fields # Check for column while we switch over formats
                
                 translation_errors = []
                 solr_list = []
@@ -349,7 +358,7 @@ def FillSolr( indexing, red_temp ):
 
                     record_count += 1
 
-                    if record["published"] != "1":
+                    if published_flag and record["published"] != "1":
                         continue
 
                     uid = record["uuid"]
