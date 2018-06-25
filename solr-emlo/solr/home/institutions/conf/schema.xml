@@ -227,9 +227,9 @@
 
 <!--                         -->
 <!-- Links from institutions -->
-<!--                         --> 
-
-  <field name="ox_hasResource-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-stored_in -->
+<!--                         -->
+	<field name="rdfs_seeAlso-resource"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+	<field name="ox_hasResource-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-stored_in -->
 
 <!-- end CofK: links from institutions -->
 

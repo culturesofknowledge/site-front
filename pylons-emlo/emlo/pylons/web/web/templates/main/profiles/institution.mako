@@ -7,6 +7,7 @@
 %>
 
 <%inherit file="/main/profile.mako" />
+<%namespace name="trans" file="/helpers/translate.mako" import="*"/>
 
 ##--------------------------------------------------------------------------------------
 
@@ -18,9 +19,22 @@
 
 <%def name="profileRight()">
 
-  <dl>
-    <!-- Short stuff here -->
-  </dl>
+	<dl>
+		<!-- short stuff here -->
+
+		<% field = h.get_relations_to_resource_fieldname() %>
+		% if c.profile.has_key( field ) :
+		<% label = trans.translate(field) %>
+			<dt>
+				${label}
+			</dt>
+			<dd>
+				${self.resource_relations( field )}
+			</dd>
+		% endif
+
+		##=================================================================================================
+	</dl>
 
 </%def>
 

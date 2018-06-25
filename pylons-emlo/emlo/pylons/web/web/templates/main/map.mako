@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 <%!
-	nav_selected = 'about'
-	main_title = 'about'
+	nav_selected = ''
+	main_title = 'Map'
 %>
 <%inherit file="/base.mako" />
 
@@ -18,8 +18,8 @@
 	<style>
 		#map {
 			display: inline-block;
-			height: 600px;
-			-width: 800px;
+			height: 540px;
+			/*width: 800px;*/
 		}
 
 		#list {
@@ -37,6 +37,10 @@
 
 		#clear { height: 35px; padding: 9px 20px; }
 
+		path.leaflet-clickable:hover {
+			stroke: white;
+			stroke-width: 2px;
+		}
 	</style>
 </%def>
 
@@ -49,7 +53,7 @@
 <%def name="body()">
 
 	<div class="row">
-		<div class="columns small-12 large-3 side" style="border:0;margin-top:190px;">
+		<div class="columns small-12 large-3 side" style="border:0;margin-top:0px;">
 
 			<!-- <h2>Navigate</h2>
 			  <ul class="side-nav">
@@ -67,43 +71,48 @@
 
 		<div class="columns small-12 large-9">
 			<br/>
+			<div class="row">
+				<div class="column">
+				<h2 id="about">Map</h2>
+				<p>Explore the locations</p>
+				</div>
+			</div>
 
-			<h2 id="about">Map</h2>
-
-			<p>Explore the locations</p>
-
+			<div class="row">
+				<div class="column large-1">
+					<label for="filter" style="display:inline-block;vertical-align:middle;width:100%;font-size:16px">Filter</label>
+				</div>
+				<div  class="column large-5">
+					<input type='text' id='filter' size='45' value=""/>
+				</div>
+				<div  class="column large-2">
+					<button id="clear">Clear</button>
+				</div>
+				<div class="column large-4">
+					<div id="colours"></div>
+				</div>
+			</div>
 		</div> <!-- large-9 columns -->
-
 	</div><!-- row -->
+
 
 	<div class="row">
 		<div class="columns small-12 large-12">
-
-			<div id="colours"></div>
+<br/>
 			<div id='map'>Loading Map</div>
 		</div>
 	</div>
 
-	<div class="row">
-		<div id="list" class="columns large-1">
-			<label for="filter">Filter</label>
-		</div>
-		<div id="list" class="columns large-10">
-			<input type='text' id='filter' size='45' value=""/>
-		</div>
-		<div id="list" class="columns large-1">
-			<button id="clear">Clear</button>
-		</div>
-	</div>
+
 	<div class="row">
 			<div class="columns small-12 large-12">
 				<select title="Places" id="placelist" size="20"></select>
 			</div>
 
-			<small>
+			<!--<small>
 				<span id='responseTime'></span>
 				<span id='numDocs'></span>
 				<span id='renderTime'></span>
-			</small>
+			</small>-->
 	</div>
 </%def>

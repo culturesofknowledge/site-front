@@ -1,44 +1,73 @@
-
-var colours = [
-	'#31eef6', '#57b5d8', '#df65b0', '#dd1c77', '#980043' // default
-];
-
 (function() {
-	var map, solr,
+	"use strict";
+
+	var colours = [
+			'#31ccf6', '#37b5d8', '#df65b0', '#dd1c77', '#980043' // default
+		],
+		monica = false,
+		solrURL = window.location.origin + '/solr/locations';
+
+	var map = null,
+		solr = null,
 		placesData = [],
 		popupHighlight = null;
-
-	var monica = true;
 
 	if( monica ) {
 		L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
 		map = L.mapbox.map('map', 'monicams.jpf4hpo5');
 	}
 	else {
-		map = L.map('map');
-	}
+		map = L.map('map', {
+			maxZoom: 20
+		});
 
-	//map.setView([39.82, -98.58], 4); // America
-	map.setView([0, 0], 2); // World
-
-	if( !monica ) {
 		L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 		}).addTo(map);
 	}
 
-	function onEachFeature(feature, layer) {
+	map.setView([10, 0], 2); // World
+
+	map.on('zoomend', function(e) {
+		switchLayer();
+	});
+
+	function displayKey() {
+
+		var coloursDiv = document.getElementById("colours");
+		//coloursDiv.appendChild(document.createTextNode("Key: "));
+
+		var spanLeast = document.createElement("span");
+		spanLeast.setAttribute("style", "margin-right:10px;vertical-align:bottom;display:inline-block;height:39px;");
+		spanLeast.appendChild(document.createTextNode("Least in view"));
+
+		var spanMost = document.createElement("span");
+		spanMost.setAttribute("style", "margin-left:10px;vertical-align:bottom;display:inline-block;height:39px;");
+		spanMost.appendChild(document.createTextNode("Most in view"));
+
+		coloursDiv.appendChild(spanLeast);
+		for (var colour = 0, end = colours.length; colour < end; colour++) {
+			var div = document.createElement("div");
+			div.setAttribute("style", "display:inline-block;width:30px;height:39px;background-color:" + colours[colour]);
+			coloursDiv.appendChild(div)
+		}
+		coloursDiv.appendChild(spanMost);
+	}
+
+	//function onEachFeature(feature, layer) {
 		//var count = feature.properties.count.toLocaleString();
 		//layer.bindTooltip(count + " places").openTooltip();
 		//layer.bindPopup(count);
-	}
+	//}
 
-	var solrErrorHandler = function (jqXHR, textStatus, errorThrown) {
+	var solrErrorHandler = function (/*jqXHR, textStatus, errorThrown*/) {
 		// due to jsonp, no details are available
 		jQuery('#errorMessage').text('Solr error, bad URL or RPT field name');
 	};
 
-	var solrSuccessHandler = function (data, textStatus, jqXHR) {
+	var solrSuccessHandler = function (data /*, textStatus, jqXHR*/ ) {
+		console.log("solrSuccessHandler",data);
+
 		var placeNames = [];
 		placesData = [];
 		for (var i = 0, iEnd = data.response.docs.length; i < iEnd; i++) {
@@ -56,14 +85,13 @@ var colours = [
 		placesData.sort(reverseNameSort);
 
 		for (i = 0, iEnd = placesData.length; i < iEnd; i++) {
-			//placeNames.push( "<option value='" + i + "'>" + placesData[i].reverseName + "  [" + placesData[i]["g"] + "]</option>" );
 			placeNames.push(['<option value="', i, '">', placesData[i].reverseName, /*" - [", placesData[i]["g"], "]",*/ "</option>"].join(""));
 		}
 
 		jQuery('#placelist').html(placeNames.join(""));
 		jQuery('#errorMessage').text('');
-		jQuery('#responseTime').html('Solr response time: ' + solr.solrTime + ' ms');
-		jQuery('#numDocs').html('Number of docs: ' + solr.docsCount.toLocaleString());
+		//jQuery('#responseTime').html('Solr response time: ' + solr.solrTime + ' ms');
+		//jQuery('#numDocs').html('Number of docs: ' + solr.docsCount.toLocaleString());
 	};
 
 	var renderCompleteHandler = function () {
@@ -82,7 +110,7 @@ var colours = [
 			var queryParts = [];
 			var words = filterVal.split(" ");
 			for (var i = 0, iEnd = words.length; i < iEnd; i++) {
-				if (words[i] != "") {
+				if (words[i] !== "") {
 					queryParts.push("(" + field + words[i] + " " + field + words[i] + "*)");
 				}
 			}
@@ -92,9 +120,14 @@ var colours = [
 		else {
 			query = field + "*";
 		}
+
 		return query;
 	};
 
+	var tileClick = function(e) {
+		var z = map.getZoom();
+		map.setZoomAround( e.latlng, z + 2 );
+	};
 
 	jQuery('#placelist').on("change", function () {
 		var index = jQuery('#placelist').val();
@@ -139,7 +172,7 @@ var colours = [
 	});
 
 	jQuery("#update").on( "click", function () {
-		resetSolr();
+		solr.refresh();
 	});
 
 	jQuery("#clear").on( "click", function () {
@@ -147,29 +180,21 @@ var colours = [
 		solr.refresh();
 	});
 
-	function resetSolr() {
-		"use strict";
-
-		var colorMap = colours;
-		var solrURL = window.location.origin + '/solr/locations';
-
-		if (solr) {
-			map.removeLayer(solr);
-		}
-
-		solr = L.solrHeatmap( solrURL, {
+	function createGridLayer() {
+		return new L.solrHeatmap(solrURL, {
 
 			field: "geo_rpt",
 			type: "geojsonGrid",
 
-			colors: colorMap,
+			colors: colours,
 			maxSampleSize: 400,
 
 			solrErrorHandler: solrErrorHandler,
 			solrSuccessHandler: solrSuccessHandler,
 			renderCompleteHandler: renderCompleteHandler,
+			tileClick: tileClick,
 
-			popupHighlight: true,
+			popupHighlight: false,
 			showGlobalResults: false,
 			fixedOpacity: 100,
 
@@ -184,19 +209,100 @@ var colours = [
 			maxDocs: 10000,
 
 			solrQueryCreate: solrQueryCreate
-		})
-			.addTo(map);
+		});
 	}
 
-	resetSolr();
+	function createClusterLayer() {
+		return new L.solrHeatmap( solrURL, {
+
+			field: "geo_rpt",
+			type: "clusters",
+
+			colors: colours,
+			maxSampleSize: 400,
+
+			solrErrorHandler: solrErrorHandler,
+			solrSuccessHandler: solrSuccessHandler,
+			renderCompleteHandler: null,
+			tileClick: null,
+
+			popupHighlight: false,
+			showGlobalResults: false,
+			fixedOpacity: 100,
+
+			limitFields: [
+				'g:geo',
+				'n:geonames_name',
+				'i:id',
+				'f:ox_totalWorksSentFromPlace',
+				't:ox_totalWorksSentToPlace',
+				'm:ox_totalWorksMentioningPlace'
+			],
+			maxDocs: 1000,
+
+			solrQueryCreate: solrQueryCreate
+		});
+
+	}
+
+	var allLayers = [],
+		gridLayer = null,
+		clustLayer = null;
+
+	function setup() {
+
+		displayKey();
+
+		gridLayer = createGridLayer();
+		clustLayer = createClusterLayer();
+
+		allLayers.push(gridLayer);
+		allLayers.push(clustLayer);
+
+		setLayer(gridLayer);
+	}
+
+	function setLayer( layer ) {
+
+		if( map.hasLayer(layer) ) {
+			return;
+		}
+
+		for( var l=0, z=allLayers.length; l<z; l++) {
+			//if( map.hasLayer( allLayers[l] ) ) {
+				//map.removeLayer( allLayers[l] );
+			//}
+		}
+		map.eachLayer(function (l) {
+			if( l !== layer ) {
+				if( l === allLayers[0] || l === allLayers[1] ) {
+					map.removeLayer(l);
+				}
+			}
+		});
+
+		solr = layer;
+		map.addLayer(layer);
+	}
+
+	function switchLayer() {
+		var layer = getLayerForZoom();
+		setLayer(layer);
+	}
+
+	function getLayerForZoom() {
+		var zoom = map.getZoom();
+		console.log( "z", zoom );
+
+		if( zoom < 8 ) {
+			return gridLayer;
+		}
+		else {
+			return clustLayer;
+		}
+	}
+
+	setup();
 })();
 
-var coloursDiv = document.getElementById("colours");
-//coloursDiv.appendChild(document.createTextNode("Key: "));
-coloursDiv.appendChild(document.createTextNode(" Least "));
-for( var colour=0, end=colours.length; colour<end;colour++ ) {
-	var div = document.createElement("div");
-	div.setAttribute("style", "display:inline-block;width:20px;height:20px;background-color:"+colours[colour]);
-	coloursDiv.appendChild(div)
-}
-coloursDiv.appendChild(document.createTextNode(" Most "));
+

@@ -99,6 +99,7 @@
         <field name="rdfs_seeAlso-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
         <field name="rdfs_seeAlso-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
         <field name="rdfs_seeAlso-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+        <field name="rdfs_seeAlso-institution"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
 
 
         <!--            -->

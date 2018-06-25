@@ -156,6 +156,10 @@ def get_place_related_to_resource_fieldname():
   return 'rdfs_seeAlso-location'
 
 # --------------------------------------------------------------------------------------------------
+def get_insitution_related_to_resource_fieldname():
+  return 'rdfs_seeAlso-institution'
+
+# --------------------------------------------------------------------------------------------------
 def get_relations_to_people_mentioned_fieldname():
   return 'dcterms_references-person'
 

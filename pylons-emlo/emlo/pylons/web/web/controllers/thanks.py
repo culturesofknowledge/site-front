@@ -27,7 +27,7 @@ class ThanksController(BaseController):
             c.id = requests['id']
             
             sol = solr.SolrConnection( solrconfig.solr_urls['all'] )
-            sol_response = sol.query( "id:uuid\:"+c.id , score=False, rows=1, start=0)
+            sol_response = sol.query( "id:uuid_"+c.id , score=False, rows=1, start=0)
 
             if len( sol_response.results ) == 1 :
                 obj = sol_response.results[0]                

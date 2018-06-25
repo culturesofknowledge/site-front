@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 <!doctype html>
 <html class="no-js" lang="en">
 <%namespace file="header.mako" import="*"/>

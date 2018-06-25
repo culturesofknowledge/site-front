@@ -162,6 +162,13 @@ relationships = {
                  get_left_side  = get_place_related_to_resource_fieldname(),
                  type_on_right  = 'resource',
                  get_right_side = get_relations_to_resource_fieldname()),
+
+
+      # Place (on left) has related resource (on right)
+      set_rel_cfg( type_on_left   = 'institution',
+                   get_left_side  = get_insitution_related_to_resource_fieldname(),
+                   type_on_right  = 'resource',
+                   get_right_side = get_relations_to_resource_fieldname()),
   ],
 
   'relationship_type-is_reply_to': [
