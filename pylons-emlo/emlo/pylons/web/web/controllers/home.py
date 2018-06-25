@@ -97,7 +97,8 @@ class HomeController(BaseController):
        else:
            c.stats['organisations']['number'] = 0
 
-       c.stats['people']['number'] = sol_response_all.facet_counts['facet_fields']['object_type']['person'] - c.stats['organisations']['number']
+       if 'person' in sol_response_all.facet_counts['facet_fields']['object_type'] :
+          c.stats['people']['number'] = sol_response_all.facet_counts['facet_fields']['object_type']['person'] - c.stats['organisations']['number']
 
 
        catalogue_dict = sol_response_all.facet_counts[ 'facet_fields' ][catalogue_fn]
