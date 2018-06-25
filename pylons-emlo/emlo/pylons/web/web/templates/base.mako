@@ -11,75 +11,40 @@
 
    from pylons import request
 %>
-	<head>
-		<!-- MMK/JMW -->
-		<meta charset="utf-8" />
-		<title>${app_globals.title + " : " + self.attr.main_title}</title>
+<head><!-- MMK/JMW --><meta charset="utf-8" />
+	<title>${app_globals.title + " : " + self.attr.main_title}</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><link rel="stylesheet" href="/css/app.css" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<script src="/bower_components/modernizr/modernizr.min.mat.js"></script>
+	<script src="http://use.typekit.net/axz4cgy.js"></script>
+	<script>try{Typekit.load();}catch(e){}</script>
 
-		<link rel="stylesheet" href="/css/app.css" />
+	${self.for_head()}
 
-		##<script src="/bower_components/modernizr/modernizr.js"></script>
-		<script src="/bower_components/modernizr/modernizr.min.mat.js"></script>
+</head><body><span id="top"></span>
 
-		## For emlo-stage.bodleian:
-		## <script src="//use.typekit.net/rdk6qkf.js"></script>
-		## For emlo.bodleian:
-		<script src="//use.typekit.net/axz4cgy.js"></script>
+	${header(self.attr.nav_selected)}
+	${next.body()}
+	${footer(self.attr.nav_selected)}
 
-		<script>try{Typekit.load();}catch(e){}</script>
+	<div id="back-top" style="display:block;"><a href="#top"><span>Top</span></a></div>
 
-    ${self.for_head()}
+<span id="bottom"></span></body>
 
-	</head>
+<foot style="display:none">
+	<script src="/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="/bower_components/foundation/js/foundation.min.js"></script>
+	<script src="/js/top.js"></script>
 
-	<body>
-	<span id="top"></span>
+	<script>var bdlss = bdlss || {};bdlss.emlo = bdlss.emlo || {};bdlss.emlo.foundationSettings = {};</script>
 
+	${self.for_foot()}
 
-		${header(self.attr.nav_selected)}
+	<script>$(document).foundation( bdlss.emlo.foundationSettings );</script>
 
-		${next.body()}
+	<script>var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-23877246-5']);_gaq.push(['_trackPageview']);</script>
+	<script src="http://www.google-analytics.com/ga.js" async></script>
 
-		${footer(self.attr.nav_selected)}
-
-		<div id="back-top" style="display: block;"><a href="#top"><span>Top</span></a></div>
-		<span id="bottom"></span>
-	</body>
-
-	<foot style="display:none">
-		<script src="/bower_components/jquery/dist/jquery.min.js"></script>
-		<script src="/bower_components/foundation/js/foundation.min.js"></script>
-		<script src="/js/top.js"></script>
-
-		<script>
-			var bdlss = bdlss || {};
-			bdlss.emlo = bdlss.emlo || {};
-			bdlss.emlo.foundationSettings = {};
-		</script>
-
-	        ${self.for_foot()}
-
-		<script>
-
-			$(document).foundation( bdlss.emlo.foundationSettings );
-
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-23877246-5']);
-			_gaq.push(['_trackPageview']);
-
-			(function() {
-				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			})();
-
-		</script>
-
-	</foot>   
-</html>
+</foot></html>
 ##
 ##----------------------------------------------------------------------------------------------
 ##------------ The following functions might be called, e.g. by result AND profile -------------
