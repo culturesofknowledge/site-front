@@ -11,6 +11,7 @@ L.SolrHeatmap = L.GeoJSON.extend({
 		solrNearbyErrorHandler: null,
 		solrNearbySuccessHandler: null,
 		renderCompleteHandler: null,
+		popupLabel:null,
 		tileClick: null,
 		popupHighlight: false,
 		fixedOpacity: false,
@@ -38,8 +39,6 @@ L.SolrHeatmap = L.GeoJSON.extend({
 
 	onAdd: function (passedMap) {
 
-		console.log("onAdd");
-
 		this._map = passedMap;
 
 		var _this = this;
@@ -55,7 +54,6 @@ L.SolrHeatmap = L.GeoJSON.extend({
 
 	onRemove: function(passedMap)
 	{
-		console.log("onRemove");
 
 		passedMap.off('moveend', this._moveEnd );
 		if (this.heatmapLayer)
@@ -257,6 +255,10 @@ L.SolrHeatmap = L.GeoJSON.extend({
 	_createClusters: function() {
 		var _this = this;
 
+		if( _this.clusterMarkers !== null ) {
+			_this._clearLayers();
+		}
+
 		_this.clusterMarkers = new L.MarkerClusterGroup({
 			maxClusterRadius: 140
 		});
@@ -270,14 +272,22 @@ L.SolrHeatmap = L.GeoJSON.extend({
 				if (val === 0) {
 					return;
 				}
-
 				var bounds = new L.latLngBounds([
 					[_this._minLat(row), _this._minLng(column)],
 					[_this._maxLat(row), _this._maxLng(column)]
 				]);
+
+				var label = '';
+				if( _this.options.popupLabel ) {
+					label = _this.options.popupLabel(bounds, val, row, column);
+				}
+				else {
+					label = "Count: " + val.toString();
+				}
+
 				_this.clusterMarkers.addLayer(new L.Marker(bounds.getCenter(), {
 					count: val
-				}).bindPopup(val.toString()));
+				}).bindPopup(label));
 			});
 		});
 
