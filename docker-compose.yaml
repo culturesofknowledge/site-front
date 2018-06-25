@@ -3,6 +3,9 @@ solr:
   build: ./solr-emlo
   restart: always
 
+  environment:
+    - SOLR_LOG_LEVEL="SEVERE"
+
   volumes:
       - ./data-solr/:/data-solr/
 
