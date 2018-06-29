@@ -19,13 +19,13 @@
 	//
 	for( i=0; i < dataPostgres.length; i++ ) {
 		var yearData = dataPostgres[i],
-			catalogueName = yearData["Catalogue"];
+			catalogueName = yearData.name;
 
 		if( ! (catalogueName in dataTemp) ) {
 			dataTemp[catalogueName] = {
 				start : 2000,
 				end : 0,
-				id : yearData["CatalogueId"] || "NCS",
+				id : yearData.id || "NCS",
 				count: 0,
 				years: []
 			};
@@ -92,7 +92,6 @@
 	catalogueList.push( allCatalogue );
 
 	catalogueListFull = catalogueList.slice(0);
-	console.log(catalogueListFull);
 
 	function allDates() {
 
@@ -120,11 +119,17 @@
 
 	var columns = [
 		{ id: 'name', head: 'Catalogue name<br/>' + arrowDown + wideSpace, cl: 'title',
-			html: dget('name') },
-		{ id: 'start', head: 'Year start<br/>' + arrowDown + arrowUp, cl: 'center',
-			html: dget('start') },
-		{ id: 'end', head: 'Year end<br/>' + arrowDown + arrowUp, cl: 'center',
-			html: dget('end') },
+			html:function(d) {
+				var blog = getBlogDataFromCatId(d.id);
+				if( blog ) {
+					return '<a href="' + blog.href + '">' + d.name + '</a>';
+				}
+
+				return d.name;
+			}
+		},
+		{ id: 'start', head: 'Year start<br/>' + arrowDown + arrowUp, cl: 'center', html: dget('start') },
+		{ id: 'end', head: 'Year end<br/>' + arrowDown + arrowUp, cl: 'center', html: dget('end') },
 		{ id: 'dated', head: 'Letters with years<br/>' + arrowDown + arrowUp, cl: 'num',
 			html: function(row) {
 

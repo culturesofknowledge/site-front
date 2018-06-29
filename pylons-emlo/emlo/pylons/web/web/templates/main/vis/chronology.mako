@@ -53,7 +53,14 @@
 			</div>
 
 			<div class="row">
+				<br/><br/>
+				<label style="width:90px" for="catalogue-name">Filter Name</label>
+				<input style="width:200px" type="text" id="catalogue-name"/>
 
+				<label style="width:90px" for="from-year">Filter Years</label><br/>
+				<input id="from-year" title="From year" style="display:inline-block;width:98px" type="number"/>
+				<input id="to-year" title="To year" style="display:inline-block;width:98px" type="number"/>
+				<button id="reset">Reset years</button>
 			</div>
 		</div> <!-- large-9 columns -->
 	</div><!-- row -->
@@ -61,14 +68,7 @@
 
 	<div class="row">
 		<div class="columns small-12 large-12">
-			<br/><br/><br/><br/>
-			<label style="width:90px" for="catalogue-name">Filter Name</label>
-			<input style="width:200px" type="text" id="catalogue-name"/>
 
-			<label style="margin-left:90px;width:90px" for="from-year">Filter Years</label>
-			<input id="from-year" title="From year" style="display:inline-block;width:80px" type="number"/>
-			<input id="to-year" title="To year" style="display:inline-block;width:80px" type="number"/>
-			<button id="reset">Reset years</button>
 
 			<table id="cat"></table>
 		</div>
