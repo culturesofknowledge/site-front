@@ -1,7 +1,7 @@
 import logging
 
 from web.lib.base import BaseController, render
-from pylons.controllers.util import abort, redirect
+from pylons.controllers.util import redirect
 
 log = logging.getLogger(__name__)
 

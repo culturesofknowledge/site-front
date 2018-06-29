@@ -73,7 +73,7 @@
 			<br/>
 			<div class="row">
 				<div class="column">
-				<h2 id="about">Map</h2>
+				<h2 id="about">Geography</h2>
 				<p>Explore the locations in EMLO.</p>
 				</div>
 			</div>
