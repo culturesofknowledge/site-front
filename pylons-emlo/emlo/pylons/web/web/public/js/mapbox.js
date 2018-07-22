@@ -10,16 +10,19 @@
 	var map = null,
 		solr = null,
 		placesData = [],
-		popupHighlight = null;
+		popupHighlight = null,
+		options = {
+			//maxZoom: 20,
+			//zoomAnimation: false,
+			markerZoomAnimation: false
+		};
 
 	if( monica ) {
 		L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
-		map = L.mapbox.map('map', 'monicams.jpf4hpo5');
+		map = L.mapbox.map('map', 'monicams.jpf4hpo5', options);
 	}
 	else {
-		map = L.map('map', {
-			maxZoom: 20
-		});
+		map = L.map('map', options );
 
 		L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
@@ -66,7 +69,6 @@
 	};
 
 	var solrSuccessHandler = function (data /*, textStatus, jqXHR*/ ) {
-		console.log("solrSuccessHandler",data);
 
 		var placeNames = [];
 		placesData = [];
@@ -129,9 +131,32 @@
 		map.setZoomAround( e.latlng, z + 2 );
 	};
 
+	var popupLabel = function(bounds, count, row, column) {
+
+		var found = [];
+		for( var p=0, z=placesData.length; p<z; p++ ) {
+			// {g: "23.13302,-82.38304", n: "Havana, La Habana, Cuba", i: "uuid_eb74cb66-a442-4dea-b095-7964c757b5a2", f: 1, t: 0, …}
+			var latlong = placesData[p].g.split(","),
+				lat = +latlong[0],
+				long = +latlong[1];
+
+			// s.LatLngBounds {_southWest: s.LatLng, _northEast: s.LatLng}
+			if(  bounds.contains(L.latLng(lat,long) ) ) {
+				found.push( placesData[p] );
+			}
+		}
+
+		var label = "";
+		for(p=0,z=found.length;p<z;p++){
+			label += '<a href="/' + found[p].i.replace("uuid_","") + '">' + found[p].n + '</a><br/>';
+		}
+
+		return "<b>" + count + " Places</b><br>" + label;
+	};
+
 	jQuery('#placelist').on("change", function () {
-		var index = jQuery('#placelist').val();
-		var placeData = placesData[+index];
+		var index = +jQuery('#placelist').val();
+		var placeData = placesData[index];
 
 		var latlong = placeData["g"].split(",");
 		if (popupHighlight === null) {
@@ -226,6 +251,8 @@
 			renderCompleteHandler: null,
 			tileClick: null,
 
+			popupLabel : popupLabel,
+
 			popupHighlight: false,
 			showGlobalResults: false,
 			fixedOpacity: 100,
@@ -238,7 +265,7 @@
 				't:ox_totalWorksSentToPlace',
 				'm:ox_totalWorksMentioningPlace'
 			],
-			maxDocs: 1000,
+			maxDocs: 10000,
 
 			solrQueryCreate: solrQueryCreate
 		});
@@ -259,7 +286,7 @@
 		allLayers.push(gridLayer);
 		allLayers.push(clustLayer);
 
-		setLayer(gridLayer);
+		setLayer(gridLayer);//clustLayer);//
 	}
 
 	function setLayer( layer ) {
@@ -268,11 +295,6 @@
 			return;
 		}
 
-		for( var l=0, z=allLayers.length; l<z; l++) {
-			//if( map.hasLayer( allLayers[l] ) ) {
-				//map.removeLayer( allLayers[l] );
-			//}
-		}
 		map.eachLayer(function (l) {
 			if( l !== layer ) {
 				if( l === allLayers[0] || l === allLayers[1] ) {
@@ -295,6 +317,7 @@
 		console.log( "z", zoom );
 
 		if( zoom < 8 ) {
+		//if( placesData.length > 100 ) {
 			return gridLayer;
 		}
 		else {

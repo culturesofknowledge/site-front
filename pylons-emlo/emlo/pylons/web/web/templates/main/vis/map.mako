@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 <%!
 	nav_selected = ''
-	main_title = 'Map'
+	main_title = 'Geography'
 %>
 <%inherit file="/base.mako" />
 
@@ -73,8 +73,8 @@
 			<br/>
 			<div class="row">
 				<div class="column">
-				<h2 id="about">Map</h2>
-				<p>Explore the locations</p>
+				<h2 id="about">Geography</h2>
+				<p>Explore the locations in EMLO.</p>
 				</div>
 			</div>
 

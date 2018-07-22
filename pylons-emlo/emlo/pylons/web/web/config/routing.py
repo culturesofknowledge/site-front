@@ -27,6 +27,8 @@ def make_map(config):
     map.redirect('/profile/repositorys/{id:.*}', '/profile/institution/{id}', _redirect_code="301 Moved Permanently")
 
     map.redirect('/profile/locations/{id:.*}', '/profile/location/{id}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/places/{id:.*}', '/profile/location/{id}', _redirect_code="301 Moved Permanently")
+    map.redirect('/profile/place/{id:.*}', '/profile/location/{id}', _redirect_code="301 Moved Permanently")
 
     map.redirect('/profile/images/{id:.*}', '/profile/image/{id}', _redirect_code="301 Moved Permanently")
 
