@@ -1382,8 +1382,8 @@ def get_list_of_catalogues(): #{
   sol_connection = solr.SolrConnection( solrconfig.solr_urls[ "works" ] )
 
   catalogue_fieldname = get_catalogue_fieldname()
-  sol_response = sol_connection.query( "*:*", rows=0,  fl="-", score=False, \
-                                       facet='true', facet_field=catalogue_fieldname )
+  sol_response = sol_connection.query( "*:*", rows=0,  fl="-", score=False,
+                                       facet='true', facet_limit=1000, facet_field=catalogue_fieldname )
   sol_connection.close()
 
   for catname, num in sol_response.facet_counts['facet_fields'][catalogue_fieldname].iteritems(): #{
