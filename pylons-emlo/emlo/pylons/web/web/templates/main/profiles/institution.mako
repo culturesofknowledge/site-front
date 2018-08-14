@@ -62,7 +62,7 @@
 			<div class="column profilepart">
     				<h3><img src="/img/icon-repository.png"/>Alternative names</h3>
 				<div class="content">
-					${c.profile[ repository_alternate_name_fieldname ]}
+					${c.profile[ repository_alternate_name_fieldname ].replace("\n","<br/>") | n}
 				</div>
 			</div>
 		% endif
