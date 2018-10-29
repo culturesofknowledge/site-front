@@ -11,7 +11,9 @@
 
 ##---------------------------------------------------------------------------------------------
 
-<%def name="for_head()"></%def>
+<%def name="for_head()">
+	<link rel="stylesheet" href="/css/chart.css" />
+</%def>
 
 ##---------------------------------------------------------------------------------------------
 
@@ -160,9 +162,6 @@ c:${cre},\
 				(function toLongFormat(){var i=person_data.length,d;for(;i;i--){d=person_data[i-1];d.year=d.y;d.mentioned=d.m||0;d.recipient=d.r||0;d.creator=d.c||0;delete d.y,delete d.m,delete d.c,delete d.r;}})();
 		    </script>
 
-		    ## Write CSS for bar-charts
-		    ${self.graph_style()}
-
 			<div id="chart">
 				<div class="button-bar">
 					<ul class="button-group unknown" style="display:none">
@@ -207,79 +206,6 @@ c:${cre},\
 
 <%def name="body()"></%def>
 
-##---------------------------------------------------------------------------------------------
-
-<%def name="graph_style()">
-##{
-        <style type='text/css'>
-		#chart {
-			z-index:100;
-			background-color: white;
-			position:relative;
-			-webkit-transition: 1s ease-in-out;
-			-moz-transition: 1s ease-in-out;
-			-o-transition: 1s ease-in-out;
-			transition: 1s ease-in-out;
-			padding: 5px;
-		}
-	  
-  		.chart {
-			margin-left: 2px;
-			margin-bottom: 10px;
-		}
-		.label {
-			font-size: 10px;
-			font-family: "Times New Roman";
-		}
-		.chart-title {
-			margin-left:0px;
-			margin-bottom:5px;
-			margin-top:10px;
-			font-size:14px;
-			font-weight: bold;
-		}
-		.chart rect {
-			stroke-width:0;
-			stroke: white;
-		}
-
-		.bar.creator { fill: #2E527E; }
-		.bar.recipient { fill: #5A7CA5; }
-		.bar.mentioned { fill: #A7BFD6; }
-		
-		.bar.creator.unknown { fill: #7E7E7E; }
-		.bar.recipient.unknown  { fill: #A5A5A5; }
-		.bar.mentioned.unknown { fill: #D6D6D6; }
-
-		.axis path,
-		.axis line {
-			fill: none;
-			stroke: black;
-			shape-rendering: crispEdges;
-		}
-		.axis text {
-			font-family: sans-serif;
-			font-size: 11px;
-		}
-		.guideline {
-			stroke: #EFC319;
-			stroke-width: 0.3;
-		}
-
-		.bar:hover { fill: #EFC319; }
-		.bar.creator.unknown:hover { fill: #8E8E8E; }
-		.bar.recipient.unknown:hover { fill: #B5B5B5; }
-		.bar.mentioned.unknown:hover { fill: #E6E6E6; }
-
-		#chart .button-bar { margin-left: 9px;}
-		#chart .button.highlight {
-			background-color: #EFC319;
-			color: black;
-		}
-	</style>
-##}
-</%def>
-## End function graph_style()
 ##---------------------------------------------------------------------------------------------
 
 <%def name="set_year_counts_for_graphs( relevant_works_fieldname, data, counts )">
