@@ -178,6 +178,8 @@ conversions = [
       },
 
       'creation_user':None, # ignore
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
@@ -202,8 +204,36 @@ conversions = [
           predicate: fieldmap.get_core_id_fieldname(),
           prefix:    fieldmap.get_uuid_value_prefix()
           #store: "uuid"
-        }
-    },
+        },
+      'element_1_eg_room':
+        {
+          predicate: "level_room",
+        },
+      'element_2_eg_building':
+        {
+          predicate: 'level_building',
+        },
+      'element_3_eg_parish':
+        {
+          predicate: "level_parish",
+        },
+      'element_4_eg_city':
+        {
+          predicate: "level_city",
+        },
+      'element_5_eg_county':
+        {
+          predicate: "level_county",
+        },
+      'element_6_eg_country':
+        {
+          predicate: "level_country",
+        },
+      'element_7_eg_empire':
+        {
+          predicate: "level_empire",
+        },
+},
 
     additional : {
       type_fieldname :'http://purl.org/dc/terms/Location'
@@ -251,6 +281,8 @@ conversions = [
       },
 
       'creation_user':None,# ignore
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
@@ -324,6 +356,8 @@ conversions = [
           },
 
       'creation_user':None, # ignore
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
@@ -687,6 +721,8 @@ conversions = [
       'work_to_be_deleted':None, # ignore
       'relevant_to_cofk':None, # ignore
       'creation_user':None, # ignore
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
@@ -914,6 +950,8 @@ conversions = [
 
       'skos_hiddenlabel':None,
       'creation_user':None,
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
@@ -1158,6 +1196,8 @@ conversions = [
       },
 
       'creation_user':None, # ignore
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
@@ -1345,6 +1385,8 @@ conversions = [
       },
 
       'creation_user':None, # ignore
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
@@ -1419,6 +1461,8 @@ conversions = [
       },
 
       'creation_user':None, # ignore
+      'published':None, # ignore
+
       'change_user':
       {
         predicate: fieldmap.get_changed_by_user_fieldname(),
