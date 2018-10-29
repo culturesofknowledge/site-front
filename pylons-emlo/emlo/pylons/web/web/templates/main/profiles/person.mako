@@ -21,6 +21,93 @@
 	<script type="text/javascript" src="/js/d3.v3.min.js"></script>
 	<script type="text/javascript" src="/js/d3.lettercount.min.js"></script>
 	##<script type="text/javascript" src="/js/d3.lettercount.js"></script>
+
+	%if c.profile.has_key( 'works_created_locations' ) or c.profile.has_key( 'works_received_locations' ) :
+		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
+
+		<script type="text/javascript">
+
+			L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
+			var map = L.mapbox.map('map', 'monicams.jpf4hpo5')
+					.setView([0,0], 7);
+
+			var greenIcon = L.icon({
+				iconUrl: '/img/marker-icon-green.png',
+				//iconRetinaUrl: 'my-icon@2x.png',
+				iconSize: [25, 41],
+				iconAnchor: [12, 39],
+				popupAnchor: [-3, -76],
+				//shadowUrl: 'my-icon-shadow.png',
+				//shadowRetinaUrl: 'my-icon-shadow@2x.png',
+				//shadowSize: [68, 95],
+				//shadowAnchor: [22, 94]
+			});
+
+			var redIcon = L.icon({
+				iconUrl: '/img/marker-icon-red.png',
+				//iconRetinaUrl: 'my-icon@2x.png',
+				iconSize: [25, 41],
+				iconAnchor: [12, 39],
+				popupAnchor: [-3, -76],
+				//shadowUrl: 'my-icon-shadow.png',
+				//shadowRetinaUrl: 'my-icon-shadow@2x.png',
+				//shadowSize: [68, 95],
+				//shadowAnchor: [22, 94]
+			});
+
+			var markers = [];
+				% if c.profile.has_key( 'works_created_locations' ) :
+					% for location in c.profile['works_created_locations']:
+						% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+							markers.push(L.marker([${c.relations["uuid_" + location]['geo_lat']},${c.relations["uuid_" + location]['geo_long']}], {icon:greenIcon}) );
+						% endif
+					% endfor
+				% endif
+
+				% if c.profile.has_key( 'works_received_locations' ) :
+					% for location in c.profile['works_received_locations']:
+						% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+							markers.push(L.marker([${c.relations["uuid_" + location]['geo_lat']},${c.relations["uuid_" + location]['geo_long']}], {icon:redIcon}) );
+						% endif
+					% endfor
+				% endif
+
+			var group = L.featureGroup(markers);
+			var bounds = group.getBounds();
+			console.log(bounds);
+			map.fitBounds(group.getBounds().pad(0.1));
+			group.addTo(map);
+
+			/*var featureLayer = L.mapbox.featureLayer({
+				// this feature is in the GeoJSON format: see geojson.org
+				// for the full specification
+				type: 'Feature',
+				geometry: {
+					type: 'Point',
+					// coordinates here are in longitude, latitude order because
+					// x, y is the standard for GeoJSON and many formats
+					coordinates: [
+						% if c.profile.has_key( 'works_created_locations' ) :
+							% for location in c.profile['works_created_locations']:
+								% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+									${c.relations["uuid_" + location]['geo_long']},${c.relations["uuid_" + location]['geo_lat']},
+								% endif
+							% endfor
+						% endif
+						% if c.profile.has_key( 'works_received_locations' ) :
+							% for location in c.profile['works_received_locations']:
+								% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+									${c.relations["uuid_" + location]['geo_long']},${c.relations["uuid_" + location]['geo_lat']},
+								% endif
+							% endfor
+						% endif
+					]
+				}
+			}).addTo(map);*/
+
+		</script>
+	% endif
 </%def>
 
 ##---------------------------------------------------------------------------------------------
@@ -185,20 +272,54 @@ c:${cre},\
 	</div>
     ##=================================================================================================
 
-	  <div class="column profilepart">
-		  ${self.h4_works_list( h.get_works_created_fieldname(), sorted_list = works_created, img='icon-quill.png' )}
-	  </div>
+	  % if c.profile.has_key( h.get_works_created_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_works_list( h.get_works_created_fieldname(), sorted_list = works_created, img='icon-quill.png' )}
+		  </div>
+      % endif
+	  % if c.profile.has_key( h.get_letters_received_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_works_list( h.get_letters_received_fieldname(), sorted_list = letters_received, img='icon-quill.png' )}
+		  </div>
+	  % endif
+	  % if c.profile.has_key( h.get_works_in_which_mentioned_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_works_list( h.get_works_in_which_mentioned_fieldname(), sorted_list = works_in_which_mentioned, img='icon-quill.png' )}
+		  </div>
+	  % endif
+	  % if c.profile.has_key( h.get_relations_to_comments_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_relations_list( h.get_relations_to_comments_fieldname(), type='simple' )}
+		  </div>
+	  % endif
 
-	  <div class="column profilepart">
-		  ${self.h4_works_list( h.get_letters_received_fieldname(), sorted_list = letters_received, img='icon-quill.png' )}
-	  </div>
-	  <div class="column profilepart">
-		  ${self.h4_works_list( h.get_works_in_which_mentioned_fieldname(), sorted_list = works_in_which_mentioned, img='icon-quill.png' )}
-	  </div>
-	  <div class="column profilepart">
-		  ${self.h4_relations_list( h.get_relations_to_comments_fieldname(), type='simple' )}
-	  </div>
-	  <br class="clearboth">
+	  %if c.profile.has_key( 'works_created_locations' ) or c.profile.has_key( 'works_received_locations' ) :
+		  <div class="column profilepart">
+			  <h3><img src="/img/icon-globe.png">Locations where letters were sent or received</h3>
+			  <div id='map' style="width:100%;height:440px;"></div>
+			  <p>Green markers show where letters were sent from, red markers show where letters were received.</p>
+
+		    % if c.profile.has_key( 'works_created_locations' ) :
+					<h4>Locations letters were sent from</h4>
+					<ul>
+					% for location in c.profile['works_created_locations']:
+						<li><a href="/${location}">${c.relations["uuid_" + location]['geonames_name']}</a></li>
+		            % endfor
+					</ul>
+			% endif
+
+		  % if c.profile.has_key( 'works_received_locations' ) :
+				  <h4>Locations letters were addressed to</h4>
+				  <ul>
+					  % for location in c.profile['works_received_locations']:
+						  <li><a href="/${location}">${c.relations["uuid_" + location]['geonames_name']}</a></li>
+					  % endfor
+				  </ul>
+		  % endif
+		  </div>
+	  %endif
+
+	<br class="clearboth">
   </div>
 </%def>
 
@@ -257,6 +378,14 @@ c:${cre},\
       #}
     #}
   #}
+
+  # Todo: Add in birth and death dates
+  #year_b  = c.profile.get( h.get_birth_year_fieldname(),  9999 )
+  #year_d  = c.profile.get( h.get_death_year_fieldname(),  0 )
+  #if min_year > year_b :
+  #  min_year = year_b
+  #if max_year < year_d :
+  #  max_year = year_d
 
   first_and_last = ( min_year, max_year )
   return first_and_last

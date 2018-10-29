@@ -1418,24 +1418,19 @@
     % endif
 
     % if decade != prev_decade: 
-      ${decade}s
-      </td><td>
+      ${decade}s</td><td>
     % else:
-      &diams; 
+      &diams;
     % endif
 
-    ##=====================================
+	##=====================================
     ## Display link to Works Search Results
     ##=====================================
     % if core_href != '': 
       <% href = core_href + '&dat_sin_year=' + str( year ) %>
-      <a href="${href}">
-    % endif
-
-    ${year}:&nbsp;${letter_count}
-
-    % if core_href != '': 
-      </a>
+      <a href="${href}">${year}:&nbsp;${letter_count}</a>
+	% else :
+        ${year}:&nbsp;${letter_count}
     % endif
 
     <% prev_decade = decade %>
