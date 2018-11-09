@@ -40,8 +40,20 @@
 
 	<script>$(document).foundation( bdlss.emlo.foundationSettings );</script>
 
+	<!-- tracker old -->
 	<script>var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-23877246-5']);_gaq.push(['_trackPageview']);</script>
 	<script src="http://www.google-analytics.com/ga.js" async></script>
+
+	<!-- tracker new -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129021123-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-129021123-1');
+	</script>
+
 
 </foot></html>
 ##
