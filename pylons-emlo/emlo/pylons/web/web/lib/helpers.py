@@ -1382,8 +1382,8 @@ def get_list_of_catalogues(): #{
   sol_connection = solr.SolrConnection( solrconfig.solr_urls[ "works" ] )
 
   catalogue_fieldname = get_catalogue_fieldname()
-  sol_response = sol_connection.query( "*:*", rows=0,  fl="-", score=False, \
-                                       facet='true', facet_field=catalogue_fieldname )
+  sol_response = sol_connection.query( "*:*", rows=0,  fl="-", score=False,
+                                       facet='true', facet_limit=1000, facet_field=catalogue_fieldname )
   sol_connection.close()
 
   for catname, num in sol_response.facet_counts['facet_fields'][catalogue_fieldname].iteritems(): #{
@@ -1444,10 +1444,13 @@ def sort_manifs_by_type( manif_uri_list ): #{
   for one_record_dict in result_dict.values(): #{
 
     # Generate a sort column from manifestation type
-    manif_type = one_record_dict[ manif_type_fieldname ]
-    sortcol = manif_type
-    if sortcol == 'Letter': # always put 'Letter' first, then the rest in alphabetic order
-      sortcol = "AA%s" % sortcol
+    if manif_type_fieldname in one_record_dict :
+      manif_type = one_record_dict[ manif_type_fieldname ]
+      sortcol = manif_type
+      if sortcol == 'Letter': # always put 'Letter' first, then the rest in alphabetic order
+        sortcol = "AA%s" % sortcol
+    else:
+      sortcol = manif_type = "Letter"
 
     # All these ID fields such as URI, UUID etc tend to have a prefix *in the data*
     # showing what type of ID they are. Will strip this off so that it matches the value

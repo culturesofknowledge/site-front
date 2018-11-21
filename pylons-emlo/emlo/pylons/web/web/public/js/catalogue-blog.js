@@ -531,7 +531,7 @@ var catIds = [
 
 function getBlogDataFromCatId( id ) {
 	if( id ) {
-		for( var i=0;i<catalogueBlogData.length;i++) {
+		for( var i=0,z=catalogueBlogData.length;i<z;i++) {
 			if( catalogueBlogData[i].catid === id ) {
 				return catalogueBlogData[i];
 			}
@@ -541,13 +541,11 @@ function getBlogDataFromCatId( id ) {
 }
 
 function getBlogDataFromCatName( name ) {
-	var catId = null;
-	for( var i=0;i<catIds.length;i++) {
+	for( var i=0,z=catIds.length;i<z;i++) {
 		if(name === catIds[i].name ) {
-			catId = catIds[i].id;
-			break;
+			return getBlogDataFromCatId( catIds[i].id );
 		}
 	}
 	
-	return getBlogDataFromCatId( catId );
+	return null;
 }

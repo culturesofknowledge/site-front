@@ -72,7 +72,7 @@
         <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
 
-		<field name="uuid_related"  type="uuid"  indexed="true"  stored="false"  multiValued="true" />
+		<field name="uuid_related"  type="uuid"  indexed="true"  stored="true"  multiValued="true" />
 
         <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
         <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
@@ -99,6 +99,7 @@
         <field name="rdfs_seeAlso-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
         <field name="rdfs_seeAlso-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
         <field name="rdfs_seeAlso-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
+        <field name="rdfs_seeAlso-institution"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_related_to -->
 
 
         <!--            -->

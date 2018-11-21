@@ -11,7 +11,9 @@
 
 ##---------------------------------------------------------------------------------------------
 
-<%def name="for_head()"></%def>
+<%def name="for_head()">
+	<link rel="stylesheet" href="/css/chart.css" />
+</%def>
 
 ##---------------------------------------------------------------------------------------------
 
@@ -19,6 +21,93 @@
 	<script type="text/javascript" src="/js/d3.v3.min.js"></script>
 	<script type="text/javascript" src="/js/d3.lettercount.min.js"></script>
 	##<script type="text/javascript" src="/js/d3.lettercount.js"></script>
+
+	%if c.profile.has_key( 'works_created_locations' ) or c.profile.has_key( 'works_received_locations' ) :
+		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
+
+		<script type="text/javascript">
+
+			L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
+			var map = L.mapbox.map('map', 'monicams.jpf4hpo5')
+					.setView([0,0], 7);
+
+			var greenIcon = L.icon({
+				iconUrl: '/img/marker-icon-green.png',
+				//iconRetinaUrl: 'my-icon@2x.png',
+				iconSize: [25, 41],
+				iconAnchor: [12, 39],
+				popupAnchor: [-3, -76],
+				//shadowUrl: 'my-icon-shadow.png',
+				//shadowRetinaUrl: 'my-icon-shadow@2x.png',
+				//shadowSize: [68, 95],
+				//shadowAnchor: [22, 94]
+			});
+
+			var redIcon = L.icon({
+				iconUrl: '/img/marker-icon-red.png',
+				//iconRetinaUrl: 'my-icon@2x.png',
+				iconSize: [25, 41],
+				iconAnchor: [12, 39],
+				popupAnchor: [-3, -76],
+				//shadowUrl: 'my-icon-shadow.png',
+				//shadowRetinaUrl: 'my-icon-shadow@2x.png',
+				//shadowSize: [68, 95],
+				//shadowAnchor: [22, 94]
+			});
+
+			var markers = [];
+				% if c.profile.has_key( 'works_created_locations' ) :
+					% for location in c.profile['works_created_locations']:
+						% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+							markers.push(L.marker([${c.relations["uuid_" + location]['geo_lat']},${c.relations["uuid_" + location]['geo_long']}], {icon:greenIcon}) );
+						% endif
+					% endfor
+				% endif
+
+				% if c.profile.has_key( 'works_received_locations' ) :
+					% for location in c.profile['works_received_locations']:
+						% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+							markers.push(L.marker([${c.relations["uuid_" + location]['geo_lat']},${c.relations["uuid_" + location]['geo_long']}], {icon:redIcon}) );
+						% endif
+					% endfor
+				% endif
+
+			var group = L.featureGroup(markers);
+			var bounds = group.getBounds();
+			console.log(bounds);
+			map.fitBounds(group.getBounds().pad(0.1));
+			group.addTo(map);
+
+			/*var featureLayer = L.mapbox.featureLayer({
+				// this feature is in the GeoJSON format: see geojson.org
+				// for the full specification
+				type: 'Feature',
+				geometry: {
+					type: 'Point',
+					// coordinates here are in longitude, latitude order because
+					// x, y is the standard for GeoJSON and many formats
+					coordinates: [
+						% if c.profile.has_key( 'works_created_locations' ) :
+							% for location in c.profile['works_created_locations']:
+								% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+									${c.relations["uuid_" + location]['geo_long']},${c.relations["uuid_" + location]['geo_lat']},
+								% endif
+							% endfor
+						% endif
+						% if c.profile.has_key( 'works_received_locations' ) :
+							% for location in c.profile['works_received_locations']:
+								% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
+									${c.relations["uuid_" + location]['geo_long']},${c.relations["uuid_" + location]['geo_lat']},
+								% endif
+							% endfor
+						% endif
+					]
+				}
+			}).addTo(map);*/
+
+		</script>
+	% endif
 </%def>
 
 ##---------------------------------------------------------------------------------------------
@@ -160,9 +249,6 @@ c:${cre},\
 				(function toLongFormat(){var i=person_data.length,d;for(;i;i--){d=person_data[i-1];d.year=d.y;d.mentioned=d.m||0;d.recipient=d.r||0;d.creator=d.c||0;delete d.y,delete d.m,delete d.c,delete d.r;}})();
 		    </script>
 
-		    ## Write CSS for bar-charts
-		    ${self.graph_style()}
-
 			<div id="chart">
 				<div class="button-bar">
 					<ul class="button-group unknown" style="display:none">
@@ -186,20 +272,54 @@ c:${cre},\
 	</div>
     ##=================================================================================================
 
-	  <div class="column profilepart">
-		  ${self.h4_works_list( h.get_works_created_fieldname(), sorted_list = works_created, img='icon-quill.png' )}
-	  </div>
+	  % if c.profile.has_key( h.get_works_created_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_works_list( h.get_works_created_fieldname(), sorted_list = works_created, img='icon-quill.png' )}
+		  </div>
+      % endif
+	  % if c.profile.has_key( h.get_letters_received_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_works_list( h.get_letters_received_fieldname(), sorted_list = letters_received, img='icon-quill.png' )}
+		  </div>
+	  % endif
+	  % if c.profile.has_key( h.get_works_in_which_mentioned_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_works_list( h.get_works_in_which_mentioned_fieldname(), sorted_list = works_in_which_mentioned, img='icon-quill.png' )}
+		  </div>
+	  % endif
+	  % if c.profile.has_key( h.get_relations_to_comments_fieldname() ):
+		  <div class="column profilepart">
+			  ${self.h4_relations_list( h.get_relations_to_comments_fieldname(), type='simple' )}
+		  </div>
+	  % endif
 
-	  <div class="column profilepart">
-		  ${self.h4_works_list( h.get_letters_received_fieldname(), sorted_list = letters_received, img='icon-quill.png' )}
-	  </div>
-	  <div class="column profilepart">
-		  ${self.h4_works_list( h.get_works_in_which_mentioned_fieldname(), sorted_list = works_in_which_mentioned, img='icon-quill.png' )}
-	  </div>
-	  <div class="column profilepart">
-		  ${self.h4_relations_list( h.get_relations_to_comments_fieldname(), type='simple' )}
-	  </div>
-	  <br class="clearboth">
+	  %if c.profile.has_key( 'works_created_locations' ) or c.profile.has_key( 'works_received_locations' ) :
+		  <div class="column profilepart">
+			  <h3><img src="/img/icon-globe.png">Locations where letters were sent or received</h3>
+			  <div id='map' style="width:100%;height:440px;"></div>
+			  <p>Green markers show where letters were sent from, red markers show where letters were received.</p>
+
+		    % if c.profile.has_key( 'works_created_locations' ) :
+					<h4>Locations letters were sent from</h4>
+					<ul>
+					% for location in c.profile['works_created_locations']:
+						<li><a href="/${location}">${c.relations["uuid_" + location]['geonames_name']}</a></li>
+		            % endfor
+					</ul>
+			% endif
+
+		  % if c.profile.has_key( 'works_received_locations' ) :
+				  <h4>Locations letters were addressed to</h4>
+				  <ul>
+					  % for location in c.profile['works_received_locations']:
+						  <li><a href="/${location}">${c.relations["uuid_" + location]['geonames_name']}</a></li>
+					  % endfor
+				  </ul>
+		  % endif
+		  </div>
+	  %endif
+
+	<br class="clearboth">
   </div>
 </%def>
 
@@ -207,79 +327,6 @@ c:${cre},\
 
 <%def name="body()"></%def>
 
-##---------------------------------------------------------------------------------------------
-
-<%def name="graph_style()">
-##{
-        <style type='text/css'>
-		#chart {
-			z-index:100;
-			background-color: white;
-			position:relative;
-			-webkit-transition: 1s ease-in-out;
-			-moz-transition: 1s ease-in-out;
-			-o-transition: 1s ease-in-out;
-			transition: 1s ease-in-out;
-			padding: 5px;
-		}
-	  
-  		.chart {
-			margin-left: 2px;
-			margin-bottom: 10px;
-		}
-		.label {
-			font-size: 10px;
-			font-family: "Times New Roman";
-		}
-		.chart-title {
-			margin-left:0px;
-			margin-bottom:5px;
-			margin-top:10px;
-			font-size:14px;
-			font-weight: bold;
-		}
-		.chart rect {
-			stroke-width:0;
-			stroke: white;
-		}
-
-		.bar.creator { fill: #2E527E; }
-		.bar.recipient { fill: #5A7CA5; }
-		.bar.mentioned { fill: #A7BFD6; }
-		
-		.bar.creator.unknown { fill: #7E7E7E; }
-		.bar.recipient.unknown  { fill: #A5A5A5; }
-		.bar.mentioned.unknown { fill: #D6D6D6; }
-
-		.axis path,
-		.axis line {
-			fill: none;
-			stroke: black;
-			shape-rendering: crispEdges;
-		}
-		.axis text {
-			font-family: sans-serif;
-			font-size: 11px;
-		}
-		.guideline {
-			stroke: #EFC319;
-			stroke-width: 0.3;
-		}
-
-		.bar:hover { fill: #EFC319; }
-		.bar.creator.unknown:hover { fill: #8E8E8E; }
-		.bar.recipient.unknown:hover { fill: #B5B5B5; }
-		.bar.mentioned.unknown:hover { fill: #E6E6E6; }
-
-		#chart .button-bar { margin-left: 9px;}
-		#chart .button.highlight {
-			background-color: #EFC319;
-			color: black;
-		}
-	</style>
-##}
-</%def>
-## End function graph_style()
 ##---------------------------------------------------------------------------------------------
 
 <%def name="set_year_counts_for_graphs( relevant_works_fieldname, data, counts )">
@@ -331,6 +378,14 @@ c:${cre},\
       #}
     #}
   #}
+
+  # Todo: Add in birth and death dates
+  #year_b  = c.profile.get( h.get_birth_year_fieldname(),  9999 )
+  #year_d  = c.profile.get( h.get_death_year_fieldname(),  0 )
+  #if min_year > year_b :
+  #  min_year = year_b
+  #if max_year < year_d :
+  #  max_year = year_d
 
   first_and_last = ( min_year, max_year )
   return first_and_last

@@ -4,6 +4,9 @@ solr:
   build: ./solr-emlo
   #restart: no
 
+  environment:
+    - SOLR_LOG_LEVEL=WARN
+
   ports:
     - "8983:8983"
 

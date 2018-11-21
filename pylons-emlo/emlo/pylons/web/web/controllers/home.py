@@ -1,6 +1,6 @@
 import logging
 
-from pylons import request, response, session, tmpl_context as c, url
+from pylons import config, request, response, session, tmpl_context as c, url
 
 from web.lib.base import BaseController, render
 from web.lib.helpers import *
@@ -33,7 +33,7 @@ class HomeController(BaseController):
 
        facet_fields = ['object_type', catalogue_fn, organisation_fn]
 
-       sol_response_all = sol_all.query( "*:*", rows=0,  fl="-", score=False, facet='true', facet_field=facet_fields)
+       sol_response_all = sol_all.query( "*:*", rows=0,  fl="-", score=False, facet='true', facet_limit=1000, facet_field=facet_fields)
        sol_all.close()
 
        c.stats = {
@@ -77,7 +77,7 @@ class HomeController(BaseController):
        for stat, num in sol_response_all.facet_counts['facet_fields']['object_type'].iteritems():
 
          if stat == 'institution' :
-            c.stats['repositories']['number'] = num
+            c.stats['repositories']['number'] = max(0,num)
          elif stat == 'comment':
              c.stats['comments']['number'] = num
          elif stat == 'image':
@@ -91,8 +91,14 @@ class HomeController(BaseController):
          elif stat == 'work':
              c.stats['works']['number'] = num
 
-       c.stats['organisations']['number'] = sol_response_all.facet_counts['facet_fields'][organisation_fn]['true']
-       c.stats['people']['number'] = sol_response_all.facet_counts['facet_fields']['object_type']['person'] - c.stats['organisations']['number']
+
+       if "true" in sol_response_all.facet_counts['facet_fields'][organisation_fn] :
+          c.stats['organisations']['number'] = sol_response_all.facet_counts['facet_fields'][organisation_fn]['true']
+       else:
+           c.stats['organisations']['number'] = 0
+
+       if 'person' in sol_response_all.facet_counts['facet_fields']['object_type'] :
+          c.stats['people']['number'] = sol_response_all.facet_counts['facet_fields']['object_type']['person'] - c.stats['organisations']['number']
 
 
        catalogue_dict = sol_response_all.facet_counts[ 'facet_fields' ][catalogue_fn]
@@ -103,10 +109,16 @@ class HomeController(BaseController):
 
 
        # tweak numbers - none of these numbers will change frequently, if ever. ("Number of everything" minus "Number of ones we want")
-       c.stats['people']['number'] -= (21985-20097)  # Remove people who have no connection to a letter
-       c.stats['organisations']['number'] -= (948-806)  # Remove orginisations who have no connection to a letter
-       c.stats['images']['number'] -= (48661)    # Remove images of the bodleian card catalogue
-       c.stats['locations']['number'] -= (5931-5190)    # Remove locations which have no connection to a letter
+
+       if config['project'] == "EMLO" :
+           if c.stats['people']['number'] >= 21985 :
+               c.stats['people']['number'] -= (21985-20097)  # Remove people who have no connection to a letter
+           if c.stats['organisations']['number'] >= 948 :
+               c.stats['organisations']['number'] -= (948-806)  # Remove orginisations who have no connection to a letter
+           if c.stats['images']['number']  >= 48661 :
+               c.stats['images']['number'] -= (48661)    # Remove images of the bodleian card catalogue
+           if c.stats['locations']['number']  > 5931 :
+               c.stats['locations']['number'] -= (5931-5190)    # Remove locations which have no connection to a letter
         
        return render( '/main/home.mako' )
 

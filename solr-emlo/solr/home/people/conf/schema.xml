@@ -239,7 +239,7 @@
 	 <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
 
-	 <field name="uuid_related"  type="uuid"  indexed="true"  stored="false"  required="true" multiValued="true" />
+	 <field name="uuid_related"  type="uuid"  indexed="true"  stored="true"  required="true" multiValued="true" />
 
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
@@ -310,6 +310,12 @@
 
 <!-- end CofK: links from people -->
 
+     <!-- back connections -->
+     <field name="works_created_locations"  type="uuid"  indexed="false"  stored="true"  multiValued="true"  />
+     <field name="works_received_locations"  type="uuid"  indexed="false"  stored="true"  multiValued="true"  />
+
+     <field name="works_to_people"  type="uuid"  indexed="false"  stored="true"  multiValued="true"  />
+     <field name="works_from_people"  type="uuid"  indexed="false"  stored="true"  multiValued="true"  />
 
 
 
@@ -320,7 +326,7 @@
   <field name="timestamp_indexed"  type="tdate"  indexed="true"  stored="true"  multiValued="false"  default="NOW"  />
   <field name="object_type"  type="string"  indexed="false"  stored="true"  required="true"  default="person"  />
   <field name="default_search_field"  type="text"  indexed="true"  stored="false"  multiValued="true"  />
-  <field name="browse"  type="alphaOnlySort"  indexed="true"  stored="false"  multiValued="false"  />
+  <field name="browse"  type="alphaOnlySort"  indexed="true"  stored="true"  multiValued="false"  />
   <field name="name-strict"  type="text_ws"  indexed="true"  stored="true"  />
 
 <!-- end CofK: people -->

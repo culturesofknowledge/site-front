@@ -229,10 +229,11 @@ class ProfileController(BaseController):
          # check number of works
          check_field = get_total_docs_in_repos_fieldname()
          sol_response = sol.query( q, fields=[check_field], score=False)
- 
-         if sol_response.results[0][ check_field ] > get_max_relations_for_profile( object ):
-            profile_too_big = True
-            fields = "*,ox_hasResource-manifestation:[value v=\"\"]"
+
+         if len(sol_response.results) != 0:
+            if sol_response.results[0][ check_field ] > get_max_relations_for_profile( object ):
+               profile_too_big = True
+               fields = "*,ox_hasResource-manifestation:[value v=\"\"]"
 
 
       sol_response = sol.query( q, fields=fields, score=False)
@@ -254,6 +255,12 @@ class ProfileController(BaseController):
       else:
 
          relations = get_related_records_from_solr( [uid] )
+
+         relations_extra = []
+         relations_extra.extend( this_profile.get('works_created_locations',[]) )
+         relations_extra.extend( this_profile.get('works_received_locations',[]) )
+
+         relations.update( get_records_from_solr( relations_extra, ['uuid','geonames_name','geo_lat','geo_long'] ) )
          further_relations = self.further_relations(relations, object)
 
 

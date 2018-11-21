@@ -78,7 +78,7 @@ def GetSelection():
 	return indexing, skip_id_gen, ""
 
 
-def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=False, skip_clean=False ) :
+def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=False, skip_clean=False, skip_delete_previous_solr=False ) :
 
 	if indexing is None :
 		indexing, __skip_id_generation, message = GetSelection()
@@ -105,21 +105,23 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 			csv_file_location = csvtordf.common['csv_source_directory_root'] + csvtordf.csv_files[csv_file_name][0]
 			new_csv_file_location = csv_file_location + ".new"
 
-			print "   -", csv_file_location
+			if os.path.isfile(csv_file_location) :
 
-			stat_info = os.stat(csv_file_location)
-			with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
+				print "   -", csv_file_location
 
-				with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
+				stat_info = os.stat(csv_file_location)
+				with codecs.open( new_csv_file_location, encoding="utf-8", mode="w") as csv_file:
 
-					for line in csv_file_original:
+					with codecs.open( csv_file_location, encoding="utf-8", mode="r") as csv_file_original :
 
-						line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
-						csv_file.write(line)
+						for line in csv_file_original:
 
-			os.rename( csv_file_location, csv_file_location + '.bak' ) # original file to backup
-			os.rename( csv_file_location + '.new', csv_file_location ) # new file to original
-			os.chown( csv_file_location, stat_info.st_uid, stat_info.st_gid )
+							line = line.replace( u'\u000B', '' )  # U+000B : <control-000B> (LINE TABULATION) {VERTICAL TABULATION [VT]}
+							csv_file.write(line)
+
+				os.rename( csv_file_location, csv_file_location + '.bak' ) # original file to backup
+				os.rename( csv_file_location + '.new', csv_file_location ) # new file to original
+				os.chown( csv_file_location, stat_info.st_uid, stat_info.st_gid )
 
 		timeEnd = time.time()
 		print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
@@ -142,11 +144,6 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 			print "  - Done (in %0.1f seconds)." % ( (timeEnd-timeStart))
 
 	#
-	# Clear Settings
-	#
-	indexer.ClearSolrData( indexing )
-
-	#
 	# Store relationships
 	#
 	if not skip_store_relations:
@@ -164,6 +161,11 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 
 
 	#
+	# Clear old data (if exists)
+	#
+	indexer.ClearSolrData( indexing )
+
+	#
 	# open redis relations database
 	#
 	red_relations = redis.Redis(host=redisconfig.host, db=redisconfig.db_temp_cofk_create)
@@ -171,7 +173,7 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	#
 	# Save the RDF and output to Solr
 	#
-	indexer.FillRdfAndSolr( indexing, None, red_relations, False )
+	indexer.FillSolr( indexing, red_relations )
 
 
 	#
@@ -191,10 +193,11 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	indexer.SolrOptimize( indexing )
 	indexer.SwitchSolrCores( indexing )
 
-	#
-	# We don't need to keep the old data so clear it out.
-	#
-	indexer.ClearSolrData( indexing )
+	if not skip_delete_previous_solr:
+		#
+		# We don't need to keep the old data so clear it out.
+		#
+		indexer.ClearSolrData( indexing )
 
 	#
 	# Done!
@@ -258,5 +261,5 @@ if __name__ == '__main__':
 				index.append("works")
 
 
-		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv )
+		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv, "skipsolrdelete" in sys.argv )
 

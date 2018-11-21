@@ -54,14 +54,14 @@ $(document).ready( function(){
 
 				// Choose an image
 				if (item.hasOwnProperty("acf") && item.acf.hasOwnProperty("catalogue_main_image") && item.acf.catalogue_main_image.length !== 0) {
-					$image.html('<img src="' + item.acf.catalogue_main_image[0].catalogue_images + '"/>');
+					$image.html('<img src="' + item.acf.catalogue_main_image[0].catalogue_images + '" alt="Catalog blog image' + (count+1) + '"/>');
 				}
 				else if (item.hasOwnProperty("featured_image") && item.featured_image !== null) {
-					$image.html('<img src="' + item.featured_image.source + '"/>');
+					$image.html('<img src="' + item.featured_image.source + '" alt="Catalog blog image' + (count+1) + '"/>');
 				}
 				else {
 					var img_src = "/img/news/KMS3059_crop_2.jpg";
-					$image.html('<img src="' + img_src + '"/>');
+					$image.html('<img src="' + img_src + '" alt="Generic catalog blog image' + (count+1) + '"/>');
 				}
 
 				var title = item.title;

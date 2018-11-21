@@ -23,7 +23,7 @@
 
 			<br/><br/>
 
-            <form method="link" action="/profile/${c.record['object_type']}/${c.record['id'].replace("uuid:","")}">
+            <form method="link" action="/profile/${c.record['object_type']}/${c.record['id'].replace("uuid_","")}">
             <input type="submit"  class="button submit" value="Return to Record"/></form>
 
 			<br/><br/><br/><br/>

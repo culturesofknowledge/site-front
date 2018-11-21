@@ -1185,7 +1185,7 @@ L.MarkerCluster = L.Marker.extend({
 
 		//Calculate weighted latlng for display
 		if (!this._wLatLng) {
-			this._latlng = this._wLatLng = new L.LatLng(addedLatLng.lat, addedLatLng.lng);
+			this._latlng = this._wLatLng = new L.LatLng(addedLatLng.lat||1, addedLatLng.lng||1);
 		} else {
 			this._wLatLng.lat = (addedLatLng.lat * addedCount + this._wLatLng.lat * this._childCount) / totalCount;
 			this._wLatLng.lng = (addedLatLng.lng * addedCount + this._wLatLng.lng * this._childCount) / totalCount;
@@ -1399,6 +1399,7 @@ L.MarkerCluster = L.Marker.extend({
 			this._expandBounds(markers[i]);
 		}
 		for (i = childClusters.length - 1; i >= 0; i--) {
+			console.log(childClusters[i]);
 			this._expandBounds(childClusters[i]);
 		}
 	},

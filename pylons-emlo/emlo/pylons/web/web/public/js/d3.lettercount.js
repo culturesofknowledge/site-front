@@ -550,13 +550,13 @@
         if (show) {
             highlight(["#show_unknown"], true);
             //highlight(["#hide_unknown"], false);
-			d3.select("#show_unknown").text("Hide Unknown");
+			d3.select("#show_unknown").text("Hide unknown");
             showUnknown = true;
 
         } else {
             //highlight(["#hide_unknown"], true);
             highlight(["#show_unknown"], false);
-			d3.select("#show_unknown").text("Show Unknown");
+			d3.select("#show_unknown").text("Show unknown");
 
             showUnknown = false;
         }
