@@ -349,7 +349,11 @@ class ProfileController(BaseController):
             '0123456789ABCDEFGHJKMNPQRSTVWXYZ' 'OIL',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567' 'ABB' )
 
-         id = base64.b32decode(id.replace('-', '').upper().encode('ascii').translate(transtbl) + "======").encode('hex')
+         decode_id = id.replace('-', '').upper().encode('ascii').translate(transtbl) + "======"
+         if len(decode_id) != 32:
+            return id
+
+         id = base64.b32decode(decode_id).encode('hex')
 
       return ("%s-%s-%s-%s-%s") % (id[:8], id[8:12], id[12:16], id[16:20], id[20:])
 
