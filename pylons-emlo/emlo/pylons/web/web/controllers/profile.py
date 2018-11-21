@@ -212,7 +212,7 @@ class ProfileController(BaseController):
 
       if uid_len != 36 :
          c.tinyurl = ''
-         return None, [], {}, '/main/profiles/person.mako'  # Return any old profile page
+         return {}, [], {}, '/main/profiles/person.mako'  # Return any old profile page
 
       #  If there are too many works to display without timing out, don't get the data for a profile,
       #  but instead go to Works Search Results for the relevant object (currently just institutions,
@@ -239,7 +239,7 @@ class ProfileController(BaseController):
       sol_response = sol.query( q, fields=fields, score=False)
       if len(sol_response.results) == 0:
          c.tinyurl = ''
-         return None, [], {}, '/main/profiles/person.mako'  # Return any old profile page
+         return {}, [], {}, '/main/profiles/person.mako'  # Return any old profile page
 
       this_profile = sol_response.results[0]
       this_profile["profile_too_big"] = profile_too_big
