@@ -56,11 +56,26 @@
 				//shadowAnchor: [22, 94]
 			});
 
+			var markerBounds = { height: 50, width: 50 };
+
 			var markers = [];
 				% if c.profile.has_key( 'works_created_locations' ) :
 					% for location in c.profile['works_created_locations']:
 						% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
-							markers.push(L.marker([${c.relations["uuid_" + location]['geo_lat']},${c.relations["uuid_" + location]['geo_long']}], {icon:greenIcon}) );
+							var divIcon = L.divIcon({
+								html:'<svg class="d3marker created" id=' + "uuid_" + location + '></svg>',
+								iconSize: [markerBounds.width, markerBounds.height],
+								className: "d3marker"
+							});
+							markers.push(
+								L.marker(
+									[
+										${c.relations["uuid_" + location]['geo_lat']},
+										${c.relations["uuid_" + location]['geo_long']}
+									],
+									{icon:divIcon}
+								)
+							);
 						% endif
 					% endfor
 				% endif
@@ -68,7 +83,20 @@
 				% if c.profile.has_key( 'works_received_locations' ) :
 					% for location in c.profile['works_received_locations']:
 						% if c.relations["uuid_" + location].has_key('geo_lat') and c.relations["uuid_" + location].has_key('geo_long') :
-							markers.push(L.marker([${c.relations["uuid_" + location]['geo_lat']},${c.relations["uuid_" + location]['geo_long']}], {icon:redIcon}) );
+							divIcon = L.divIcon({
+								html:'<svg class="received" id=' + "uuid_" + location + '></svg>',
+								iconSize: [markerBounds.width, markerBounds.height],
+								className: "d3marker"
+							});
+							markers.push(
+								L.marker(
+									[
+										${c.relations["uuid_" + location]['geo_lat']},
+										${c.relations["uuid_" + location]['geo_long']}
+									],
+									{icon:divIcon}
+								)
+							);
 						% endif
 					% endfor
 				% endif
@@ -78,6 +106,54 @@
 			console.log(bounds);
 			map.fitBounds(group.getBounds().pad(0.1));
 			group.addTo(map);
+
+
+			// Set up div
+			var divs = d3.selectAll(".d3marker")
+					.style("background-color","none")
+			;
+
+			// set up svg
+			var svgs = d3.selectAll(".d3marker svg")
+					.attr("width", markerBounds.width )
+					.attr("height", markerBounds.height )
+			;
+
+			var data = [2, 4, 8, 10];
+			var color = d3.scale.ordinal()
+					.range(["rgba(255,0,0,0.5)","rgba(0,0,230,0.5)","rgba(0,230,0,0.5)","rgba(255,0,220,0.5)","rgba(255,220,0,0.5)"])//['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c'])
+					.domain(d3.range(0,5) );
+
+			var gs =  svgs.append( "g")
+					.attr("transform", "translate(" + markerBounds.width / 2 + "," + markerBounds.height / 2 + ")")
+			;
+
+			var pie = d3.layout.pie();
+			var arc = d3.svg.arc().innerRadius(10).outerRadius(markerBounds.width/2 - 1);
+
+			var arcs = gs.selectAll("arc")
+							.data( pie( data ) )
+							.enter()
+							.append("g")
+							.attr("class","arc")
+			;
+
+			arcs.append("path")
+					.attr("fill", function(d, i) {
+						//return d3.scale.category10(i);
+						//return (i===1) ? "red" : "blue";
+						return color(i);
+					})
+					.attr("d", arc )
+			;
+
+			//divs.selectAll("svg.created circle")
+			//		.attr("fill", "green")
+			//;
+
+			//divs.selectAll("svg.received circle")
+			//		.attr("fill", "red")
+			//;
 
 			/*var featureLayer = L.mapbox.featureLayer({
 				// this feature is in the GeoJSON format: see geojson.org
