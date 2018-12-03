@@ -1,8 +1,8 @@
 (function(person_data) {
 
     var all_charts = ['creator', 'recipient', 'mentioned'],
-		all_chart_titles = ['Letters written', 'Addressee of letters', 'Mentioned in'],
-		stacked = 1, split = 2, seperate = 3,
+		all_chart_titles = ['Letters written', 'Letters received', 'Letters mentioning'],
+		stacked = 1, split = 2, separate = 3,
 		unknownYear = "9999",
         unknownYearText = "?",
 		i,
@@ -68,14 +68,14 @@
 	// Create the Chart
 	//
 
-    var svg_height_base = 100,
+    var svg_height_base = 120,
         svg_chart_gap = 25,
         label_space_bottom = 20,
         label_space_top = 20,
         label_space_left = 35,
         label_space_right = 15,
 
-		bars_are = seperate; // could be : stacked , split
+		bars_are = separate; // could also be : stacked , split
 
     var svg_width = d3.select("#chart").style("width").replace( "px", ""),
 		svg_height = svg_height_base * charts.length + svg_chart_gap * ( charts.length - 1 ),
@@ -155,14 +155,14 @@
         if (max_value < y_ticks) {
             y_ticks = max_value;
         }
-        else if (bars_are != seperate && max_value >= y_ticks * 3) {
+        else if (bars_are != separate && max_value >= y_ticks * 3) {
             y_ticks *= 3;
         }
         return y_ticks;
     }
 
     function getYAxisSubTickNumber(yAxisTicks, bars_are) {
-        if (bars_are != seperate) {
+        if (bars_are != separate) {
             if (yAxisTicks && yAxisTicks.length >= 2) {
                 var sep = yAxisTicks[1] - yAxisTicks[0] - 1;
                 return d3.min([sep, 4]); // TODO, work out a good value;
@@ -204,8 +204,8 @@
             svgChart.append("text")
                 .classed("chart-title", 1)
                 .classed(chart, 1)
-                .attr("x", chart_x + 5)
-                .attr("y", chart_y - 5)
+                .attr("x", chart_x - 10)
+                .attr("y", chart_y - 10)
                 .text(chart_titles[i])
             ;
 
@@ -419,7 +419,7 @@
                 .text(title)
 
         }
-        if (bars_are == seperate) {
+        if (bars_are == separate) {
 
             for (i = 0; i < charts.length - 1; i++) {
                 fade(".xaxis." + charts[i], true);
@@ -612,7 +612,7 @@
         });
 
         d3.select("#bars_seperate").on("click", function() {
-            switchBars(seperate);
+            switchBars(separate);
         });
         d3.select("#bars_stacked").on("click", function() {
             switchBars(stacked);
@@ -678,7 +678,19 @@
         hide(["#chart"],false);
 
         updateCharts(500, function (d, i) {
-            return (d != 0 ) ? i * (1200 / person_data_length) : 0;
+	        if(d.creator === 0 && d.recipient === 0 && d.mentioned === 0 ) {
+		        return 0;
+	        }
+
+	        // Work out how many bars we've already moved, skip over empty ones.
+	        for( var j= 0,count=0;j<i;j++) {
+		        if (person_data[j].creator !== 0 ||
+			        person_data[j].recipient !== 0 ||
+			        person_data[j].mentioned !== 0) {
+			        count += 1;
+		        }
+	        }
+	        return (count * 40);
         });
     }
 

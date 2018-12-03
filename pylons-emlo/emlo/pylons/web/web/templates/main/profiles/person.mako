@@ -226,27 +226,12 @@
 		    %>
 
 		    <script type='text/javascript'>
-				var person_data = [\
-% for year in count_keys :
-<% 
-	mem=counts[year]['mentioned']
-	rec=counts[year]['recipient']
-	cre=counts[year]['creator']
-%>\
-{y:${year},\
-% if mem != 0 :
-m:${mem},\
-% endif 
-% if rec != 0 :
-r:${rec},\
-% endif
-% if cre != 0 :
-c:${cre},\
-% endif
-},\
-% endfor
-];
-				(function toLongFormat(){var i=person_data.length,d;for(;i;i--){d=person_data[i-1];d.year=d.y;d.mentioned=d.m||0;d.recipient=d.r||0;d.creator=d.c||0;delete d.y,delete d.m,delete d.c,delete d.r;}})();
+				function toLongFormat(d,p,i,z){for(i=0,z=d.length;i<z;i++){p.push({year:d[i][0],mentioned:d[i][1],recipient:d[i][2],creator:d[i][3]});}return p;}
+				var person_data = toLongFormat([
+					% for year in count_keys :
+[${year},${counts[year]['mentioned']},${counts[year]['recipient']},${counts[year]['creator']}],\
+					% endfor
+				],[]);
 		    </script>
 
 			<div id="chart">
