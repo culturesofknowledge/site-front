@@ -212,7 +212,7 @@ class ProfileController(BaseController):
 
       if uid_len != 36 :
          c.tinyurl = ''
-         return None, [], {}, '/main/profiles/person.mako'  # Return any old profile page
+         return {}, [], {}, '/main/profiles/person.mako'  # Return any old profile page
 
       #  If there are too many works to display without timing out, don't get the data for a profile,
       #  but instead go to Works Search Results for the relevant object (currently just institutions,
@@ -239,7 +239,7 @@ class ProfileController(BaseController):
       sol_response = sol.query( q, fields=fields, score=False)
       if len(sol_response.results) == 0:
          c.tinyurl = ''
-         return None, [], {}, '/main/profiles/person.mako'  # Return any old profile page
+         return {}, [], {}, '/main/profiles/person.mako'  # Return any old profile page
 
       this_profile = sol_response.results[0]
       this_profile["profile_too_big"] = profile_too_big
@@ -349,7 +349,11 @@ class ProfileController(BaseController):
             '0123456789ABCDEFGHJKMNPQRSTVWXYZ' 'OIL',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567' 'ABB' )
 
-         id = base64.b32decode(id.replace('-', '').upper().encode('ascii').translate(transtbl) + "======").encode('hex')
+         decode_id = id.replace('-', '').upper().encode('ascii').translate(transtbl) + "======"
+         if len(decode_id) != 32:
+            return id
+
+         id = base64.b32decode(decode_id).encode('hex')
 
       return ("%s-%s-%s-%s-%s") % (id[:8], id[8:12], id[12:16], id[16:20], id[20:])
 

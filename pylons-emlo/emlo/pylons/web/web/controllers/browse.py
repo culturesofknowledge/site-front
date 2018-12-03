@@ -194,12 +194,7 @@ class BrowseController(BaseController):
   def institutions(self):
     c.current_letter = letter = request.params.get( 'letter', 'a' )
 
-    "-browse:a* AND -browse:b* -browse:c* AND -browse:d* AND -browse:e* AND -browse:f* AND " \
-        "-browse:g* AND -browse:h* -browse:i* AND -browse:j* AND -browse:k* AND -browse:l* AND " \
-        "-browse:m* AND -browse:n* -browse:o* AND -browse:p* AND -browse:q* AND -browse:r* AND " \
-        "-browse:s* AND -browse:t* -browse:u* AND -browse:v* AND -browse:w* AND -browse:x* AND " \
-        "-browse:y* AND -browse:z*"
-
+    # select stuff with no alpha letter
     # -browse:a* AND -browse:b* -browse:c* AND -browse:d* AND -browse:e* AND -browse:f* AND -browse:g* AND -browse:h* -browse:i* AND -browse:j* AND -browse:k* AND -browse:l* AND -browse:m* AND -browse:n* -browse:o* AND -browse:p* AND -browse:q* AND -browse:r* AND -browse:s* AND -browse:t* -browse:u* AND -browse:v* AND -browse:w* AND -browse:x* AND -browse:y* AND -browse:z*
 
     q = "browse:" + letter + "*"
