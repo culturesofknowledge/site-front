@@ -179,12 +179,6 @@
 
 					<br/><br/><br/><br/>
 
-					% if url_edit:
-						<a class="headerbutton button tiny" href="${url_edit}" target="_blank" rel="nofollow">Edit Record</a>
-					% endif
-
-					<br/>
-
 					<div class="change">
 
 						% if c.profile.has_key( h.get_source_of_data_fieldname() ):
@@ -213,14 +207,20 @@
 								on ${change_day}/${change_month}/${ change_year }.
 							% endif
 
-								<br/><br/>Alternative urls for this record:<ul>
-								<li style="list-style:none;font-size:smaller"><a href="${c.normalUrl}">emlo.bodleian.ox.ac.uk${c.normalUrl}</a></li>
-								<li style="list-style:none;font-size:smaller"><a href="${c.miniUrl}">emlo.bodleian.ox.ac.uk${c.miniUrl}</a></li>
-								% if c.iidUrl:
-									<li style="list-style:none;font-size:smaller"><a href="${c.iidUrl}">emlo.bodleian.ox.ac.uk${c.iidUrl}</a></li>
-                                % endif
-								<li style="list-style:none;font-size:smaller"><a href="${c.tinyurl}">${c.tinyurl}</a></li>
-							</ul>
+								<br/><br/>Alternative urls for this record:
+								<ul>
+									<li style="list-style:none;font-size:smaller"><a href="${c.normalUrl}">emlo.bodleian.ox.ac.uk${c.normalUrl}</a></li>
+									<li style="list-style:none;font-size:smaller"><a href="${c.miniUrl}">emlo.bodleian.ox.ac.uk${c.miniUrl}</a></li>
+									% if c.iidUrl:
+										<li style="list-style:none;font-size:smaller"><a href="${c.iidUrl}">emlo.bodleian.ox.ac.uk${c.iidUrl}</a></li>
+	                                % endif
+									<li style="list-style:none;font-size:smaller"><a href="${c.tinyurl}">${c.tinyurl}</a></li>
+								</ul>
+
+								% if url_edit:
+									<a style="font-size:smaller" href="${url_edit}" target="_blank" rel="nofollow">Editing interface</a> (requires login)
+								% endif
+
 						% endif
 					</div>
 
