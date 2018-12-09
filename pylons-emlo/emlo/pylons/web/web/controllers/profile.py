@@ -266,7 +266,7 @@ class ProfileController(BaseController):
       try:
          t = Tinyurl()
          c.tinyurl = t.get(page_url)
-      except (ConnectionError, ServerNotFoundError):
+      except (ConnectionError):
         c.tinyurl = "Service not available"
 
       c.iidUrl = self._get_emlo_iid( object, this_profile )
