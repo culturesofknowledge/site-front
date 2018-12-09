@@ -93,7 +93,7 @@ class FormsController(BaseController): #{
     }
 
     default_facet_fields=[ 'object_type', get_catalogue_fieldname() ]
-    facet_fields=[]
+    facet_fields = []
     for default_facet_field in default_facet_fields: #{
       if default_facet_field in request.params: #{  # cannot drill down any further
         continue
@@ -101,10 +101,11 @@ class FormsController(BaseController): #{
       facet_fields.append( default_facet_field )
     #}
     
-    c.query = {}    
-    c.query['type'] = 'quick'
-    c.query['baseurl'] = self.base_url_quick
-    
+    c.query = {
+      'type': 'quick',
+      'baseurl': self.base_url_quick
+    }
+
     rows = request.params.get( 'rows', get_default_rows_per_page() )
     start = request.params.get( 'start', 0 )
     
@@ -134,10 +135,10 @@ class FormsController(BaseController): #{
     ##print q
     
     sol = solr.SolrConnection( solrconfig.solr_urls["all"] )
-    sol_response = sol.query( q.encode( 'utf-8' ), start=start, sort=sort, rows=rows, \
-                              facet='true', facet_mincount='1', facet_sort="count", \
-                              facet_field=facet_fields, \
-                              hl="true", hl_fl="*",\
+    sol_response = sol.query( q.encode( 'utf-8' ), start=start, sort=sort, rows=rows,
+                              facet='true', facet_mincount='1', facet_sort="count", facet_limit=1000,
+                              facet_field=facet_fields,
+                              hl="true", hl_fl="*",
                               hl_simple_pre='<span class="highlight">', hl_simple_post="</span>")
 
     c.solr = {}
@@ -261,12 +262,12 @@ class FormsController(BaseController): #{
     
     #Query with highlighting
     sol_response = sol.query( query_full.encode( 'utf-8' ), start=c.query['start'], rows=c.query['rows'], \
-                    sort=sort, \
-                    facet='true', facet_sort="count", facet_mincount='1', \
-                    facet_limit=str( self.get_max_number_of_facet_entries() ), \
-                    facet_query=facet_queries, facet_field=facet_fields, \
-                    hl="true", \
-                    hl_fl=get_content_fields(), \
+                    sort=sort,
+                    facet='true', facet_sort="count", facet_mincount='1',
+                    facet_limit=str( self.get_max_number_of_facet_entries() ),
+                    facet_query=facet_queries, facet_field=facet_fields,
+                    hl="true",
+                    hl_fl=get_content_fields(),
                     hl_simple_pre="""<span class="highlight">""", hl_simple_post="</span>" )
         
     #print '-------------- query_response ----------------------'

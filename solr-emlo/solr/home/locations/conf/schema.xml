@@ -82,6 +82,12 @@
     <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true" precisionStep="6" positionIncrementGap="0"/>
 
 
+      <!-- A text field that only splits on whitespace for exact matching of words -->
+      <fieldType name="text_ws" class="solr.TextField" positionIncrementGap="100">
+          <analyzer>
+              <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+          </analyzer>
+      </fieldType>
 
     <!-- A text field that uses WordDelimiterFilter to enable splitting and matching of
         words on case-change, alpha numeric boundaries, and non-alphanumeric chars,
@@ -215,7 +221,7 @@
 	 <field name="uri"  type="string"  indexed="true"  stored="true"  required="true"  />
 
 
-	 <field name="uuid_related"  type="uuid"  indexed="true"  stored="false" multiValued="true" />
+	 <field name="uuid_related"  type="uuid"  indexed="true"  stored="true" multiValued="true" />
 
   <field name="dcterms_identifier-uuid_"  type="string"  indexed="true"  stored="true"  required="true"  />
   <field name="dcterms_identifier-uri_"  type="string"  indexed="true"  stored="true"  required="true"  />
@@ -240,6 +246,13 @@
      <field name="geo"  type="location"  indexed="true" stored="true" />
      <field name="geo_rpt"  type="location_rpt"  indexed="true" stored="true" />
 
+     <field name="level_room"  type="text_ws"  indexed="true"  stored="true"  />
+     <field name="level_building"  type="text_ws"  indexed="true"  stored="true"  />
+     <field name="level_parish"  type="text_ws"  indexed="true"  stored="true"  />
+     <field name="level_city"  type="text_ws"  indexed="true"  stored="true"  />
+     <field name="level_county"  type="text_ws"  indexed="true"  stored="true"  />
+     <field name="level_country"  type="text_ws"  indexed="true"  stored="true"  />
+     <field name="level_empire" type="text_ws"  indexed="true"  stored="true"  />
 <!--                      -->
 <!-- Links from locations -->
 <!--                      --> 
@@ -264,7 +277,7 @@
 
   <field name="timestamp_indexed"  type="tdate"  indexed="true"  stored="true"  multiValued="false"  default="NOW"  />
   <field name="object_type"  type="string"  indexed="true"  stored="true"  required="true"  default="location"  />
-  <field name="browse"  type="alphaOnlySort"  indexed="true"  stored="false"  multiValued="false"  />
+  <field name="browse"  type="alphaOnlySort"  indexed="true"  stored="true"  multiValued="false"  />
   <field name="default_search_field"  type="text"  indexed="true"  stored="false"  multiValued="true"  />
 
 <!-- end CofK: locations -->

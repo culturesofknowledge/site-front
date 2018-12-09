@@ -33,7 +33,7 @@ class HomeController(BaseController):
 
        facet_fields = ['object_type', catalogue_fn, organisation_fn]
 
-       sol_response_all = sol_all.query( "*:*", rows=0,  fl="-", score=False, facet='true', facet_field=facet_fields)
+       sol_response_all = sol_all.query( "*:*", rows=0,  fl="-", score=False, facet='true', facet_limit=1000, facet_field=facet_fields)
        sol_all.close()
 
        c.stats = {

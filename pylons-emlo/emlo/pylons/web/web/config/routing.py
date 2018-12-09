@@ -49,6 +49,9 @@ def make_map(config):
     map.connect('/home', controller='home', action='index')
     map.connect('/home/', controller='home', action='index')
 
+    map.connect('/status', controller='status', action='index')
+    map.connect('/status/', controller='status', action='index')
+
     map.connect('/advanced', controller='search', action='index')
     map.connect('/advanced/', controller='search', action='index')
 
