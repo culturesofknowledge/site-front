@@ -82,6 +82,7 @@
 
 		        ${self.totals_linking_to_list_of_works( object_type = 'location' )}
 			</div>
+
 		</div>
 
 		% if c.profile.has_key( h.get_location_synonyms_fieldname() ) :
@@ -101,21 +102,45 @@
 			</div>
 		% endif
 
-		%if c.profile.has_key( h.get_latitude_fieldname() ) or \
-	        c.profile.has_key( h.get_longitude_fieldname() ) :
+		%if h.get_latitude_fieldname() in c.profile or \
+			h.get_latitude_fieldname() in c.profile or \
+			"parents" in c.profile:
 
 			<div class="column profilepart">
 
 				<h4><img src="/img/icon-globe.png">Position</h4>
 				<div class="content">
 					<dl>
-			        ${self.def_list_item( h.get_latitude_fieldname(), True )}
-			        ${self.def_list_item( h.get_longitude_fieldname(), True )}
-					</dl>
 
-					%if h.get_latitude_fieldname() in c.profile and h.get_latitude_fieldname() in c.profile :
-						<div id='map' style="width:100%;height: 300px;"></div>
-					%endif
+						%if h.get_latitude_fieldname() in c.profile or \
+							h.get_latitude_fieldname() in c.profile :
+							${self.def_list_item( h.get_latitude_fieldname(), True )}
+					        ${self.def_list_item( h.get_longitude_fieldname(), True )}
+						% endif
+
+						%if h.get_latitude_fieldname() in c.profile and \
+									    h.get_latitude_fieldname() in c.profile :
+							<dd><div id='map' style="width:100%;height: 300px;"></div></dd>
+						%endif
+
+						% if c.profile.has_key("parents") and c.profile.has_key("parents_json" ) :
+							<%
+								import json
+								parents = json.loads( c.profile["parents_json"] )
+								def sort_length(a,b):
+									return len(b['geonames_name']) - len(a['geonames_name'])
+								parents.sort(sort_length)
+							%>
+							% if parents:
+								<dt>Associated locations</dt>
+								<dd><ul>
+									% for parent in parents :
+										<li><a href="/profile/location/${parent['uuid']}">${parent['geonames_name']}</a></li>
+									% endfor
+								</ul></dd>
+							% endif
+						% endif
+					</dl>
 
 				</div>
 
