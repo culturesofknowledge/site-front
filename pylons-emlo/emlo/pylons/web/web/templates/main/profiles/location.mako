@@ -132,7 +132,7 @@
 								parents.sort(sort_length)
 							%>
 							% if parents:
-								<dt>Associated locations</dt>
+								<dt>Associated parent locations</dt>
 								<dd><ul>
 									% for parent in parents :
 										<li><a href="/profile/location/${parent['uuid']}">${parent['geonames_name']}</a></li>
@@ -171,6 +171,24 @@
 		      ${self.h4_relations_list( h.get_relations_to_comments_fieldname(), type='simple' )}
 		    </div>
 		%endif
+
+		% if "children" in c.profile and "children_json" in c.profile :
+			<div class="column profilepart">
+			<%
+				import json
+				children = json.loads( c.profile["children_json"] )
+				children.sort(key=lambda c: c['geonames_name'])
+			%>
+			% if children:
+				<h4><img src="/img/icon-globe.png">Associated Child Locations</h4>
+				<ul>
+					% for child in children :
+						<li><a href="/profile/location/${child['uuid']}">${child['geonames_name']}</a></li>
+					% endfor
+				</ul>
+			% endif
+			</div>
+		% endif
 
 
 	</div>

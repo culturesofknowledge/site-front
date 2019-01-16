@@ -48,7 +48,8 @@ def main() :
 
 			updated = {}
 
-			add_parents( solr, result, updated)
+			#add_parents( solr, result, updated)
+			add_direct_children( solr, result, updated )
 
 			if updated:
 				updated["dcterms_identifier-uuid_"] = "uuid_" + result['uuid']
@@ -73,7 +74,9 @@ def main() :
 			try:
 				solr.add([place_updates], fieldUpdates={
 					'parents': 'set',
-					'parents_json': 'set'
+					'parents_json': 'set',
+					'children': 'set',
+					'children_json': 'set'
 				})
 			except pysolr.SolrError as se:
 				# catch bug in solr, raise if something else
@@ -148,5 +151,46 @@ def add_parents( solr, result, updated):
 
 			updated['parents_json'] = json.dumps(parents.docs)
 
+def add_direct_children( solr, doc, updated ) :
+
+	last_level = None
+	q = []
+	for level in levels :
+		if level in doc:
+			last_level = level
+			q.append(level + ':"' + doc[level] + '"')
+
+	if q:
+		last_level_pos = levels.index(last_level)
+		if last_level_pos <= 5 :
+			next_level = levels[last_level_pos+1]
+			q.append( next_level + ":[* TO *]" )
+
+		if last_level_pos <= 4 :
+			next_level = levels[last_level_pos+2]
+			q.append( "-" + next_level + ":[* TO *]" )
+
+		q = " AND ".join(q)
+
+		if debug:
+			print q
+
+		children = solr.search( q, **{
+			'fl' : "uuid,geonames_name",
+			'start': 0,
+			'rows' : 100,
+			'score': False,
+		})
+
+		# print children.docs
+
+		updated['children'] = []
+		for child_doc in children.docs :
+			updated['children'].append( child_doc['uuid'] )
+
+		updated['children_json'] = json.dumps(children.docs)
+
+		#updated["children"] = []
+		#updated["children_json"] = ''
 
 main()
