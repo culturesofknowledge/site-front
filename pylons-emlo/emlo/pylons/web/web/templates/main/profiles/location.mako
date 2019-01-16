@@ -148,21 +148,30 @@
 			</div>
 		% endif
 
-		<div class="column profilepart">
-		      ${self.h4_works_list( h.get_works_with_origin_fieldname(), img='icon-quill.png' )}
-		</div>
+		%if h.get_works_with_origin_fieldname() in c.profile:
+			<div class="column profilepart">
+			      ${self.h4_works_list( h.get_works_with_origin_fieldname(), img='icon-quill.png' )}
+			</div>
+		%endif
 
-		<div class="column profilepart">
-	            ${self.h4_works_list( h.get_works_with_destination_fieldname(), img='icon-quill.png' )}
-		</div>
+		%if h.get_works_with_destination_fieldname() in c.profile:
+			<div class="column profilepart">
+		            ${self.h4_works_list( h.get_works_with_destination_fieldname(), img='icon-quill.png' )}
+			</div>
+		%endif
 
-		<div class="column profilepart">
-		      ${self.h4_works_list( h.get_works_in_which_mentioned_fieldname(), img='icon-quill.png' )}
-		</div>
+		%if h.get_works_in_which_mentioned_fieldname() in c.profile:
+			<div class="column profilepart">
+			      ${self.h4_works_list( h.get_works_in_which_mentioned_fieldname(), img='icon-quill.png' )}
+			</div>
+		%endif
 
-		<div class="column profilepart">
-	      ${self.h4_relations_list( h.get_relations_to_comments_fieldname(), type='simple' )}
-	    </div>
+		%if h.get_relations_to_comments_fieldname() in c.profile:
+			<div class="column profilepart">
+		      ${self.h4_relations_list( h.get_relations_to_comments_fieldname(), type='simple' )}
+		    </div>
+		%endif
+
 
 	</div>
    
