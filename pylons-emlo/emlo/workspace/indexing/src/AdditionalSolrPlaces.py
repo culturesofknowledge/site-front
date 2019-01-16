@@ -22,7 +22,7 @@ levels = [
 	"level_room"
 ]
 
-debug = True # False #
+debug = False #True #
 
 def main() :
 
@@ -32,8 +32,8 @@ def main() :
 	fields = ",".join(levels) + ",uuid,geonames_name",
 
 	solr = pysolr.Solr(solrconfig.solr_urls['locations'])
-	#places = solr.search("*:*", **{
-	places = solr.search("uuid:(d90260ee-660d-4f7f-9cda-aefa9db81943 283a71a7-cf68-4832-a381-9bf5388e1860 30ef492a-1264-4905-9695-9bcdeebbf258)", **{
+	places = solr.search("*:*", **{
+	#places = solr.search("uuid:(d90260ee-660d-4f7f-9cda-aefa9db81943 283a71a7-cf68-4832-a381-9bf5388e1860 30ef492a-1264-4905-9695-9bcdeebbf258)", **{
 		'fl' : fields,
 		'start': start,
 		'rows' : batch,
@@ -48,7 +48,7 @@ def main() :
 
 			updated = {}
 
-			#add_parents( solr, result, updated)
+			add_parents( solr, result, updated)
 			add_direct_children( solr, result, updated )
 
 			if updated:
@@ -57,6 +57,7 @@ def main() :
 				if debug:
 					print updated
 
+				# Empty.
 				#updated = {
 				#	"parents" : ["0"],
 				#	"parents_json" : "[]",
