@@ -2,7 +2,6 @@
 import sys
 import json
 
-#import solr
 import pysolr
 # These two lines are hacks. They switch the default encoding to utf8 so that the command line will convert UTF8 + Ascii to UTF8
 reload(sys)
@@ -23,25 +22,82 @@ levels = [
 	"level_room"
 ]
 
-solr = pysolr.Solr(solrconfig.solr_urls['locations'])
+debug = True # False #
 
-start = 0
-batch = 200
-fields = ",".join(levels) + ",uuid,geonames_name",
+def main() :
 
-places = solr.search("*:*", **{
-#places = solr.search("uuid:8971752f-155c-478e-9604-3473e5a2ba16", **{
-	'fl' : fields,
-	'start': start,
-	'rows' : batch,
-	'score': False,
-})
+	start = 0
+	batch = 200
 
-total = places.hits
+	fields = ",".join(levels) + ",uuid,geonames_name",
+
+	solr = pysolr.Solr(solrconfig.solr_urls['locations'])
+	#places = solr.search("*:*", **{
+	places = solr.search("uuid:(d90260ee-660d-4f7f-9cda-aefa9db81943 283a71a7-cf68-4832-a381-9bf5388e1860 30ef492a-1264-4905-9695-9bcdeebbf258)", **{
+		'fl' : fields,
+		'start': start,
+		'rows' : batch,
+		'score': False,
+	})
+
+	count_down = total = places.hits
+	while start < total :
+
+		places_updates = []
+		for result in places.docs:
+
+			updated = {}
+
+			add_parents( solr, result, updated)
+
+			if updated:
+				updated["dcterms_identifier-uuid_"] = "uuid_" + result['uuid']
+
+				if debug:
+					print updated
+
+				#updated = {
+				#	"parents" : ["0"],
+				#	"parents_json" : "[]",
+				#	"dcterms_identifier-uuid_" : "uuid_" + result['uuid']
+				#}
+
+				places_updates.append( updated )
+
+			count_down -= 1
+
+		# Because of a bug in Solr the add incorrectly causes a SolrError because of fields with multiple uuids in a list
+		# So we have to call this one at a time...
+		for place_updates in places_updates :
+
+			try:
+				solr.add([place_updates], fieldUpdates={
+					'parents': 'set',
+					'parents_json': 'set'
+				})
+			except pysolr.SolrError as se:
+				# catch bug in solr, raise if something else
+				if "TransactionLog" not in se.message or "java.util.UUID" not in se.message :
+					raise
+
+		print "To go: " + str(count_down)
+
+		start += batch
+		places = solr.search("*:*", **{
+			'fl' : fields,
+			'start': start,
+			'rows' : batch,
+			'score': False,
+		})
+
+	solr.commit()
+
+	print "done " + str(start) + "(from " + str(total) + ")"
+
 
 # From Belgium, Flanders, Ghent
 # Produce ['Belgium', 'Flanders, Belgium'] and find both
-def add_parent( result, updated ):
+def add_parents( solr, result, updated):
 
 	place_levels = []
 	for level in levels :
@@ -55,6 +111,11 @@ def add_parent( result, updated ):
 
 	parents = []
 	parent_count = len(place_levels)
+
+	if debug:
+		print place_levels
+		print result
+
 	for level in range(1, parent_count ) :
 
 		place_levels_parent = place_levels[:level]
@@ -65,6 +126,9 @@ def add_parent( result, updated ):
 	if parents :
 		q = 'browse: ("' + '" "'.join(parents) + '")'
 
+		if debug:
+			print q
+
 		parents = solr.search( q, **{
 			'fl' : "uuid,geonames_name",
 			'start': 0,
@@ -72,7 +136,11 @@ def add_parent( result, updated ):
 			'score': False,
 		})
 
+
 		if parents.hits > 0:
+
+			if debug:
+				print parents.docs
 
 			updated['parents'] = []
 			for parent_doc in parents.docs :
@@ -80,44 +148,5 @@ def add_parent( result, updated ):
 
 			updated['parents_json'] = json.dumps(parents.docs)
 
-count_down = total
-while start < total :
 
-	places_updates = []
-	for result in places.docs:
-
-		updated = {}
-		changed = False
-
-		print str(count_down), result['uuid']
-
-		add_parent( result, updated )
-
-		if updated:
-			updated["dcterms_identifier-uuid_"] = "uuid_" + result['uuid']
-
-			# print updated
-			places_updates.append( updated )
-
-		count_down -= 1
-
-	print "...at " + str(start)
-	start += batch
-
-	places = solr.search("*:*", **{
-		'fl' : fields,
-		'start': start,
-		'rows' : batch,
-		'score': False,
-	})
-
-	try:
-		r = solr.add(places_updates, fieldUpdates={'parents': 'set', 'parents_json': 'set'})
-	except pysolr.SolrError as se:
-		# catch bug, raise if something else
-		if "TransactionLog" not in se.message or "java.util.UUID" not in se.message :
-			raise
-
-solr.commit()
-
-print "done " + str(start) + "(from " + str(total) + ")"
+main()
