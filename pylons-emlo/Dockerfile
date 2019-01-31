@@ -20,7 +20,8 @@ RUN pip install solrpy==0.9.7 \
 				redis==2.10.5 \
 				feedparser==4.1 \
 				httplib2==0.7.7 \
-				fastcsv==0.1.3
+				fastcsv==0.1.3 \
+				pysolr==3.8.1
 
 ADD /emlo/ /emlo/
 

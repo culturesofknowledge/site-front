@@ -125,14 +125,11 @@ def GenerateIds( _, red_ids ):
 
                     idPosition = csv_row.index(id_field)
                     uuidPosition = csv_row.index("uuid")
-                    try :
-                        published = csv_row.index("published")
-                    except:
-                        published = -1
+                    published = csv_row.index("published")
 
                     for csv_row in reader:
 
-                        if published != -1 and csv_row[published] != "1" :
+                        if csv_row[published] != "1" :
                             continue
 
                         editid = csv_row[idPosition].strip()
@@ -246,8 +243,10 @@ def StoreRelations( _, red_rel, red_ids ):
                     left, right = red_ids.mget( [record[leftValPosition], record[rightValPosition]] )
 
                     if left is not None and right is not None:
-                        red_rel.sadd( left, "::".join( [left_to_right_rel, right, right_thing] ) )
-                        red_rel.sadd( right, "::".join( [right_to_left_rel, left, left_thing] ) )
+                        #red_rel.sadd( left, "::".join( [left_to_right_rel, right, right_thing] ) )
+                        #red_rel.sadd( right, "::".join( [right_to_left_rel, left, left_thing] ) )
+                        red_rel.rpush( left, left_to_right_rel, right, right_thing )
+                        red_rel.rpush( right, right_to_left_rel, left, left_thing )
                     else :
                         pass  # Reference to a missing ID. Needs to be removed in EMLO-EDIT
 
@@ -292,7 +291,7 @@ def generateAdditional(singular, record, solr_item):
             country = "unknown"
 
 
-def FillRdfAndSolr( indexing, red_ids, red_temp, create_file_entities ):
+def FillRdfAndSolr( indexing, _, red_temp, __ ):
 
     # We no longer generate RDF.
     FillSolr( indexing, red_temp )
@@ -431,7 +430,9 @@ def FillSolr( indexing, red_temp ):
                     #
                     # Add relationships
                     #
-                    members = red_temp.smembers( uid )
+
+                    #members = red_temp.smembers( uid )  # get relationships
+                    members = red_temp.lrange( uid, 0, -1 )  # get all relationships
 
                     if members :
                         # if entity :
@@ -439,9 +440,11 @@ def FillSolr( indexing, red_temp ):
 
                         uuid_related = []
 
-                        for member in members:
+                        for i in xrange(0,len(members),3) :
 
-                            relation, uid_related, type_related = member.split("::")
+                            relation = members[i]
+                            uid_related = members[i+1]
+                            type_related = members[i+2]
 
                             uri_relationship = create_uri( uri_base, type_related, uid_related )
                             add( solr_item, relation , uri_relationship, relationship=type_related )

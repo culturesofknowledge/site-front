@@ -28,7 +28,7 @@ people = solr_people.query( "*:*", fields="*", start=start, rows=batch, score=Fa
 #people = solr_people.query( "uuid:c442cfce-636a-480d-a959-2f3d8f7498a0", fields="*", start=start, rows=batch, score=False)
 
 total = people.numFound
-
+count_down = total
 while start < total :
 
 	people_updates = []
@@ -37,7 +37,7 @@ while start < total :
 		updated = {}
 		changed = False
 
-		print "id:", result['id']
+		print count_down, result['id']
 
 		if 'frbr_creatorOf-work' in result:
 			works_created = get_records_from_solr( result['frbr_creatorOf-work'] , [
@@ -95,6 +95,8 @@ while start < total :
 
 
 		solr_people.add_many( people_updates, False )
+
+		count_down -= 1
 
 	print "...at " + str(start)
 	start += batch
