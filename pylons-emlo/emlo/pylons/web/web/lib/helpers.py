@@ -797,7 +797,7 @@ def get_records_from_solr( uids, selected_fields='*' ): #{
 
    total = len( uuids_ids )
    if total > 0 :
-      print "I'm hitting solr for " + str(total) + " records..."
+      # print "I'm hitting solr for " + str(total) + " records..."
 
       # Make sure that list of selected fields includes 'id', which is essential.
       if selected_fields != '*':

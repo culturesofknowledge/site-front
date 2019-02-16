@@ -259,8 +259,10 @@ class ProfileController(BaseController):
          relations_extra = []
          relations_extra.extend( this_profile.get('works_created_locations',[]) )
          relations_extra.extend( this_profile.get('works_received_locations',[]) )
+         relations_extra.extend( this_profile.get('works_from_people',[]) )
+         relations_extra.extend( this_profile.get('works_to_people',[]) )
 
-         relations.update( get_records_from_solr( relations_extra, ['uuid','geonames_name','geo_lat','geo_long'] ) )
+         relations.update( get_records_from_solr( relations_extra ) )  #, ['uuid','geonames_name','geo_lat','geo_long'] ) )
          further_relations = self.further_relations(relations, object)
 
 

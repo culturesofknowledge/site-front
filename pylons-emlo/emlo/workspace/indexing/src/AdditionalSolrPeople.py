@@ -48,9 +48,6 @@ def main() :
 		for result in people.docs:  # people.results:
 
 			updated = {}
-			changed = False
-
-			print count_down, result['id']
 
 			if 'frbr_creatorOf-work' in result:
 				works_created = get_records_from_solr( result['frbr_creatorOf-work'] , [
@@ -59,7 +56,6 @@ def main() :
 				] )
 
 				if works_created:
-					# print works_created
 
 					works_created_locations = set()
 					works_to_people = set()
@@ -109,8 +105,6 @@ def main() :
 
 			if updated:
 				updated[u"dcterms_identifier-uuid_"] = u"uuid_" + result['uuid']
-				updated[u'uuid_related'] = ['00000001-0000-4da2-0000-000000000001']
-				#							#'6a9b17f5-e7ce-4da2-ab67-9a58cdaecfcf']
 
 				# print updated
 				#for key, value in result.iteritems():
@@ -130,16 +124,15 @@ def main() :
 
 			try:
 				solr.add([person_updates], fieldUpdates={
-					'works_created_locations': 'set',
-					'works_to_people': 'set',
-					'works_received_locations': 'set',
-					'works_from_people': 'set'
+					u'works_created_locations': 'set',
+					u'works_to_people': 'set',
+					u'works_received_locations': 'set',
+					u'works_from_people': 'set'
 				})
 			except pysolr.SolrError as se:
 				# catch bug in solr, raise if something else
 				if "TransactionLog" not in se.message or "java.util.UUID" not in se.message :
 					raise
-
 
 		print "...at " + str(start)
 		start += batch

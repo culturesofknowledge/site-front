@@ -354,6 +354,81 @@
 		  </div>
 	  % endif
 
+
+	  %if 'works_to_people' in c.profile or 'works_from_people' in c.profile :
+		  <div class="column profilepart">
+			  <h3><img src="/img/icon-people.png">People communicated with</h3>
+
+			  % if 'works_to_people' in c.profile :
+                  <%
+						have_person = False
+						have_organisation = False
+						for person in c.profile['works_to_people']:
+							if c.relations["uuid_" + person]['ox_isOrganisation'] :
+								have_organisation = True
+							if not c.relations["uuid_" + person]['ox_isOrganisation'] :
+								have_person = True
+                  %>
+
+				  % if have_person:
+					  <h4>People who received letters</h4>
+					  <ul>
+						  % for person in c.profile['works_to_people']:
+							  % if not c.relations["uuid_" + person]['ox_isOrganisation']:
+							  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
+							  % endif
+						  % endfor
+					  </ul>
+                  % endif
+
+				  % if have_organisation:
+					  <h4>Organisations who received letters</h4>
+					  <ul>
+						  % for person in c.profile['works_to_people']:
+						     % if c.relations["uuid_" + person]['ox_isOrganisation']:
+							  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
+							 % endif
+						  % endfor
+					  </ul>
+				  % endif
+			  % endif
+
+			  % if 'works_from_people' in c.profile :
+			  <%
+				  have_person = False
+				  have_organisation = False
+				  for person in c.profile['works_to_people']:
+					if c.relations["uuid_" + person]['ox_isOrganisation'] :
+						have_organisation = True
+					if not c.relations["uuid_" + person]['ox_isOrganisation'] :
+						have_person = True
+			  %>
+			    % if have_person:
+				  <h4>People who sent letters</h4>
+				  <ul>
+					  % for person in c.profile['works_from_people']:
+					    % if not c.relations["uuid_" + person]['ox_isOrganisation']:
+						  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
+						%  endif
+					  % endfor
+				  </ul>
+				% endif
+
+				  % if have_organisation:
+					  <h4>Organisations who sent letters</h4>
+					  <ul>
+						  % for person in c.profile['works_from_people']:
+							  % if c.relations["uuid_" + person]['ox_isOrganisation']:
+								  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
+							  %  endif
+						  % endfor
+					  </ul>
+				  % endif
+
+			  % endif
+		  </div>
+	  %endif
+
 	  %if c.profile.has_key( 'works_created_locations' ) or c.profile.has_key( 'works_received_locations' ) :
 		  <div class="column profilepart">
 			  <h3><img src="/img/icon-globe.png">Locations where letters were sent or received</h3>
