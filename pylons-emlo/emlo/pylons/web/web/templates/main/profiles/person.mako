@@ -121,18 +121,26 @@
 
 			var data = [2, 4, 8, 10];
 			var color = d3.scale.ordinal()
-					.range(["rgba(255,0,0,0.5)","rgba(0,0,230,0.5)","rgba(0,230,0,0.5)","rgba(255,0,220,0.5)","rgba(255,220,0,0.5)"])//['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c'])
+					.range( ["black","white"] ) //["rgba(255,0,0,0.5)","rgba(0,0,230,0.5)","rgba(0,230,0,0.5)","rgba(255,0,220,0.5)","rgba(255,220,0,0.5)"])//['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c'])
 					.domain(d3.range(0,5) );
 
 			var gs =  svgs.append( "g")
-					.attr("transform", "translate(" + markerBounds.width / 2 + "," + markerBounds.height / 2 + ")")
+					.attr("transform", "translate(" + markerBounds.width / 2 + "," + markerBounds.height / 2 + ") rotate(190)")
 			;
 
 			var pie = d3.layout.pie();
 			var arc = d3.svg.arc().innerRadius(10).outerRadius(markerBounds.width/2 - 1);
 
 			var arcs = gs.selectAll("arc")
-							.data( pie( data ) )
+							.data( function() {
+								var data = [];
+								data.push( Math.floor( Math.random() * 10 ) + 1 );
+								data.push( Math.floor( Math.random() * 10 ) + 1 );
+								data.push( Math.floor( Math.random() * 10 ) + 1 );
+								data.splice( 0, 0, (data[0] + data[1] + data[2]) - (data[0] + data[1] + data[2]) * 0.90); // make first one 10 % and invisible, for a nice gap in the piechart
+								console.log(data);
+								return pie( data )
+							} )
 							.enter()
 							.append("g")
 							.attr("class","arc")
@@ -142,8 +150,13 @@
 					.attr("fill", function(d, i) {
 						//return d3.scale.category10(i);
 						//return (i===1) ? "red" : "blue";
-						return color(i);
+						if( i === 0 ) { return "transparent"; }
+						return "rgba(255,255,255,0.6)";//color(i);
 					})
+					.attr("stroke", function(d,i) {
+						if( i === 0 ) { return "transparent"; }
+						return '#444';
+					} )
 					.attr("d", arc )
 			;
 
