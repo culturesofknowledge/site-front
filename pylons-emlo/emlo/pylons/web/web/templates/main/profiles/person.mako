@@ -326,7 +326,7 @@
 			<div id="chart">
 				<div class="button-bar">
 					<ul class="button-group unknown" style="display:none">
-						<li><button id="show_unknown" class="button tiny">Show unknown</button></li>
+						<li><button id="show_unknown" class="button tiny">Show unknown years</button></li>
 					</ul>
 
 
@@ -370,7 +370,7 @@
 
 	  %if 'works_to_people' in c.profile or 'works_from_people' in c.profile :
 		  <div class="column profilepart">
-			  <h3><img src="/img/icon-people.png">People communicated with</h3>
+			  <h3><img src="/img/icon-people.png">People and Organisations communicated with</h3>
 
 			  % if 'works_to_people' in c.profile :
                   <%
@@ -410,7 +410,7 @@
 			  <%
 				  have_person = False
 				  have_organisation = False
-				  for person in c.profile['works_to_people']:
+				  for person in c.profile['works_from_people']:
 					if c.relations["uuid_" + person]['ox_isOrganisation'] :
 						have_organisation = True
 					if not c.relations["uuid_" + person]['ox_isOrganisation'] :
@@ -458,7 +458,7 @@
 			% endif
 
 		  % if c.profile.has_key( 'works_received_locations' ) :
-				  <h4>Locations letters were addressed to</h4>
+				  <h4>Locations letters were received</h4>
 				  <ul>
 					  % for location in c.profile['works_received_locations']:
 						  <li><a href="/${location}">${c.relations["uuid_" + location]['geonames_name']}</a></li>
