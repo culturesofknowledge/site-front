@@ -130,7 +130,15 @@ relationships = {
                  get_right_side = get_relations_to_manifestation_fieldname()),
   ],
 
-  'relationship_type-intended_for': [],
+  'relationship_type-intended_for': [
+      # Work (left) was addressed to person (right)
+      set_rel_cfg(
+          type_on_left   = 'work',
+          get_left_side  = get_letters_intended_fieldname(),
+          type_on_right  = 'person',
+          get_right_side = get_intended_uri_fieldname() ),
+
+  ],
 
   'relationship_type-is_finding_aid_for': [],
 
@@ -429,6 +437,14 @@ relationships = {
                      type_on_right  = 'work',
                      get_right_side = get_fieldname_work_with_comments_on_route()),
     ],
+
+    'relationship_type-taught' : [],
+    'relationship_type-friend_of' : [],
+    'relationship_type-was_patron_of' : [],
+    'relationship_type-employed' : [],
+    'relationship_type-acquaintance_of' : [],
+    'relationship_type-deals_with' : [],
+    'relationship_type-collaborated_with' : [],
 }
 
 # ---------------------------------------------------------------------------------------------------
