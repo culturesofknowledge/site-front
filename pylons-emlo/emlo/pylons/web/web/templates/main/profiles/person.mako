@@ -373,10 +373,16 @@
 			  <h3><img src="/img/icon-people.png">People and Organisations communicated with</h3>
 
 			  % if 'works_to_people' in c.profile :
-                  <%
+				  <%
+						def sorter( pid ) :
+							return c.relations["uuid_" + pid]['foaf_name'].lower()
+
+						people = c.profile['works_to_people']
+						people.sort( key=sorter )
+
 						have_person = False
 						have_organisation = False
-						for person in c.profile['works_to_people']:
+						for person in people:
 							if c.relations["uuid_" + person]['ox_isOrganisation'] :
 								have_organisation = True
 							if not c.relations["uuid_" + person]['ox_isOrganisation'] :
@@ -386,7 +392,7 @@
 				  % if have_person:
 					  <h4>People who received letters</h4>
 					  <ul>
-						  % for person in c.profile['works_to_people']:
+						  % for person in people:
 							  % if not c.relations["uuid_" + person]['ox_isOrganisation']:
 							  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 							  % endif
@@ -397,7 +403,7 @@
 				  % if have_organisation:
 					  <h4>Organisations who received letters</h4>
 					  <ul>
-						  % for person in c.profile['works_to_people']:
+						  % for person in people:
 						     % if c.relations["uuid_" + person]['ox_isOrganisation']:
 							  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 							 % endif
@@ -408,9 +414,14 @@
 
 			  % if 'works_from_people' in c.profile :
 			  <%
+				  def sorter( pid ) :
+				    return c.relations["uuid_" + pid]['foaf_name'].lower()
+				  people = c.profile['works_from_people']
+				  people.sort( key=sorter )
+
 				  have_person = False
 				  have_organisation = False
-				  for person in c.profile['works_from_people']:
+				  for person in people:
 					if c.relations["uuid_" + person]['ox_isOrganisation'] :
 						have_organisation = True
 					if not c.relations["uuid_" + person]['ox_isOrganisation'] :
@@ -419,7 +430,7 @@
 			    % if have_person:
 				  <h4>People who sent letters</h4>
 				  <ul>
-					  % for person in c.profile['works_from_people']:
+					  % for person in people:
 					    % if not c.relations["uuid_" + person]['ox_isOrganisation']:
 						  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 						%  endif
@@ -430,7 +441,7 @@
 				  % if have_organisation:
 					  <h4>Organisations who sent letters</h4>
 					  <ul>
-						  % for person in c.profile['works_from_people']:
+						  % for person in people:
 							  % if c.relations["uuid_" + person]['ox_isOrganisation']:
 								  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 							  %  endif
