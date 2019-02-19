@@ -134,9 +134,9 @@ relationships = {
       # Work (left) was addressed to person (right)
       set_rel_cfg(
           type_on_left   = 'work',
-          get_left_side  = get_letters_intended_fieldname(),
+          get_left_side  = get_letters_intended_fn(),
           type_on_right  = 'person',
-          get_right_side = get_intended_uri_fieldname() ),
+          get_right_side = get_intended_uri_fn() ),
 
   ],
 
