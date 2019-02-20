@@ -308,6 +308,13 @@
   <field name="mail_handwrote-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-handwrote -->
   <field name="ox_previouslyOwned-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-formerly_owned -->
 
+
+     <field name="taught"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+     <field name="was_taught_by"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+     <field name="employed"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+     <field name="was_employed_by"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+     <field name="friend"  type="string"  indexed="true"  stored="true"  multiValued="true"  />
+
 <!-- end CofK: links from people -->
 
     <!-- back connections -->
