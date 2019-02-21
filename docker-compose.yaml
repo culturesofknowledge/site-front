@@ -8,6 +8,7 @@ solr:
 
   volumes:
       - ./data-solr/:/data-solr/
+      - ./solr-emlo/solr/home:/opt/solr/server/solr/home
 
   log_driver: "json-file"
   log_opt:
