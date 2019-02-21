@@ -7,9 +7,13 @@ You'll need Docker and Docker-compose installed.
 A copy of this git repository needs to be cloned.
 
 ## Build
+Run the file create_solr_files.sh to generate needed auto conf files
+
+    ./create_solr_files.sh
+
 Run docker-compose to download, build and run as a daemon everything needed:
 
-`docker-compose up -d --build`
+    `docker-compose up -d --build`
 
 ## Indexing
 You'll need some data to index, drop the data in to the  "data" folder defined in the docker-compose file:
