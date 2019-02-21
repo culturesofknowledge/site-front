@@ -1,3 +1,15 @@
+#Git Ignore file
+
+#OS Stuff
+#
+.directory
+
+# IDE Stuff
+#
+.idea
+
+# Solr stuff
+#
 solr/solr-6.2.1
 
 data-solr/manifestations
@@ -19,9 +31,18 @@ data-solr/people_stage
 data-solr/resources_stage
 data-solr/works_stage
 
+solr-emlo/solr/home/*/core.properties
+
+# Logs
+#
 logs/*.log
 
+# Python stuff
+#
 pylons-emlo/emlo/**/*.pyc
 
+# Temp data stuff
+#
 data/*.csv
 data/*.csv.bak
+cache
