@@ -1112,17 +1112,17 @@ def get_accompaniments_fn() :
 
 
 def get_taught_fn():
-  return 'taught'
+  return 'taught-person'
 def get_taught_by_fn():
-  return 'was_taught_by'
+  return 'was_taught_by-person'
 
 def get_employed_fn():
-  return 'employed'
+  return 'employed-person'
 def get_employed_by_fn():
-  return 'was_employed_by'
+  return 'was_employed_by-person'
 
 def get_friend_fn():
-  return 'friend'
+  return 'friend-person'
 
 
 if __name__ == '__main__':

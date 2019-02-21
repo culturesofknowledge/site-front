@@ -215,6 +215,12 @@
     ${self.relations_list( h.get_is_relative_of_fieldname(), display_label = True )}
     ${self.relations_list( h.get_unspecified_relationship_with_fieldname(), display_label = True )}
 
+	  ${self.relations_list( h.get_taught_fn(), display_label = True )}
+	  ${self.relations_list( h.get_taught_by_fn(), display_label = True )}
+	  ${self.relations_list( h.get_employed_fn(), display_label = True )}
+	  ${self.relations_list( h.get_employed_by_fn(), display_label = True )}
+	  ${self.relations_list( h.get_friend_fn(), display_label = True )}
+
     ${self.relations_list( h.get_orgs_of_which_member_fieldname(), display_label = True )}
     ${self.relations_list( h.get_members_of_org_fieldname(), display_label = True )}
 
