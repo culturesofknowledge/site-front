@@ -281,6 +281,7 @@
         <field name="mail_recipient-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
         <field name="mail_origin-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
         <field name="mail_destination-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
+        <field name="mail_intended-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-intended_for -->
 
         <field name="mail_replyTo-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
         <field name="mail_hasReply-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-is_reply_to -->
@@ -519,6 +520,7 @@
         <field name="ox_memberOf-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-member_of -->
         <field name="foaf_member-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-member_of -->
         <field name="mail_recipientOf-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
+        <field name="mail_intendedFor-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_intended_for -->
         <field name="dcterms_isReferencedBy-work"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-mentions -->
         <field name="mail_handwrote-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-handwrote -->
         <field name="ox_previouslyOwned-manifestation"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-formerly_owned -->

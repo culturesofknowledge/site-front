@@ -218,7 +218,7 @@
 								</ul>
 
 								% if url_edit:
-									<a style="font-size:smaller" href="${url_edit}" target="_blank" rel="nofollow">Editing interface</a> (requires login)
+									<span style="font-size:smaller" ><a href="${url_edit}" target="_blank" rel="nofollow">Editing interface</a> (requires login)</span>
 								% endif
 
 						% endif

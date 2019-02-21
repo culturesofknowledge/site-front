@@ -266,6 +266,8 @@
   <field name="ox_dateReceiptAnnotate-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_date -->
   <field name="ox_agentsReferencedAnnotatedBy-comment"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-refers_to_people_mentioned_in_work -->
   <field name="mail_recipient-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_addressed_to -->
+  <field name="mail_intended-person"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-intended_for -->
+
   <field name="mail_origin-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_from -->
   <field name="mail_destination-location"  type="string"  indexed="true"  stored="true"  multiValued="true"  /> <!-- type-was_sent_to -->
 

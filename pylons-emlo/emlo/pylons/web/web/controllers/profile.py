@@ -11,7 +11,7 @@ from web.lib.helpers import get_records_from_solr, profile_url_from_uri, escape_
 from web.lib.fieldmap import *
 import web.lib.relations
 from web.lib.tinyurl import Tinyurl
-from web.lib.restful_lib2 import ConnectionError
+from web.lib.restful_lib2 import ConnectionError#, ServerNotFoundError
 
 from pylons import config
 
@@ -271,11 +271,11 @@ class ProfileController(BaseController):
       page_url = "http://%s/profile/%s/%s" % (config['base_url'], object, uid)
 
       c.tinyurl = ''
+      t = Tinyurl()
       try:
-         t = Tinyurl()
          c.tinyurl = t.get(page_url)
-      except (ConnectionError):
-        c.tinyurl = "Service not available"
+      except :  # ConnectionError:  #, ServerNotFoundError:
+         c.tinyurl = "Service not available"
 
       c.iidUrl = self._get_emlo_iid( object, this_profile )
       c.normalUrl = "/" + uid

@@ -121,18 +121,26 @@
 
 			var data = [2, 4, 8, 10];
 			var color = d3.scale.ordinal()
-					.range(["rgba(255,0,0,0.5)","rgba(0,0,230,0.5)","rgba(0,230,0,0.5)","rgba(255,0,220,0.5)","rgba(255,220,0,0.5)"])//['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c'])
+					.range( ["black","white"] ) //["rgba(255,0,0,0.5)","rgba(0,0,230,0.5)","rgba(0,230,0,0.5)","rgba(255,0,220,0.5)","rgba(255,220,0,0.5)"])//['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c'])
 					.domain(d3.range(0,5) );
 
 			var gs =  svgs.append( "g")
-					.attr("transform", "translate(" + markerBounds.width / 2 + "," + markerBounds.height / 2 + ")")
+					.attr("transform", "translate(" + markerBounds.width / 2 + "," + markerBounds.height / 2 + ") rotate(190)")
 			;
 
 			var pie = d3.layout.pie();
 			var arc = d3.svg.arc().innerRadius(10).outerRadius(markerBounds.width/2 - 1);
 
 			var arcs = gs.selectAll("arc")
-							.data( pie( data ) )
+							.data( function() {
+								var data = [];
+								data.push( Math.floor( Math.random() * 10 ) + 1 );
+								data.push( Math.floor( Math.random() * 10 ) + 1 );
+								data.push( Math.floor( Math.random() * 10 ) + 1 );
+								data.splice( 0, 0, (data[0] + data[1] + data[2]) - (data[0] + data[1] + data[2]) * 0.90); // make first one 10 % and invisible, for a nice gap in the piechart
+								console.log(data);
+								return pie( data )
+							} )
 							.enter()
 							.append("g")
 							.attr("class","arc")
@@ -142,8 +150,13 @@
 					.attr("fill", function(d, i) {
 						//return d3.scale.category10(i);
 						//return (i===1) ? "red" : "blue";
-						return color(i);
+						if( i === 0 ) { return "transparent"; }
+						return "rgba(255,255,255,0.6)";//color(i);
 					})
+					.attr("stroke", function(d,i) {
+						if( i === 0 ) { return "transparent"; }
+						return '#444';
+					} )
 					.attr("d", arc )
 			;
 
@@ -319,7 +332,7 @@
 			<div id="chart">
 				<div class="button-bar">
 					<ul class="button-group unknown" style="display:none">
-						<li><button id="show_unknown" class="button tiny">Show unknown</button></li>
+						<li><button id="show_unknown" class="button tiny">Show unknown years</button></li>
 					</ul>
 
 
@@ -363,13 +376,19 @@
 
 	  %if 'works_to_people' in c.profile or 'works_from_people' in c.profile :
 		  <div class="column profilepart">
-			  <h3><img src="/img/icon-people.png">People communicated with</h3>
+			  <h3><img src="/img/icon-people.png">People and Organisations communicated with</h3>
 
 			  % if 'works_to_people' in c.profile :
-                  <%
+				  <%
+						def sorter( pid ) :
+							return c.relations["uuid_" + pid]['foaf_name'].lower()
+
+						people = c.profile['works_to_people']
+						people.sort( key=sorter )
+
 						have_person = False
 						have_organisation = False
-						for person in c.profile['works_to_people']:
+						for person in people:
 							if c.relations["uuid_" + person]['ox_isOrganisation'] :
 								have_organisation = True
 							if not c.relations["uuid_" + person]['ox_isOrganisation'] :
@@ -379,7 +398,7 @@
 				  % if have_person:
 					  <h4>People who received letters</h4>
 					  <ul>
-						  % for person in c.profile['works_to_people']:
+						  % for person in people:
 							  % if not c.relations["uuid_" + person]['ox_isOrganisation']:
 							  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 							  % endif
@@ -390,7 +409,7 @@
 				  % if have_organisation:
 					  <h4>Organisations who received letters</h4>
 					  <ul>
-						  % for person in c.profile['works_to_people']:
+						  % for person in people:
 						     % if c.relations["uuid_" + person]['ox_isOrganisation']:
 							  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 							 % endif
@@ -401,9 +420,14 @@
 
 			  % if 'works_from_people' in c.profile :
 			  <%
+				  def sorter( pid ) :
+				    return c.relations["uuid_" + pid]['foaf_name'].lower()
+				  people = c.profile['works_from_people']
+				  people.sort( key=sorter )
+
 				  have_person = False
 				  have_organisation = False
-				  for person in c.profile['works_to_people']:
+				  for person in people:
 					if c.relations["uuid_" + person]['ox_isOrganisation'] :
 						have_organisation = True
 					if not c.relations["uuid_" + person]['ox_isOrganisation'] :
@@ -412,7 +436,7 @@
 			    % if have_person:
 				  <h4>People who sent letters</h4>
 				  <ul>
-					  % for person in c.profile['works_from_people']:
+					  % for person in people:
 					    % if not c.relations["uuid_" + person]['ox_isOrganisation']:
 						  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 						%  endif
@@ -423,7 +447,7 @@
 				  % if have_organisation:
 					  <h4>Organisations who sent letters</h4>
 					  <ul>
-						  % for person in c.profile['works_from_people']:
+						  % for person in people:
 							  % if c.relations["uuid_" + person]['ox_isOrganisation']:
 								  <li><a href="/${person}">${c.relations["uuid_" + person]['foaf_name']}</a></li>
 							  %  endif
@@ -451,7 +475,7 @@
 			% endif
 
 		  % if c.profile.has_key( 'works_received_locations' ) :
-				  <h4>Locations letters were addressed to</h4>
+				  <h4>Locations letters were received</h4>
 				  <ul>
 					  % for location in c.profile['works_received_locations']:
 						  <li><a href="/${location}">${c.relations["uuid_" + location]['geonames_name']}</a></li>

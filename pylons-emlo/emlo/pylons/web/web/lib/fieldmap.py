@@ -776,6 +776,15 @@ def get_letters_received_fieldname():
   return 'mail_recipientOf-work'
 
 # ----------------------------------------------------------------------------------------------
+def get_letters_intended_fn():
+  return 'mail_intendedFor-work'
+
+# --------------------------------------------------------------------------------------------------
+def get_intended_uri_fn():
+  return 'mail_intended-person'
+
+
+# ----------------------------------------------------------------------------------------------
 def get_works_in_which_mentioned_fieldname():
   return 'dcterms_isReferencedBy-work'
 

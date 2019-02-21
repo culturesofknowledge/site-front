@@ -268,16 +268,22 @@
 	% endif
 
   ##=============================== Authors ======================================
-  % if c.profile.has_key(author_uri_fieldname) or c.profile.has_key( addressee_uri_fieldname ) or \
-		c.profile.has_key( h.get_relations_to_people_mentioned_fieldname() ): ## adding control to show or not show the fieldset if there is no content
+  % if author_uri_fieldname in c.profile or \
+	  addressee_uri_fieldname in c.profile or \
+	  h.get_relations_to_people_mentioned_fieldname() in c.profile or \
+	  h.get_intended_uri_fn() in c.profile:
 		<div class="column workfieldset  profilepart">
 		  <h3 class="worklegend">
 			  <img src="/img/icon-people.png" class="workicon"/>People
 		  </h3>
 
 			<div class="workspacing content">
-			  % if c.profile.has_key( author_uri_fieldname ) :   
-				<h4>Author(s)</h4>
+			  % if c.profile.has_key( author_uri_fieldname ) :
+			    % if len( c.profile[author_uri_fieldname] ) > 1:
+				    <h4>Authors</h4>
+				% else :
+				    <h4>Author</h4>
+				% endif
 					<div class="people authors">
 			    		${self.relations_list( author_uri_fieldname )}
 						% if c.profile.has_key( author_as_marked_fieldname ) :
@@ -299,8 +305,14 @@
 			  % endif
 
 			  ##=============================== Addressees ==================================
-			  % if c.profile.has_key( addressee_uri_fieldname ):   
-				<h4>Recipient(s)</h4>
+			  % if c.profile.has_key( addressee_uri_fieldname ):
+
+				% if len( c.profile[addressee_uri_fieldname] ) > 1:
+					<h4>Recipients</h4>
+				% else:
+					<h4>Recipient</h4>
+                % endif
+
 				<div class="people recipients">
 					${self.relations_list( addressee_uri_fieldname )}
 					% if c.profile.has_key( addressee_as_marked_fieldname ) :
@@ -321,6 +333,12 @@
 				</div>
 			  % endif
 
+				% if h.get_intended_uri_fn() in c.profile :
+					<h4>Intended for</h4>
+					<div class="people recipients">
+						${self.relations_list( h.get_intended_uri_fn() )}
+					</div>
+				% endif
 			  ##=============================== People Mentioned ==================================
 				% if c.profile.has_key( h.get_relations_to_people_mentioned_fieldname() ):
 					<h4>Mentions</h4>
@@ -335,6 +353,7 @@
 						% endif
 					</div>
   				% endif
+
 			</div><!-- class:workspacing content -->
 		</div>
   % endif
