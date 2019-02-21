@@ -126,19 +126,14 @@ relationships = {
 					get_right_side = get_relations_to_manifestation_fieldname()),
 	],
 
-  'relationship_type-intended_for': [
-      # Work (left) was addressed to person (right)
-      set_rel_cfg(
-          type_on_left   = 'work',
-          get_left_side  = get_letters_intended_fn(),
-          type_on_right  = 'person',
-          get_right_side = get_intended_uri_fn() ),
+	'relationship_type-intended_for': [
+		# Work (left) was addressed to person (right)
+		set_rel_cfg( type_on_left   = 'work',
+					get_left_side  = get_letters_intended_fn(),
+					type_on_right  = 'person',
+					get_right_side = get_intended_uri_fn() ),
 
-  ],
-
-  'relationship_type-is_finding_aid_for': [],
-
-  'relationship_type-is_in_or_near': [],
+	],
 
 	'relationship_type-is_manifestation_of': [
 		# Manifestation (left) is manifestation of work (right)
@@ -168,8 +163,8 @@ relationships = {
 					get_right_side = get_relations_to_resource_fieldname()),
 
 
-		  # Place (on left) has related resource (on right)
-		  set_rel_cfg( type_on_left   = 'institution',
+		# Place (on left) has related resource (on right)
+		set_rel_cfg( type_on_left   = 'institution',
 					get_left_side  = get_insitution_related_to_resource_fieldname(),
 					type_on_right  = 'resource',
 					get_right_side = get_relations_to_resource_fieldname()),
@@ -450,7 +445,6 @@ relationships = {
 	'relationship_type-deals_with': [],  # 1
 	'relationship_type-edited': [],  # none yet
 	'relationship_type-has_flag': [],
-	'relationship_type-intended_for': [],  # 1
 	'relationship_type-is_finding_aid_for': [],
 	'relationship_type-is_in_or_near': [],
 	'relationship_type-is_rightsholder_of': [],
