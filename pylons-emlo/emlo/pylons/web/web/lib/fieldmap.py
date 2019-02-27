@@ -1120,6 +1120,20 @@ def get_accompaniments_fn() :
   return 'ox_accompaniments'
 
 
+def get_taught_fn():
+  return 'taught-person'
+def get_taught_by_fn():
+  return 'was_taught_by-person'
+
+def get_employed_fn():
+  return 'employed-person'
+def get_employed_by_fn():
+  return 'was_employed_by-person'
+
+def get_friend_fn():
+  return 'friend-person'
+
+
 if __name__ == '__main__':
   print ''
   print 'Fieldmap.py: settings:'

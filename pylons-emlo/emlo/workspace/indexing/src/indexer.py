@@ -45,19 +45,27 @@ def plural_to_singular( plural ):
     return plural[:-1]
 
 def add_solr( item, key, value ):
-    if key in item :
-        try:
-            item[key].append( value )
-        except AttributeError:
-            item[key] = [item[key], value]
 
-        #currentitem = item[key]
-        #if isinstance( currentitem, list) :
-        #    item[key].append( value )
-        #else :
-        #    item[key] = [currentitem, value]
-    else :
+    try:
+        item[key].append(value)
+    except KeyError:
         item[key] = value
+    except AttributeError:
+        item[key] = [item[key], value]
+
+    # if key in item :
+    #     try:
+    #         item[key].append( value )
+    #     except AttributeError:
+    #         item[key] = [item[key], value]
+    #
+    #     #currentitem = item[key]
+    #     #if isinstance( currentitem, list) :
+    #     #    item[key].append( value )
+    #     #else :
+    #     #    item[key] = [currentitem, value]
+    # else :
+    #     item[key] = value
 
 
 def add( solr_item, predicate, object, prefix=None, transient=None, relationship=None ):
@@ -342,6 +350,7 @@ def FillSolr( indexing, red_temp ):
 
                 csv_records = []
                 csv_codec_file = None
+                published_flag = False
 
                 if os.path.isfile(csv_file_location) :
                    csv_codec_file = codecs.open( csv_file_location, encoding="utf-8", mode="rb")
@@ -441,7 +450,7 @@ def FillSolr( indexing, red_temp ):
 
                         uuid_related = []
 
-                        for i in xrange(0,len(members),3) :
+                        for i in xrange(0, len(members), 3) :
 
                             relation = members[i]
                             uid_related = members[i+1]
