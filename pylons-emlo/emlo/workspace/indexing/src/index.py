@@ -1,7 +1,10 @@
 __author__ = 'sers0034'
 
-import sys, time, subprocess
-import codecs, os, tempfile
+import sys
+import time
+import subprocess
+import codecs
+import os
 
 import redis
 
@@ -14,11 +17,10 @@ import AdditionalSolr
 #import pydevd
 #pydevd.settrace('129.67.193.177', port=55157, stdoutToServer=True, stderrToServer=True)
 
-fieldmap_path = '../../../pylons/web/web/lib'
-sys.path.append( fieldmap_path )
-import fieldmap
-
 import indexer
+import sourceconfig_base
+
+indexer_check_file = sourceconfig_base.base + "NEED_INDEX"
 
 def GetSelection():
 	print "CSV conversion to RDF and Solr"
@@ -102,7 +104,7 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 
 		for csv_file_name in csvtordf.csv_files:
 
-			csv_file_location = csvtordf.common['csv_source_directory_root'] + csvtordf.csv_files[csv_file_name][0]
+			csv_file_location = sourceconfig_base.base + csvtordf.csv_files[csv_file_name][0]
 			new_csv_file_location = csv_file_location + ".new"
 
 			if os.path.isfile(csv_file_location) :
@@ -206,60 +208,99 @@ def RunIndexing( indexing=None, skip_id_generation=False, skip_store_relations=F
 	print "Conversion completed in %0.1f seconds (%0.1f minutes)." % ( (timeFinished-timeBegin), (timeFinished-timeBegin)/60 )
 
 
+def check_file_mark_processing() :
+	checker = open(indexer_check_file, "w")
+	checker.write("2")
+	checker.close()
+
+def check_file_clear() :
+	checker = open(indexer_check_file, "w")
+	checker.write("0")
+	checker.close()
+
+def check_file_need_index() :
+
+	need_index = False
+
+	try :
+		checker = open(indexer_check_file, "r")
+
+		if checker :
+
+			number = file.read()
+			if number == "1" :
+
+				need_index = True
+
+			checker.close()
+
+	except IOError:
+		pass
+
+	return need_index
+
+
 if __name__ == '__main__':
 
-	# These two lines are hacks. They switch the default encoding to utf8 so that the command line will convert UTF8 + Ascii to UTF8
-	reload(sys)
-	sys.setdefaultencoding("utf8")
+	if not check_file_need_index() :
+		print ("No indexing is necessary")
 
-	sys.path.append( fieldmap_path )
+	else:
 
-	# debug = True
-	debug = False
+		check_file_mark_processing()
 
-	if debug :
-		print "Using test csv data..."
-		print
-		csvtordf.csv_files = csvtordf.test_csv_files
+		# These two lines are hacks. They switch the default encoding to utf8 so that the command line will convert UTF8 + Ascii to UTF8
+		reload(sys)
+		sys.setdefaultencoding("utf8")
+		sys.path.append( '../../../pylons/web/web/lib' )
 
-	index_all = [
-		"comments",
-		"images",
-		"institutions",
-		"locations",
-		"manifestations",
-		"people",
-		"resources",
-		"works"
-	]
+		# debug = True
+		debug = False
 
-	if len( sys.argv ) == 0 :
-		RunIndexing( index_all, False, False, False )
+		if debug :
+			print "Using test csv data..."
+			print
+			csvtordf.csv_files = csvtordf.test_csv_files
 
-	else :
+		index_all = [
+			"comments",
+			"images",
+			"institutions",
+			"locations",
+			"manifestations",
+			"people",
+			"resources",
+			"works"
+		]
 
-		index = index_all
-		if "ask" in sys.argv :
-			index = None
-		elif "locations" in sys.argv or "comments" in sys.argv  or "people" in sys.argv  or "manifestations" in sys.argv  or  "images" in sys.argv  or "institutions" in sys.argv  or "resources" in sys.argv  or "works" in sys.argv :
-			index = []
-			if "locations" in sys.argv :
-				index.append("locations")
-			if "comments" in sys.argv :
-				index.append("comments")
-			if "people" in sys.argv :
-				index.append("people")
-			if "manifestations" in sys.argv :
-				index.append("manifestations")
-			if "images" in sys.argv :
-				index.append("images")
-			if "institutions" in sys.argv :
-				index.append("institutions")
-			if "resources" in sys.argv :
-				index.append("resources")
-			if "works" in sys.argv :
-				index.append("works")
+		if len( sys.argv ) == 0 :
+			RunIndexing( index_all, False, False, False )
+
+		else :
+
+			index = index_all
+			if "ask" in sys.argv :
+				index = None
+			elif "locations" in sys.argv or "comments" in sys.argv or "people" in sys.argv  or "manifestations" in sys.argv  or  "images" in sys.argv  or "institutions" in sys.argv  or "resources" in sys.argv  or "works" in sys.argv :
+				index = []
+				if "locations" in sys.argv :
+					index.append("locations")
+				if "comments" in sys.argv :
+					index.append("comments")
+				if "people" in sys.argv :
+					index.append("people")
+				if "manifestations" in sys.argv :
+					index.append("manifestations")
+				if "images" in sys.argv :
+					index.append("images")
+				if "institutions" in sys.argv :
+					index.append("institutions")
+				if "resources" in sys.argv :
+					index.append("resources")
+				if "works" in sys.argv :
+					index.append("works")
 
 
-		RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv, "skipsolrdelete" in sys.argv )
+			RunIndexing( index, "skipid" in sys.argv, "skiprel" in sys.argv, "skipclean" in sys.argv, "skipsolrdelete" in sys.argv )
 
+		check_file_clear()

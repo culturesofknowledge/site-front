@@ -18,103 +18,52 @@ sys.path.append( fieldmap_path )
 import fieldmap
 import reversemap
 
-import sourceconfig_base
-
-# common settings for all objects
-common = { 
-    'file_entity_storage_root' : '/home/dev/entitystore/' ,     # must have ending '/'
-    'file_entity_uri_base' : 'http://localhost/',           # must have ending '/'
-    'csv_source_directory_root' : sourceconfig_base.base,          # must have ending '/'
-    'file_entity_prefix' : '_',
-}
-
 # The list of lists of csv files. (You can comment out lines to only debug specific ones)
 csv_files = {
-             'relationships'    : [ 'relationship.csv' ],
-             'locations'        : [ 'location.csv' ],
-             'comments'         : [ 'comment.csv' ],
-             'images'           : [ 'image.csv' ],
-             'people'           : [ 'person.csv' ],
-             'works'            : [ 'work.csv' ],
-             'manifestations'   : [ 'manifestation.csv' ],
-             'institutions'     : [ 'institution.csv' ],
-             'resources'        : [ 'resource.csv' ]
+  'relationships'    : [ 'relationship.csv' ],
+  'locations'        : [ 'location.csv' ],
+  'comments'         : [ 'comment.csv' ],
+  'images'           : [ 'image.csv' ],
+  'people'           : [ 'person.csv' ],
+  'works'            : [ 'work.csv' ],
+  'manifestations'   : [ 'manifestation.csv' ],
+  'institutions'     : [ 'institution.csv' ],
+  'resources'        : [ 'resource.csv' ]
 }
 
 # The list of lists of csv files. (You can comment out lines to only debug specific ones)
 test_csv_files = {
-             'relationships'    : [ 'lister/cofk_lister_relationship.csv' ],
-             'locations'        : [ 'lister/cofk_lister_location.csv' ],
-             'comments'         : [ 'lister/cofk_lister_comment.csv' ],
-             'images'           : [ 'lister/cofk_lister_image.csv' ],
-             'people'           : [ 'lister/cofk_lister_person.csv' ],
-             'works'            : [ 'lister/cofk_lister_work.csv' ],
-             'manifestations'   : [ 'lister/cofk_lister_manifestation.csv' ],
-             'institutions'     : [ 'lister/cofk_lister_institution.csv' ],
-             'resources'        : [ 'lister/cofk_lister_resource.csv' ]
+  'relationships'    : [ 'small/cofk_lister_relationship.csv' ],
+  'locations'        : [ 'small/cofk_lister_location.csv' ],
+  'comments'         : [ 'small/cofk_lister_comment.csv' ],
+  'images'           : [ 'small/cofk_lister_image.csv' ],
+  'people'           : [ 'small/cofk_lister_person.csv' ],
+  'works'            : [ 'small/cofk_lister_work.csv' ],
+  'manifestations'   : [ 'small/cofk_lister_manifestation.csv' ],
+  'institutions'     : [ 'small/cofk_lister_institution.csv' ],
+  'resources'        : [ 'small/cofk_lister_resource.csv' ]
 }
-
-# Commonly-used namespaces
-dcterms_short  =  'dcterms' 
-dcterms_long   =  'http://dublincore.org/documents/dcmi-terms/'
-
-geo_short      =  'geo'     
-geo_long       =  'http://www.w3.org/2003/01/geo/'
-
-ox_short       =  'ox'      
-ox_long        = 'http://vocab.ox.ac.uk/'
-
-geonames_short = 'geonames'
-geonames_long  = 'http://www.geonames.org/ontology/'
-
-bibo_short     = 'bibo'
-bibo_long      = 'http://purl.org/ontology/bibo/'
-
-foaf_short     = 'foaf'
-foaf_long      = 'http://xmlns.com/foaf/0.1/'
-
-bio_short      = 'bio'
-bio_long       = 'http://vocab.org/bio/0.1/'
-
-skos_short     = 'skos'
-skos_long      = 'http://www.w3.org/TR/2009/REC-skos-reference-20090818/'
-
-frbr_short     = 'frbr'
-frbr_long      = 'http://purl.org/vocab/frbr/core#'
-
-mail_short     = 'mail' 
-mail_long      = 'http://vocab.ox.ac.uk/mail/'
-
-indef_short    = 'indef'
-indef_long     = 'http://vocab.ox.ac.uk/indef/'
-
-cito_short     = 'cito'
-cito_long      = 'http://vocab.ouls.ox.ac.uk/cito/'
-
-rel_short      = 'rel'
-rel_long       = 'http://purl.org/vocab/relationship/'
-
 
 #
 # The following conversions array holds the information to convert CSV files to RDF.
 # It has the following settings:
-title_singular='title_singular' # title_singular - for addition to base uri
-title_plural='title_plural'     # title plural - for name of entity store
-namespaces='namespaces'         # namespaces - a list of namespaces needed for the following translations
-translations='translations'     # translations - the list of rdf values for each csv column name
-                                # with following settings:
-predicate='predicate'           #     predicate - what rdf to replace CSV column  name (e.g. predicate:"dcterms:identifier" )
-prefix='prefix'                 #     prefix - what to add to the front of the data (e.g. prefix:"uuri:" )
-store='store'                   #     store - mark if useful to store in redis, used to store ID field at moment ( store:"id" )
-converter = 'converter'         #     converter - this is a function that will be called to change the data into a valid format. (e.g. converter: convert_to_rdf_date)
+title_singular = 'title_singular' # title_singular - for addition to base uri
+title_plural = 'title_plural'     # title plural - for name of entity store
+namespaces = 'namespaces'         # namespaces - a list of namespaces needed for the following translations
+translations = 'translations'     # translations - the list of rdf values for each csv column name
+                                  # with following settings:
+predicate = 'predicate'           #     predicate - what rdf to replace CSV column  name (e.g. predicate:"dcterms:identifier" )
+prefix = 'prefix'                 #     prefix - what to add to the front of the data (e.g. prefix:"uuri:" )
+store = 'store'                   #     store - mark if useful to store in redis, used to store ID field at moment ( store:"id" )
+converter = 'converter'           #     converter - this is a function that will be called to change the data into a valid format. (e.g. converter: convert_to_rdf_date)
 
-transient='transient'           #     transient - this predicate is to be stored in a sub resource
-                                #     with following settings: 
-                                #         transient - id to append to main URI (e.g. transient:"_authors")
-                                #         predicate - predicate to use for new URI (e.g. predicate "mail:authors"
-ignoreIfEqual='ignoreIfEqual'   #     ignoreIfEqual - ignore this piece of data if set to this value (post converter)
-additional='additional'         # additional - a list of additional values to add which are not in the csv file
-solr='solr'                     #     solr - an alternative name to use in solr (currently only for fields not translated to RDF)
+transient = 'transient'           #  transient - this predicate is to be stored in a sub resource
+                                  #     with following settings:
+                                  #         transient - id to append to main URI (e.g. transient:"_authors")
+                                  #         predicate - predicate to use for new URI (e.g. predicate "mail:authors"
+ignoreIfEqual = 'ignoreIfEqual'   #     ignoreIfEqual - ignore this piece of data if set to this value (post converter)
+additional = 'additional'         # additional - a list of additional values to add which are not in the csv file
+solr = 'solr'                     #     solr - an alternative name to use in solr (currently only for fields not translated to RDF)
 
 type_fieldname = fieldmap.get_type_fieldname()
 
@@ -129,16 +78,9 @@ conversions = [
     title_singular : "location",
     title_plural   : "locations",
 
-    namespaces : {
-      dcterms_short  : dcterms_long,
-      geo_short      : geo_long,
-      ox_short       : ox_long,
-      geonames_short : geonames_long,
-    },
-
     translations : {
 
-      'location_id':  
+      'location_id':
       {
         predicate: fieldmap.get_core_id_fieldname(),
         prefix:    fieldmap.get_normal_id_value_prefix(),
@@ -248,12 +190,6 @@ conversions = [
     title_singular : "comment",
     title_plural   : "comments",
 
-    namespaces : { 
-      dcterms_short: dcterms_long,
-      ox_short     : ox_long,
-      bibo_short   : bibo_long
-    },
-
     translations : {
 
       'comment_id':  
@@ -307,12 +243,6 @@ conversions = [
   {
     title_singular : "image",
     title_plural : "images",
-    
-    namespaces : { 
-      dcterms_short: dcterms_long,
-      ox_short     : ox_long,
-      foaf_short   : foaf_long,
-    },
 
     translations : {
 
@@ -381,18 +311,6 @@ conversions = [
   {
     title_singular : "work",
     title_plural   : "works",
-
-    namespaces : {
-      dcterms_short: dcterms_long,
-      ox_short     : ox_long,
-      foaf_short   : foaf_long,
-      bio_short    : bio_long,
-      skos_short   : skos_long,
-      frbr_short   : frbr_long,
-      mail_short   : mail_long,
-      indef_short  : indef_long,
-      cito_short   : cito_long,
-    },
 
     translations : {
 
@@ -748,16 +666,6 @@ conversions = [
   {
     title_singular : "person",
     title_plural   : "people",
-    
-    namespaces : {
-      dcterms_short: dcterms_long,
-      ox_short     : ox_long,
-      foaf_short   : foaf_long,
-      bio_short    : bio_long,
-      rel_short    : rel_long,
-      skos_short   : skos_long,
-      indef_short  : indef_long,
-    },
 
     translations : {
 
@@ -997,18 +905,6 @@ conversions = [
   {
     title_singular : "manifestation",
     title_plural : "manifestations",
-
-    namespaces : {
-      dcterms_short: dcterms_long,
-      ox_short     : ox_long,
-      indef_short  : indef_long ,
-      mail_short   : mail_long,
-      foaf_short   : foaf_long,
-      bio_short    : bio_long,
-      skos_short   : skos_long,
-      frbr_short   : frbr_long,
-      bibo_short   : bibo_long,
-    },
 
     translations : {
 
@@ -1327,12 +1223,6 @@ conversions = [
     title_singular : "institution",
     title_plural : "institutions",
 
-    namespaces : {
-      dcterms_short : dcterms_long,
-      ox_short      : ox_long,
-      geonames_short: geonames_long,
-    },
-
     translations : {
 
       'institution_id':
@@ -1416,11 +1306,6 @@ conversions = [
   {
     title_singular : "resource",
     title_plural : "resources",
-
-    namespaces : {
-      dcterms_short: dcterms_long,
-      ox_short     : ox_long,
-    },
 
     translations : {
 
