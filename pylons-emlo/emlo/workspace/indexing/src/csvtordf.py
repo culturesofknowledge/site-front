@@ -11,12 +11,12 @@ Also see "relationships.py"
 # The 'fieldmap' module passes back the fieldname as a string.
 # By using functions from 'fieldmap', we can restrict fieldnames to being hard-coded in only 
 # ONE place, allowing much easier changes if a better ontology is found. (SB, 13 July 2011)
-
 import sys
-fieldmap_path = '../../../pylons/web/web/lib' 
-sys.path.append( fieldmap_path )
+from conversionhelper import *  # For converter functions (e.g. convert to date)
+
+sys.path.append( '../../../pylons/web/web/lib' )
 import fieldmap
-import reversemap
+
 
 # The list of lists of csv files. (You can comment out lines to only debug specific ones)
 csv_files = {
@@ -45,14 +45,16 @@ test_csv_files = {
 }
 
 #
-# The following conversions array holds the information to convert CSV files to RDF.
-# It has the following settings:
+# The long conversion array below is now a pointless annoyance...
+# The original idea was to output RDF in the front end, but it doesn't do that.
+# So this just changes fieldnames to something else...
+
+# The conversion array has the following settings:
 title_singular = 'title_singular' # title_singular - for addition to base uri
 title_plural = 'title_plural'     # title plural - for name of entity store
-namespaces = 'namespaces'         # namespaces - a list of namespaces needed for the following translations
 translations = 'translations'     # translations - the list of rdf values for each csv column name
                                   # with following settings:
-predicate = 'predicate'           #     predicate - what rdf to replace CSV column  name (e.g. predicate:"dcterms:identifier" )
+predicate = 'predicate'           #     predicate - what rdf to replace CSV column  name (e.g. predicate: "dcterms:identifier" )
 prefix = 'prefix'                 #     prefix - what to add to the front of the data (e.g. prefix:"uuri:" )
 store = 'store'                   #     store - mark if useful to store in redis, used to store ID field at moment ( store:"id" )
 converter = 'converter'           #     converter - this is a function that will be called to change the data into a valid format. (e.g. converter: convert_to_rdf_date)
@@ -66,8 +68,6 @@ additional = 'additional'         # additional - a list of additional values to 
 solr = 'solr'                     #     solr - an alternative name to use in solr (currently only for fields not translated to RDF)
 
 type_fieldname = fieldmap.get_type_fieldname()
-
-from conversionhelper import *  # For converter functions (e.g. convert to date)
 
 conversions = [
   ############
@@ -1369,6 +1369,9 @@ conversions = [
 #----------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
+
+  import reversemap
+
   print 'Listing conversion values:'
   print ''
   first_col_width = 15

@@ -227,7 +227,8 @@ def check_file_need_index() :
 
 		if checker :
 
-			number = file.read()
+			number = checker.readline()[0]
+
 			if number == "1" :
 
 				need_index = True
