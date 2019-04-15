@@ -257,7 +257,7 @@
   img_class = ""
   if with_gap:
     img_class = "gap"
-  %><img class="help ${img_class}" src="${img_src}" alt="Help"/>
+  %><img style="min-width:25px;text-align:left;" class="help ${img_class}" src="${img_src}" alt="Help"/>
 </%def>
 
 ##------------------------------------------------------------------------------------------
