@@ -578,9 +578,44 @@
 		var filterYearFromText = document.getElementById("from-year").value *1,
 			filterYearToText   = document.getElementById("to-year").value *1;
 
+		if( filterYearFromText > filterYearToText ) {
+			var swip = filterYearFromText;
+			filterYearFromText = filterYearToText;
+			filterYearToText = swip;
+		}
+
 		for( var i=0,z=catalogueList.length;i<z;i++) {
 			var cat = catalogueList[i];
 			var svg = d3.select("svg#"+cat.id);
+
+			var filterLeft = svg.select("rect.filter-left");
+			var filterRight = svg.select("rect.filter-right");
+
+			if( filterLeft.empty() ) {
+				filterLeft = svg.append("rect")
+					.classed("filter-left", 1)
+					.style("fill","rgb(130,130,130)")
+				;
+			}
+			if( filterRight.empty() ) {
+				filterRight = svg.append("rect")
+					.classed("filter-right", 1)
+					.style("fill","rgb(130,130,130)")
+				;
+			}
+
+			filterLeft
+					.attr("x", 0)
+					.attr("y", 0 )
+					.attr("height", svgHeight)
+					.attr("width", xScale(filterYearFromText))
+			;
+			filterRight
+				.attr("x", xScale(filterYearToText))
+				.attr("y", 0 )
+				.attr("height", svgHeight)
+				.attr("width",svgWidth - xScale(filterYearToText) )
+			;
 
 			var selection = svg.selectAll("rect.bar")
 				.data( cat.years, function(d) { return d.y; } );
