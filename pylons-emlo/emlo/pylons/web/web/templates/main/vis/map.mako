@@ -19,9 +19,13 @@
 		#map {
 			display: inline-block;
 			height: 540px;
-			/*width: 800px;*/
+			width: 1000px;
 		}
-
+		@media only screen and (max-width: 64.063em) {
+			#map {
+				width: 100%;
+			}
+		}
 		#list {
 			display: inline-block;
 		}
@@ -54,65 +58,61 @@
 
 	<div class="row">
 		<div class="columns small-12 large-3 side" style="border:0;margin-top:0px;">
-
-			<!-- <h2>Navigate</h2>
-			  <ul class="side-nav">
-				  <li><a href="#context">Context</a></li>
-				<li><a href="#citation">Citation Guidelines</a></li>
-				<li><a href="#copyright">Copyright and Scholarly Responsibility</a></li>
-				<li><a href="#issues">Known Issues</a></li>
-				<li><a href="#credits">Credits</a></li>
-				<li><a href="#technical">Technical Overview</a></li>
-				<li><a href="#cookies">Cookies</a></li>
-				<li><a href="#contact">Contact</a></li>
-			  </ul>-->
-
 		</div>
 
 		<div class="columns small-12 large-9">
 			<br/>
 			<div class="row">
 				<div class="column">
-				<h2 id="about">Geography</h2>
-				<p>Explore the locations in EMLO.</p>
+					<h2 id="about">Geography</h2>
+					<p>Explore the locations in EMLO.</p>
+					<br/><br/><br/>
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="column large-1">
-					<label for="filter" style="display:inline-block;vertical-align:middle;width:100%;font-size:16px">Filter</label>
-				</div>
-				<div  class="column large-5">
-					<input type='text' id='filter' size='45' value=""/>
-				</div>
-				<div  class="column large-2">
-					<button id="clear">Clear</button>
-				</div>
-				<div class="column large-4">
-					<div id="colours"></div>
-				</div>
-			</div>
 		</div> <!-- large-9 columns -->
 	</div><!-- row -->
 
-
 	<div class="row">
-		<div class="columns small-12 large-12">
-<br/>
+
+		<div class="column small-12 large-9">
 			<div id='map'>Loading Map</div>
 		</div>
-	</div>
 
+		<div class="columns small-12 large-3">
+			<div class="row">
+				<div class="column">
+					<h4>Letter count in view</h4>
+					<div id="colours"></div>
+				</div>
 
-	<div class="row">
-			<div class="columns small-12 large-12">
-				<select title="Places" id="placelist" size="20"></select>
 			</div>
+			<div class="row">
+				<div class="column large-12">
+					<h4><label for="filter" style="display:inline-block;vertical-align:middle;width:100%;font-size:16px">Filter</label></h4>
+				</div>
+			</div>
+			<div class="row">
+				<div  class="column large-8">
+					<input type='text' id='filter' value=""/>
+				</div>
+				<div  class="column large-4">
+					<button id="clear">Reset</button>
+				</div>
 
-			<!--<small>
-				<span id='responseTime'></span>
-				<span id='numDocs'></span>
-				<span id='renderTime'></span>
-			</small>-->
+			</div>
+			<div class="row">
+				<div class="column">
+					<h4>Places in view</h4>
+					<select title="Places" id="placelist" size="20"></select>
+					<!-- small>
+						<span id='responseTime'></span>
+						<span id='numDocs'></span>
+						<span id='renderTime'></span>
+					</small -->
+				</div>
+
+			</div>
+		</div>
 	</div>
 </%def>
