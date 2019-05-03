@@ -54,7 +54,7 @@
 			<p>Created by the Cultures of Knowledge Project with generous funding from The Andrew W. Mellon Foundation, Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence. </p>
 
 			<%
-				warning = ''
+				warning = None
 
 				if not 'people' in c.stats or not 'locations' in c.stats or not 'works' in c.stats \
 					or c.stats['people']['number'] == 0 \
@@ -62,8 +62,8 @@
 					or c.stats['works']['number'] == 0:
 					warning = "Please note that the EMLO records are currently unavailable. They will be back online shortly. Thank you."
 
-				else :
-					warning = "Please note that, due to a technical issue beyond our control, transcriptions and some images of a number of letters normally available in EMLO are not online at present. Work is underway to restore access."
+				#else :
+				#	warning = "Please note that, due to a technical issue beyond our control, transcriptions and some images of a number of letters normally available in EMLO are not online at present. Work is underway to restore access."
 			%>
 
 			% if warning:
