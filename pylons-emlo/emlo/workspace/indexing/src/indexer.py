@@ -21,6 +21,7 @@ import fastcsv
 import csvtordf
 import relationships
 import solrconfig
+import sourceconfig_base
 
 fieldmap_path = '../../../pylons/web/web/lib'
 sys.path.append( fieldmap_path )
@@ -52,22 +53,8 @@ def add_solr( item, key, value ):
     except AttributeError:
         item[key] = [item[key], value]
 
-    # if key in item :
-    #     try:
-    #         item[key].append( value )
-    #     except AttributeError:
-    #         item[key] = [item[key], value]
-    #
-    #     #currentitem = item[key]
-    #     #if isinstance( currentitem, list) :
-    #     #    item[key].append( value )
-    #     #else :
-    #     #    item[key] = [currentitem, value]
-    # else :
-    #     item[key] = value
 
-
-def add( solr_item, predicate, object, prefix=None, transient=None, relationship=None ):
+def add( solr_item, predicate, uid, prefix=None, transient=None, relationship=None ):
     
     if transient :
         solr_key = "%s-%s" % ( transient[csvtordf.predicate], predicate )
@@ -75,25 +62,15 @@ def add( solr_item, predicate, object, prefix=None, transient=None, relationship
         solr_key = predicate
         
     if prefix :
-        solr_key = "%s-%s" % ( solr_key, prefix )
-        solr_value = "%s%s" % ( prefix, object )
+        solr_key = solr_key + "-" + prefix
+        solr_value = prefix + uid
     else :
-        solr_value = object
+        solr_value = uid
         
     if relationship :
-        solr_key = "%s-%s" % ( solr_key, relationship )
+        solr_key = solr_key + "-" + relationship
          
     add_solr( solr_item, solr_key, solr_value )
-        
-    return
-
-
-def create_uri( base, typey, uid ):  # base ends with "/"
-    return "".join([base, typey, "/", uid])
-
-
-def create_uri_quick( baseAndType, uid ):  # baseAndType ends with "/"
-    return baseAndType + uid
 
 
 def add_to_solr( sol, items ):
@@ -123,7 +100,7 @@ def GenerateIds( _, red_ids ):
 
             print "  - " + csv_file
             
-            csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
+            csv_file_location = sourceconfig_base.base + csv_file
 
             if os.path.isfile(csv_file_location) :
 
@@ -212,7 +189,7 @@ def StoreRelations( _, red_rel, red_ids ):
 
         print "  - " + csv_file,
 
-        csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
+        csv_file_location = sourceconfig_base.base + csv_file
 
         with fastcsv.Reader(io.open(csv_file_location)) as reader :
 
@@ -310,7 +287,8 @@ def FillSolr( indexing, red_temp ):
     Generate a solr entry for each object
     """
     
-    uri_base = csvtordf.common['file_entity_uri_base']
+    uri_base = 'http://localhost/'
+
     sol_all = solr.SolrConnection( solrconfig.solr_urls_stage['all'] )
 
     core_id_name = fieldmap.get_core_id_fieldname()
@@ -344,7 +322,7 @@ def FillSolr( indexing, red_temp ):
                 #
                 # open each csvfile and output to entity store as rdf
                 #
-                csv_file_location = csvtordf.common['csv_source_directory_root'] + csv_file
+                csv_file_location = sourceconfig_base.base + csv_file
                 print "  - CSV file:  " + csv_file_location
 
                 csv_records = []
@@ -370,7 +348,7 @@ def FillSolr( indexing, red_temp ):
                         continue
 
                     uid = record["uuid"]
-                    uri = create_uri_quick( uri_base_with_type, uid )
+                    uri = uri_base_with_type + uid
 
                     solr_item = {
                         "uuid" : uid,
@@ -455,7 +433,7 @@ def FillSolr( indexing, red_temp ):
                             uid_related = members[i+1]
                             type_related = members[i+2]
 
-                            uri_relationship = create_uri( uri_base, type_related, uid_related )
+                            uri_relationship = uri_base + type_related + "/" + uid_related
                             add( solr_item, relation , uri_relationship, relationship=type_related )
 
                             uuid_related.append( uid_related )

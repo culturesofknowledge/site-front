@@ -45,23 +45,32 @@
 ## -- EMLO intro --
 	<div class="row">
 
-		<div class="large-3 columns"><!-- dummy column -->&nbsp;</div>
+		<div class="large-2 columns"><!-- dummy column -->&nbsp;</div>
 
-		<div class="large-9 columns">
+		<div class="large-10 columns" style="padding-left:25px">
 			<br/>
 			<h1>Welcome to Early Modern Letters Online</h1>
 
 			<p>Created by the Cultures of Knowledge Project with generous funding from The Andrew W. Mellon Foundation, Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence. </p>
 
-			% if not 'people' in c.stats or not 'locations' in c.stats or not 'works' in c.stats \
-				or c.stats['people']['number'] == 0 \
-				or c.stats['locations']['number'] == 0 \
-				or c.stats['works']['number'] == 0:
-				<p style="color:red;margin-bottom:10px">Please note that the EMLO records are currently unavailable. They will be back online shortly. Thank you.</p>
+			<%
+				warning = ''
+
+				if not 'people' in c.stats or not 'locations' in c.stats or not 'works' in c.stats \
+					or c.stats['people']['number'] == 0 \
+					or c.stats['locations']['number'] == 0 \
+					or c.stats['works']['number'] == 0:
+					warning = "Please note that the EMLO records are currently unavailable. They will be back online shortly. Thank you."
+
+				else :
+					warning = "Please note that, due to a technical issue beyond our control, transcriptions and some images of a number of letters normally available in EMLO are not online at present. Work is underway to restore access."
+			%>
+
+			% if warning:
+				<p style="font-size:smaller;color:red;margin-bottom:10px">${warning}</p>
 			% else:
 				<br/>
 			% endif
-
 		</div>
 	</div>
 
@@ -73,26 +82,25 @@
 <div class="panel" style=""><!-- just to add grey background with full width of grid -->
     <div class="row ">
 
-      <h2 style="margin-left:15px">Search</h2>
         ##========== Two alternative search forms come next ============
         <form id="search" action="/forms/">
 
             ##===============================
-            <div class="large-11 columns">
+            <div class="large-11 small-10 columns">
               <%
               fieldname = 'people'
               help = "Search letters for authors, senders, recipients, and people mentioned, e.g. 'Samuel Hartlib', 'John Aubrey', or 'The Royal Society'. <br/><br/>Search is not case sensitive. "
               %>
-              <label for="${fieldname}" >People</label>
+              <label for="${fieldname}" >Search people</label>
               ${self.normal_text_input_field( fieldname, help )}
             </div>
-            <div class="large-1 column"><label>&nbsp;<!-- for alingment--></label>
+            <div class="large-1 small-2 columns"><label>&nbsp;<!-- for alingment--></label>
               ${self.context_help( help, with_gap = False, calling_field = fieldname )}
             </div>
 
             ##===============================
-            <div class="large-6 columns">
-              <label>Year(s) from</label>
+            <div class="large-6 small-5 columns">
+              <label>Search from year</label>
               <%
               fieldname = 'dat_from_year'
               help = "Search by individual year and across year ranges. <br/><br/>To select a single year, use the first drop-down only. "
@@ -102,46 +110,42 @@
               ${self.end_normal_select( fieldname )}
             </div>
 
-						<!-- div class="large-1 column"><label>&nbsp</label>-</di -->
-
-            <div class="large-5 columns">
-              <label>To</label>
+            <div class="small-5 columns">
+              <label>Search to year</label>
 
               <% fieldname = 'dat_to_year' %>
               ${self.start_normal_select( fieldname, title='Search up to this year.', css_class='year_to' )}
               ${self.year_options()}
               ${self.end_normal_select( fieldname )}
-
             </div>
 
-
-            <div class="large-1 column"><label>&nbsp;<!-- for alignment--></label>
+            <div class="large-1 small-2 columns"><label>&nbsp;<!-- for alignment--></label>
               ${self.context_help( help, with_gap = False, calling_field = fieldname )}
             </div>
 
             ##===============================
-            <div class="large-11 columns">
+            <div class="large-11 small-10 columns">
               <%
               fieldname = 'locations'
               help = "Search the places that letters were sent from or to, e.g. 'Queen's College', 'Paris', or 'Spain'. <br/><br/>Search is not case sensitive."
               %>
-              <label for="${fieldname}" >Places</label>
+              <label for="${fieldname}" >Search places</label>
               ${self.normal_text_input_field( fieldname, help )}
             </div>
-            <div class="large-1 column"><label>&nbsp;<!-- for alingment--></label>
+            <div class="large-1 small-2 columns"><label>&nbsp;<!-- for alingment--></label>
               ${self.context_help( help, with_gap = False, calling_field = fieldname )}
             </div>
 
             ##===============================
-            <div class="large-11 columns">
-              <label>Content</label>
+            <div class="large-11 small-10 columns">
+              <label>Search content</label>
               <%
               fieldname = 'let_con'
               help = "Search across abstracts, keywords, incipits, excipits, transcriptions, and enclosures, e.g. 'Spider' or 'Mathematics'. <br/><br/>Search is not case sensitive. "
               %>
               ${self.normal_text_input_field( fieldname, help )}
             </div>
-            <div class="large-1 column"><label>&nbsp;<!-- for alingment--></label>
+            <div class="large-1 small-2 columns"><label>&nbsp;<!-- for alingment--></label>
               ${self.context_help( help, with_gap = False, calling_field = fieldname )}
             </div>
 
@@ -170,7 +174,7 @@
 
         </form>  <!-- End short version of form -->
 
-          <div class="large-12 hide-for-small columns" style="margin-top:-40px">
+          <div class="large-12 hide-for-small columns" style="margin-top:-70px">
 						
             <p class="text-center" style="margin-bottom:0">Want a full set of fields? Try <a href="/advanced">Search+</a></p>
             <p class="text-center" style="">Prefer things at a glance? You can also <a href="/browse/people">Browse</a></p>
@@ -226,7 +230,9 @@
 						if desc == 'Works':
 								desc = 'Letters'
 						elif desc == 'Manifestations':
-								desc = 'Letter Versions'
+								desc = 'Versions'
+						elif desc == 'Related resources':
+								desc = 'Resources'
 
 						if stat == 'catalogues' :
 							stat = 'Catalogues'

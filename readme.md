@@ -13,7 +13,7 @@ Run the file create_solr_files.sh to generate needed auto conf files
 
 Run docker-compose to download, build and run as a daemon everything needed:
 
-    `docker-compose up -d --build`
+    docker-compose up -d --build
 
 ## Indexing
 You'll need some data to index, drop the data in to the  "data" folder defined in the docker-compose file:
@@ -30,12 +30,16 @@ You'll need some data to index, drop the data in to the  "data" folder defined i
 
 then to run the indexer:
 
-`docker-compose exec pylons /emlo/workspace/indexing/src/index.sh`
+    docker-compose exec pylons /emlo/workspace/indexing/src/index.sh
 
 (if docker-compose doesn't have exec use "docker exec" instead but you'll need the name of the container (docker ps) )
  
+## Auto index
+Install the crontab_sudo file to crontab, (you may need to update the file positions)
+
 ## Summary
 - Install _docker_, _docker-compose_
 - Run `docker-compose up -d --build`
 - Put data in _data_ folder
 - Run `docker-compose exec pylons /emlo/workspace/indexing/src/index.sh`
+- Setup crontab

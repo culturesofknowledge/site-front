@@ -8,8 +8,9 @@
 	<nav class="top-bar yellow-bg" data-topbar>
 		<ul class="title-area">
 			<li class="name">
-				<h1><a class="no-decoration" href="/" accesskey="1"><img src="/img/emlo_logo.png" alt="EMLO logo" class="show-for-large-up menu-name"/></a>
-				<strong><a class="no-decoration hide-for-large-up" href="/" accesskey="1">EMLO  &nbsp;&nbsp;</a></strong>
+				<h1><a style="min-width:152px" class="no-decoration" href="/" accesskey="1">
+					<img style="width:152px;" src="/img/emlo_logo.png" alt="EMLO logo" class="show-for-large-up menu-name"/></a>
+					<strong><a class="no-decoration hide-for-large-up" href="/" accesskey="1">EMLO  &nbsp;&nbsp;</a></strong>
 				</h1>
 			</li>
 			<li class="toggle-topbar menu-icon"><a href="/">Menu</a></li>
@@ -50,45 +51,7 @@
 </div>
 <!-- end of menu -->
 </%def>
-<%def name="header_old(selected='')">
-  <div id="logo">
-      <a href="/" style="border:none;"><img src="/images/IE7_Logo_Variant.png" border="0" alt="Early Modern Letters Online" width="150" height="211"></a>
-      <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" />
-  </div>
 
-  <div id="head">
-
-    <div id="nav">
-
-      <ul>
-      <li style="margin-left:20px;"></li>
-        % for items in app_globals.nav:
-          % if items['id'] == selected :
-            <li class="selected">\
-          % else:
-            <li>\
-          % endif
-          <a href="${items['url']}">${items['display']}</a></li>
-        % endfor
-      </ul>
-
-      ################ Start 'Search everything' form (appears on ALL tabs) ###############
-
-      <form id="quicksearch" action="/forms/quick">
-	  <label class="white">Quick Search</label>
-      ${base.normal_text_input_field( 'everything' )}
-
-	  <input type="image" id="submit-quick" name="submit-quick" value="Search"  src="/images/quick_search_button.png" class="quick_btn"/>
-
-      <input type="hidden" id="search_type" name="search_type" value="quick"/>
-
-      </form>
-      ################ End 'Search everything' form ###############
-
-		</div>
-		<div id="bottom_shadow"></div>
-	</div><!--id:head-->
-</%def>
 <%def name="someother_footer()">
   <!-- Do something different here for specific pages, none yet though -->
 </%def>

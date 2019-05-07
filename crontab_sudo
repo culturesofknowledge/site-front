@@ -1,2 +1,3 @@
-# Install to auti-index every Monday morning. (if Linux complains about this file try resaving it in vim)
-15 6 * * 1 docker-compose -f /data/emlo-docker-compose/docker-compose.yaml exec pylons /emlo/workspace/indexing/src/index.sh > /data/emlo-docker-compose/logs/import.log 2>&1
+# Check needed indexing once every hour. (if Linux complains about this file try resaving it in vim, probably line ending)
+42 * * * * docker-compose -f /data/emlo-docker-compose/docker-compose.yaml exec pylons /emlo/workspace/indexing/src/index.sh >> /data/emlo-docker-compose/logs/import-week$(date "+%U").log 2>&1
+42 4 * * 2 rm -f /data/emlo-docker-compose/logs/import-week$(date -d "2 weeks ago" +%U).log

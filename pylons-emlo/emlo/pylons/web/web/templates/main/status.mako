@@ -40,27 +40,18 @@
 
 ##===================================================================================================
 
-## -- Search --
 <div class="panel" style=""><!-- just to add grey background with full width of grid -->
-    <div class="row ">
+	<div class="row ">
 
-      <h2 style="margin-left:15px">Raw Stats</h2>
-	    <p>No adjustments. e.g. count all people, even if no letters; count all images, even if bodleian cards.</p>
-	    <ul>
-		% for stat in c.stats :
-			<li>${stat} : ${c.stats[stat]}</li>
-	    % endfor
-	    </ul>
-
-    </div><!-- row -->
+		<h2 style="margin-left:15px">Index</h2>
+		<p>System last indexed at ${c.indexedTime}</p>
+	</div><!-- row -->
 </div><!-- grey back panel -->
-## -- Search --
 
 <div class="panel" style=""><!-- just to add grey background with full width of grid -->
 	<div class="row ">
 
-		<h2 style="margin-left:15px">Indexing</h2>
-		<p>System last indexed at ${c.indexedTime}</p>
+		<h2 style="margin-left:15px">Updated</h2>
 		<p>Some works with recent changes:</p>
 		<ul>
 			% for changed in c.changedLast :
@@ -71,5 +62,21 @@
 	</div><!-- row -->
 </div><!-- grey back panel -->
 ##}
+
+## -- Search --
+<div class="panel" style=""><!-- just to add grey background with full width of grid -->
+	<div class="row ">
+
+		<h2 style="margin-left:15px">Raw Stats</h2>
+		<p>No adjustments. e.g. count all people, even if no letters; count all images, even if bodleian cards.</p>
+		<ul>
+			% for stat in c.stats :
+				<li>${stat} : ${c.stats[stat]}</li>
+			% endfor
+		</ul>
+
+	</div><!-- row -->
+</div><!-- grey back panel -->
+## -- Search --
 </%def>
 ##===================================================================================================

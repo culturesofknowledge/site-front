@@ -2,7 +2,8 @@
 	"use strict";
 
 	var colours = [
-			'#31ccf6', '#37b5d8', '#df65b0', '#dd1c77', '#980043' // default
+			'#91dcf6', '#37b5d8', '#df65b0', '#dd1c77', '#980043' // blue and red
+		///*"#d4d5de",*/ "#a7bfd7", "#5b7da6", "#2e527e", "#032446", "#101010" // Emlo blues
 		],
 		monica = false,
 		solrURL = window.location.origin + '/solr/locations';
@@ -14,7 +15,8 @@
 		options = {
 			//maxZoom: 20,
 			//zoomAnimation: false,
-			markerZoomAnimation: false
+			markerZoomAnimation: false,
+			width:100
 		};
 
 	if( monica ) {
@@ -29,7 +31,7 @@
 		}).addTo(map);
 	}
 
-	map.setView([10, 0], 2); // World
+	map.setView([20, 70], 2); // World
 
 	map.on('zoomend', function(e) {
 		switchLayer();
@@ -42,16 +44,16 @@
 
 		var spanLeast = document.createElement("span");
 		spanLeast.setAttribute("style", "margin-right:10px;vertical-align:bottom;display:inline-block;height:39px;");
-		spanLeast.appendChild(document.createTextNode("Least in view"));
+		spanLeast.appendChild(document.createTextNode("Least"));
 
 		var spanMost = document.createElement("span");
 		spanMost.setAttribute("style", "margin-left:10px;vertical-align:bottom;display:inline-block;height:39px;");
-		spanMost.appendChild(document.createTextNode("Most in view"));
+		spanMost.appendChild(document.createTextNode("Most"));
 
 		coloursDiv.appendChild(spanLeast);
 		for (var colour = 0, end = colours.length; colour < end; colour++) {
 			var div = document.createElement("div");
-			div.setAttribute("style", "display:inline-block;width:30px;height:39px;background-color:" + colours[colour]);
+			div.setAttribute("style", "display:inline-block;width:25px;height:30px;background-color:" + colours[colour]);
 			coloursDiv.appendChild(div)
 		}
 		coloursDiv.appendChild(spanMost);
