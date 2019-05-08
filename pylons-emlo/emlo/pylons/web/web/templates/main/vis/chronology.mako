@@ -585,8 +585,8 @@
 				</div>
 
 				<ul class="button-group unknown tabs" >
-					<li><button type="button" id="btnChart" class="selected">Show Chart</button></li>
-					<li><button type="button" id="btnTable">Show Table</button></li>
+					<li><button type="button" id="btnChart" class="selected">Chart</button></li>
+					<li><button type="button" id="btnTable">Table</button></li>
 				</ul>
 			</div>
 
