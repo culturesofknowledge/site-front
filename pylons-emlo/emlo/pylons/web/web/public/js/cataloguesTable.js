@@ -142,13 +142,27 @@ var table = {
 						}
 					}
 
-					return count;
-					// return (row[undated]) ? row.count - row[undated] : row.count;
+					var url = createUrl(
+						row.name === allCatalogueName ? null : row.name,
+						currentFilter.from,
+						currentFilter.to
+					);
+					return '<a href="' + url + '">' + count + '</a>';
 				}
 			},
 			{ id: 'undated', head: 'Letters without years<br/>' + arrowDown + arrowUp, cl: 'num',
 				html: function(row) {
-					return row[undated] ? row[undated] : '-';
+					if( row[undated]) {
+						var url = createUrl(
+							row.name === allCatalogueName ? null : row.name,
+							"9999",
+							null
+						);
+						return '<a href="' + url + '">' + row[undated] + '</a>';
+					}
+					else  {
+						return "-";
+					}
 				}
 			},
 			{ id: 'total', head: 'Total<br/>' + arrowDown + arrowUp, cl: 'num',
@@ -159,7 +173,6 @@ var table = {
 							count += row[y];
 						}
 					}
-
 					return count;
 				}
 			},
@@ -626,6 +639,28 @@ var table = {
 					.attr("stroke-width",0)
 
 			}
+		}
+
+		function createUrl( cat, start, end ){
+			// http://emlo.bodleian.ox.ac.uk/forms/advanced?dat_to_year=1631&dat_from_year=1580&cito_Catalog=Bodleian%20card%20catalogue
+			var base = "http://emlo.bodleian.ox.ac.uk/forms/advanced?";
+			var paras = [];
+
+			if( cat !== null ) {
+				paras.push( "cito_Catalog=" + cat );
+			}
+
+			if( start !== null ) {
+				paras.push( "dat_from_year=" + start );
+			}
+
+			if( end !== null ) {
+				paras.push( "dat_to_year=" + end );
+			}
+
+			return base + paras.join("&");
+
+
 		}
 
 		runUpdate();
