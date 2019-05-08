@@ -346,7 +346,10 @@
 			pieHoverHtml : function(d) {
 				var tip = d.count + " letters in total<br/>";
 				if( d.noYears > 0 ) {
-					tip += "(including " + d.noYears + " letters with unknown years)";
+					tip += "(including " + d.noYears + " (~" + (Math.ceil((d.noYears / d.count) * 100)) +"%) letters with unknown years)";
+				}
+				else {
+					tip += "(There are no letters with unknown years)";
 				}
 				//tip += '<p style="text-align:right;width:100%;margin:0"><small>(click to show these in EMLO)</small></p>';
 

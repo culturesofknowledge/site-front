@@ -261,7 +261,7 @@ var timeline = {
 		var arc = d3.svg.arc()
 			.innerRadius(0)
 			.outerRadius(function(d) {
-				return pieScale(d.data.count);//noYearSpace/2;//
+				return noYearSpace/2;//pieScale(d.data.count);//
 			});
 
 		var pie = d3.layout.pie()
@@ -307,7 +307,7 @@ var timeline = {
 				if( d.data.noYear ) {
 					return fillColourNoYear;
 				}
-				var scale = colourScale(d.data.count);
+				var scale = 2;//colourScale(d.data.count);
 				return fillColour.brighter(scale).toString();
 			});
 
