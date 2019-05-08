@@ -30,9 +30,9 @@
 		#intro {
 			max-width: 1000px;
 		}
-		#intro, #timeline-controls {
+		/*#intro, #timeline-controls {
 			margin: 1% 3%;
-		}
+		}*/
 
 		button {
 			padding: 3px 0;
@@ -241,6 +241,20 @@
 			fill:rgb(239, 195, 25);
 		}
 
+		select {
+			width: auto;
+		}
+
+		ul.tabs { margin-bottom: 40px !important; margin-top: 40px; }
+		ul.tabs li { width:50%;height:30px }
+		ul.tabs li button { width:100%;height:100% }
+		ul.tabs li button.selected {
+			background-color: #ffffff;
+			color: #008cba;
+			border: solid 2px #008cba;
+			border-bottom-width: 0;
+			padding: 0;
+		}
 	</style>
 </%def>
 
@@ -252,26 +266,24 @@
 
 	<script src="/js/d3.slider.js"></script>
 	<script src="/js/cataloguesYears.js"></script>
-	<script src="/js/cataloguesData.js"></script>
+	<!-- script src="/js/cataloguesData.js"></script -->
 
 	<script>
 		var dataPostgres = catalogueYearsCount,
-				dataTemp = {},
-				//dummyYear = 1490,
-				i;
+				dataTemp = {}, i;
 
 		//
 		// Sort out data
 		//
 		for( i=0; i < dataPostgres.length; i++ ) {
 			var yearData = dataPostgres[i],
-					catalogueName = yearData["Catalogue"];
+					catalogueName = yearData["name"];
 
 			if( ! (catalogueName in dataTemp) ) {
 				dataTemp[catalogueName] = {
 					"start" : 2000,
 					"end" : 0,
-					"id" : yearData["CatalogueId"]
+					"id" : yearData["id"]
 				};
 			}
 
@@ -345,14 +357,18 @@
 				//window.location = "http://emlo.bodleian.ox.ac.uk/forms/advanced?col_cat=" + d.name;
 			},
 			yearChange : function( start, end ) {
-				setButtonsYears(null);
 				slider.value([start, end]);
 			},
 			scaleMarkers : 1,
 			groupHeight: 50,
 			groupGapHeight: 10
 		};
-		var control = timeline.createChart( dataTemp, config );
+
+		var controlTimeline = timeline.createChart( dataTemp, config );
+		var controlTable = table.create();
+
+		var filterYearFrom = document.getElementById("from-year"),
+			filterYearTo   = document.getElementById("to-year");
 
 		//
 		// Handle sorting
@@ -398,118 +414,106 @@
 
 		function order( name ) {
 			var orderFunction = orderBy( name );
-			control.reorder( orderFunction );
-		}
-		function setButtonsOrder( button ) {
-			d3.selectAll(".order button").classed("highlight",0);
-			d3.select(button).classed("highlight",1);
+			controlTimeline.reorder( orderFunction );
 		}
 
-		var sort = "nameAsc";
-		d3.select("#btnSortNameAsc").on("click", function() {
-			if( sort === "nameAsc" ) {
-				sort = "nameDesc";
-			}
-			else {
-				sort = "nameAsc";
-			}
-			order( sort );
-			setButtonsOrder(this);
-		});
-		d3.select("#btnSortCountAsc").on("click", function() {
-			if( sort === "countDesc" ) {
-				sort = "countAsc";
-			}
-			else {
-				sort = "countDesc";
-			}
-			order( sort );
-			setButtonsOrder(this);
-		});
-		d3.select("#btnSortYearEndAsc").on("click", function() {
-			if( sort === "yearEndAsc" ) {
-				sort = "yearEndDesc";
-			}
-			else {
-				sort = "yearEndAsc";
-			}
-			order( sort );
-			setButtonsOrder(this);
-		});
-		d3.select("#btnSortYearStartAsc").on("click", function() {
-			if( sort === "yearStartAsc" ) {
-				sort = "yearStartDesc";
-			}
-			else {
-				sort = "yearStartAsc";
-			}
-			order( sort );
-			setButtonsOrder(this);
+		d3.select("#reset").on("click", function() {
+			changeYears();
 		});
 
-		//
-		// Set up zoom
-		//
-		d3.select("#btnYearAll").on("click", function() {
-			changeYears(); // all
-			setButtonsYears(this);
+		d3.select("#btnChart").on("click", function() {
+			d3.selectAll(".tabs button").classed("selected",0);
+
+			d3.select("#catTable").style("display","none");
+			d3.select("#catChart").style("display","block");
+
+			d3.select(this).classed("selected",1);
 		});
 
-		d3.select("#btnYear1500").on("click", function() {
-			changeYears( 1500, 1549 );
-			setButtonsYears(this);
-		});
-		d3.select("#btnYear1550").on("click", function() {
-			changeYears( 1550, 1599 );
-			setButtonsYears(this);
-		});
-		d3.select("#btnYear1600").on("click", function() {
-			changeYears( 1600, 1649 );
-			setButtonsYears(this);
-		});
-		d3.select("#btnYear1650").on("click", function() {
-			changeYears( 1650, 1699 );
-			setButtonsYears(this);
-		});
-		d3.select("#btnYear1700").on("click", function() {
-			changeYears( 1700, 1749 );
-			setButtonsYears(this);
-		});
-		d3.select("#btnYear1750").on("click", function() {
-			changeYears( 1750, 1799 );
-			setButtonsYears(this);
-		});
-		d3.select("#btnYear1800").on("click", function() {
-			changeYears( 1800, 1850 );
-			setButtonsYears(this);
+		d3.select("#btnTable").on("click", function() {
+			d3.selectAll(".tabs button").classed("selected",0);
+
+			d3.select("#catTable").style("display","table");
+			d3.select("#catChart").style("display","none");
+
+			d3.select(this).classed("selected",1);
 		});
 
-		function setButtonsYears( button ) {
-			d3.selectAll(".years button").classed("highlight",0);
-			d3.select(button).classed("highlight",1);
-		}
-
-		function changeYears( from, to ) {
-			if( !from && !to ) {
-				from = control.startYear;
-				to = control.endYear;
+		function changeYears( yearFrom, yearTo ) {
+			if( !yearFrom ) {
+				yearFrom = controlTimeline.startYear;
 			}
-			control.showYears( from, to );
-			slider.value([from, to]);
+			if( !yearTo ) {
+				yearTo = controlTimeline.endYear;
+			}
+
+			if( yearFrom < controlTimeline.startYear ) {
+				yearFrom = controlTimeline.startYear
+			}
+			if( yearTo > controlTimeline.endYear ) {
+				yearTo = controlTimeline.endYear
+			}
+
+			filterYearFrom.value = yearFrom + "";
+			filterYearTo.value = yearTo + "";
+
+			controlTimeline.showYears( yearFrom, yearTo );
+			controlTable.update();
+
+			slider.value([yearFrom, yearTo]);
+
+			d3.select("#fifties").property('value', '0');
 		}
 
 		var slider = d3.slider()
 				.axis(true)
-				.min(control.startYear)
-				.max(control.endYear)
-				.value([control.startYear,control.endYear])
+				.min(controlTimeline.startYear)
+				.max(controlTimeline.endYear)
+				.value([controlTimeline.startYear,controlTimeline.endYear])
 				.on("slideend", function(evt, values) {
-					control.showYears( Math.floor(values[0]), Math.ceil(values[1]) );
-					setButtonsYears(null); // this is a bit of a cheat, it should really highlight the right button depending on years "slid" too
+					changeYears( Math.floor(values[0]), Math.ceil(values[1]));
 				});
 
 		d3.select('#slider').call( slider );
 
+		d3.select('#from-year').on("input",function() {
+			updateYearInputs();
+		});
+		d3.select('#to-year').on("input",function() {
+			updateYearInputs();
+		});
+
+		function updateYearInputs() {
+			function getYear( year ) {
+				year = +year;
+				if( !isNaN(year) && year >= 1000 ) {
+					return year;
+				}
+				return 0;
+			}
+
+			var filterYearFromText = filterYearFrom.value,
+					filterYearToText = filterYearTo.value,
+					yearFrom = getYear(filterYearFromText),
+					yearTo = getYear(filterYearToText);
+
+			if( yearFrom !== 0 && yearTo !== 0 ) {
+				changeYears(yearFrom, yearTo);
+			}
+		}
+
+		d3.select("#fifties").on("change", function() {
+			var yearFrom = +this.options[this.selectedIndex].value;
+			changeYears( yearFrom, yearFrom + 49 );
+		});
+
+		d3.select("#sort").on("change", function() {
+			order( this.options[this.selectedIndex].value );
+		});
+
+		d3.select('input#catalogue-name').on("input",function() {
+			updateYearInputs();
+		});
 
 	</script>
 </%def>
@@ -533,6 +537,17 @@
 					<h2 id="about">Chronology</h2>
 					<p>Explore our catalogues by years.</p>
 					<br/><br/><br/><br/>
+
+					<!-- <div id="intro">
+						<h1 id="title">Number of letters per year per catalogue in EMLO</h1>
+						<p>This is interactive chart shows the number of letters Early Modern Letters Online has a particular catalogue and year.
+							you can click on the catalogue names on the left to find more information about that catalogue, and click on the circles to see the list of letters for that year.</p>
+
+						<p>The colour and size of each circle represents the number of letters a darker colour and larger circle indicates relatively more letters.</p>
+
+						<p>You can use the buttons or the slider to zoom in to see more detail. Only catalogues with letters in your chosen timeframe will be shown.</p>
+					</div> -->
+
 				</div>
 			</div>
 		</div> <!-- large-9 columns -->
@@ -540,67 +555,59 @@
 
 
 	<div class="row">
-		<div class="columns small-12 large-12">
-			<table id="cat"></table>
-		</div>
 
 		<div class="columns small-12 large-12">
-
-			<div id="intro">
-				<h1 id="title">Number of letters per year per catalogue in EMLO</h1>
-				<p>This is interactive chart shows the number of letters Early Modern Letters Online has a particular catalogue and year.
-					you can click on the catalogue names on the left to find more information about that catalogue, and click on the circles to see the list of letters for that year.</p>
-
-				<p>The colour and size of each circle represents the number of letters a darker colour and larger circle indicates relatively more letters.</p>
-
-				<p>You can use the buttons or the slider to zoom in to see more detail. Only catalogues with letters in your chosen timeframe will be shown.</p>
-			</div>
-
-			<div id="timeline-controls">
-				<form>
-					<div class="years button-bar">
-						<ul class="button-group unknown" style="display: inline-block;">
-							<li>Years: </li>
-							<li><button type="button" class="highlight" id="btnYearAll">All</button></li>
-							<!--<li><button type="button" id="btnYearCustom">Custom</button></li>-->
-							<li><button type="button" id="btnYear1500">1500 - 1549</button></li>
-							<li><button type="button" id="btnYear1550">1550 - 1599</button></li>
-							<li><button type="button" id="btnYear1600">1600 - 1649</button></li>
-							<li><button type="button" id="btnYear1650">1650 - 1699</button></li>
-							<li><button type="button" id="btnYear1700">1700 - 1749</button></li>
-							<li><button type="button" id="btnYear1750">1750 - 1799</button></li>
-							<li><button type="button" id="btnYear1800">1800 - 1850</button></li>
-						</ul>
-					</div>
-
-					<div class="order">
-						<ul class="button-group unknown" style="display: inline-block;">
-							<li>Order:</li>
-							<li><button type="button" id="btnSortNameAsc" class="highlight" >Catalogue Name</button></li>
-							<li><button type="button" id="btnSortCountAsc">Letter Count</button></li>
-							<li><button type="button" id="btnSortYearStartAsc">Starting year</button></li>
-							<li><button type="button" id="btnSortYearEndAsc">Ending year</button></li>
-						</ul>
-					</div>
-
-					<div class="custom-years" style="padding-left:233px;max-width:100%">
-						<div id="slider"></div>
-					</div>
-
-				</form>
-			</div>
-
-			<div class="chart" style="width:100%"></div>
-
-
 			<label style="width:90px" for="catalogue-name">Filter Name</label>
 			<input style="width:200px;display:inline-block" type="text" id="catalogue-name"/>
 
 			<label style="margin-left:20px;width:90px" for="from-year">Filter Years</label>
 			<input id="from-year" title="From year" style="display:inline-block;width:98px" type="number"/>
 			<input id="to-year" title="To year" style="display:inline-block;width:98px" type="number"/>
+			<select style="width:143px" id="fifties">
+				<option value="0" selected>Set half-centuries</option>
+				<option value="1500">1500-1549</option>
+				<option value="1550">1550-1599</option>
+				<option value="1600">1600-1649</option>
+				<option value="1650">1650-1699</option>
+				<option value="1700">1700-1749</option>
+				<option value="1750">1750-1799</option>
+				<option value="1800">1800-1850</option>
+			</select>
 			<button id="reset" style="padding: 8px 16px;height:initial">Reset years</button>
 
+			<div id="timeline-controls">
+
+				<div class="custom-years" style="max-width:100%">
+					<div id="slider"></div>
+				</div>
+
+				<ul class="button-group unknown tabs" >
+					<li><button type="button" id="btnChart" class="selected">Show Chart</button></li>
+					<li><button type="button" id="btnTable">Show Table</button></li>
+				</ul>
+			</div>
+
+		</div>
+
+		<div class="column">
+			<table id="catTable" style="display:none"></table>
+		</div>
+
+		<div class="columns small-12 large-12">
+			<div id="catChart">
+				<label for="sort" style="width:100px">Catalogue sort: </label>
+				<select id="sort" style="width:200px">
+					<option value="nameAsc" selected>Name ascending</option>
+					<option value="nameDesc">Name descending</option>
+					<option value="countAsc">Letter count ascending</option>
+					<option value="countDesc">Letter count descending</option>
+					<option value="yearStartAsc">Start year ascending</option>
+					<option value="yearStartDesc">Start year descending</option>
+					<option value="yearEndAsc">End year ascending</option>
+					<option value="yearEndDesc">End year descending</option>
+				</select>
+				<div class="chart" style="width:100%"></div>
+			</div>
 		</div>
 	</div>
 

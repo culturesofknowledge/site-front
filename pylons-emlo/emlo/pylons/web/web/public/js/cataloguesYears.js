@@ -7,7 +7,6 @@ var timeline = {
 
 		var _dataAll = [],
 			_dataFiltered = [],
-			_dataNoYear =[],
 			catalogues;
 
 		config.scaleMarkers = config.scaleMarkers || 1;
@@ -59,7 +58,7 @@ var timeline = {
 					number = dataTemp[catName][y]
 				}
 
-				if (number != 0) {
+				if (number !== 0) {
 					years.push({
 						"year": y,
 						"number": number,
@@ -486,6 +485,7 @@ var timeline = {
 
 			_dataAll.sort(orderFunction);
 			_dataFiltered = filterDataYears(_dataAll, chartStartYear, chartEndYear);
+			_dataFiltered = filterByName(_dataFiltered);
 
 			chart.selectAll("g.data")
 				.data(_dataFiltered, idFunction)
@@ -499,8 +499,9 @@ var timeline = {
 			;
 		}
 
-		var initial = true;
 
+
+		var initial = true;
 		function update(data) {
 			/* Update to the correct chart, years or counts */
 
@@ -753,6 +754,15 @@ var timeline = {
 			});
 		}
 
+		function filterByName(list) {
+			var filterName = document.getElementById("catalogue-name").value.toLowerCase();
+			list = list.filter(function (cat) {
+				return cat.name.toLowerCase().indexOf(filterName) !== -1;
+			});
+			return list;
+		}
+
+
 		function chartYears(start, end) {
 
 			if( start > end ) {
@@ -768,6 +778,7 @@ var timeline = {
 			chartEndYear = end+1; //End at the end of the year
 
 			_dataFiltered = filterDataYears(_dataAll, chartStartYear, chartEndYear);
+			_dataFiltered = filterByName(_dataFiltered);
 
 			update(_dataFiltered);
 			
@@ -827,7 +838,7 @@ var timeline = {
 			},
 			startYear : defaultStartYear,
 			endYear : defaultEndYear
-		}
+		};
 	}
 };
  
