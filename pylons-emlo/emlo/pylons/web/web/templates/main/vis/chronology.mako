@@ -532,18 +532,8 @@
 				<div class="column">
 					<h2 id="about">Chronology</h2>
 					<p>Explore our catalogues by years.</p>
+					<br/><br/><br/><br/>
 				</div>
-			</div>
-
-			<div class="row">
-				<br/><br/>
-				<label style="width:90px" for="catalogue-name">Filter Name</label>
-				<input style="width:200px" type="text" id="catalogue-name"/>
-
-				<label style="width:90px" for="from-year">Filter Years</label><br/>
-				<input id="from-year" title="From year" style="display:inline-block;width:98px" type="number"/>
-				<input id="to-year" title="To year" style="display:inline-block;width:98px" type="number"/>
-				<button id="reset">Reset years</button>
 			</div>
 		</div> <!-- large-9 columns -->
 	</div><!-- row -->
@@ -603,6 +593,13 @@
 			<div class="chart" style="width:100%"></div>
 
 
+			<label style="width:90px" for="catalogue-name">Filter Name</label>
+			<input style="width:200px;display:inline-block" type="text" id="catalogue-name"/>
+
+			<label style="margin-left:20px;width:90px" for="from-year">Filter Years</label>
+			<input id="from-year" title="From year" style="display:inline-block;width:98px" type="number"/>
+			<input id="to-year" title="To year" style="display:inline-block;width:98px" type="number"/>
+			<button id="reset" style="padding: 8px 16px;height:initial">Reset years</button>
 
 		</div>
 	</div>

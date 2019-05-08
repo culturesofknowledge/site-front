@@ -163,7 +163,7 @@
 		},
 		{ id: 'chart', head: 'Coverage<br/>' + wideSpace + wideSpace, cl: 'center',
 			html: function( row ) {
-				return '<svg id="' + row.id + '" height="' + svgHeight + '" width="' + svgWidth + '"></svg>';
+				return '<svg id="' + row.id + '" height="' + svgHeight + '" width="' + svgWidth + '" style="position:relative"></svg>';
 			}
 		}
 	];
@@ -539,36 +539,44 @@
 			.range([0, svgWidth]);
 
 		heightScale = d3.scale.linear()
-			.domain([0, maxNumber])
-			.range([2, svgHeight]);
+			.domain([1, maxNumber])
+			.range([5, svgHeight]);
 
-		rectWidth = svgWidth / allCatalogue.years.length;
+		rectWidth = svgWidth / (allCatalogue.years.length);
 
 		for (var i = 0, z = catalogueList.length; i < z; i++) {
 			var cat = catalogueList[i];
 			var svg = d3.select("svg#" + cat.id);
 
-			svg.on("click", function () {
-				if (svg.property("data-zoomed") === "yes") {
-					svg.property("data-zoomed", "no");
-					this.style = "z-index: 0; transform: scale(1) translate(0,0px);";
+			svg.on("click", (function ( svg ) {
+				return function() {
+					var svgs = d3.selectAll("svg");
+					var zoomed = svg.property("data-zoomed") === "yes";
+
+					svgs.property("data-zoomed", "no");
+					svgs.style("transform", "scale(1) translate(0,0px)" );
+					svgs.style("z-index", "0");
+
+					if( !zoomed ) {
+						svg.property("data-zoomed", "yes");
+						svg.style("transform", "scale(7) translate(-41px,21px)");
+						svg.style("z-index", "100");
+					}
 				}
-				else {
-					svg.property("data-zoomed", "yes");
-					this.style = "z-index:10; transform: scale(7) translate(-41px,21px);";
-				}
-			});
+			}(svg)) );
 
 			svg.append("rect")
 				.attr("width",svgWidth)
 				.attr("height",svgHeight)
 				.attr("fill","white")
 				.attr("stroke","black")
-				.attr("stroke-width","0.5");
+				.attr("stroke-width","1")
+			;
 
-			svg.append("line")
+			/*svg.append("line")
 				.attr("x2", svgWidth)
-				.attr("stroke", "black");
+				.attr("stroke", "black")
+			;*/
 		}
 	}
 	function updateChart() {
@@ -578,9 +586,44 @@
 		var filterYearFromText = document.getElementById("from-year").value *1,
 			filterYearToText   = document.getElementById("to-year").value *1;
 
+		if( filterYearFromText > filterYearToText ) {
+			var swip = filterYearFromText;
+			filterYearFromText = filterYearToText;
+			filterYearToText = swip;
+		}
+
 		for( var i=0,z=catalogueList.length;i<z;i++) {
 			var cat = catalogueList[i];
 			var svg = d3.select("svg#"+cat.id);
+
+			var filterLeft = svg.select("rect.filter-left");
+			var filterRight = svg.select("rect.filter-right");
+
+			if( filterLeft.empty() ) {
+				filterLeft = svg.append("rect")
+					.classed("filter-left", 1)
+					.style("fill","rgb(130,130,130)")
+				;
+			}
+			if( filterRight.empty() ) {
+				filterRight = svg.append("rect")
+					.classed("filter-right", 1)
+					.style("fill","rgb(130,130,130)")
+				;
+			}
+
+			filterLeft
+					.attr("x", 0)
+					.attr("y", 0 )
+					.attr("height", svgHeight)
+					.attr("width", xScale(filterYearFromText))
+			;
+			filterRight
+				.attr("x", xScale(filterYearToText))
+				.attr("y", 0 )
+				.attr("height", svgHeight)
+				.attr("width",svgWidth - xScale(filterYearToText) )
+			;
 
 			var selection = svg.selectAll("rect.bar")
 				.data( cat.years, function(d) { return d.y; } );
@@ -589,24 +632,25 @@
 				.enter()
 				.append("rect")
 				.classed("bar",1)
-				.attr("x", function(d) { return d.y === "no year" ? 0:xScale(d.y); })
-				.attr("y", function(d) { return svgHeight - (d.y === "no year" ? 0:heightScale(d.n)); })
-				.attr("height", function(d) { return d.y === "no year" ? 0:heightScale(d.n); })
+				.attr("x", function(d) { return d.y === "no year" ? 0 : xScale(d.y); })
+				.attr("y", function(d) { return svgHeight - (d.y === "no year" ? 0 : heightScale(d.n)); })
+				.attr("height", function(d) { return d.y === "no year" ? 0 : heightScale(d.n); })
 				.attr("width", rectWidth);
 
 			selection
 				.attr("fill",function(d,i) {
 					if( d.y < filterYearFromText || d.y > filterYearToText ) {
-						return "rgb(" + 200 + "," + 200 + "," + 255 + ")";
+						return "rgb(200,200,255)";
 					}
 
-					if( i % 10 > 5 ) {
-						return "rgb(" + 50 + "," + 50 + "," + 255 + ")";
+					if( i % 20 > 10 ) {
+						return "rgb(75,75,255)";
 					}
 					else {
-						return "rgb(" + 100 + "," + 100 + "," + 255 + ")";
+						return "rgb(50,50,255)";
 					}
 				})
+				.attr("stroke-width",0)
 
 		}
 	}
