@@ -14,6 +14,8 @@ Run the file create_solr_files.sh to generate needed auto conf files
 Run docker-compose to download, build and run as a daemon everything needed:
 
     docker-compose up -d --build
+    
+or just call the "start.sh" script
 
 ## Indexing
 You'll need some data to index, drop the data in to the  "data" folder defined in the docker-compose file:
