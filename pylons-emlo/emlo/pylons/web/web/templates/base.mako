@@ -14,7 +14,7 @@
 	<title>${app_globals.title + " : " + self.attr.main_title}</title><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><link rel="stylesheet" href="/css/app.css" />
 
 	<script src="/bower_components/modernizr/modernizr.min.mat.js"></script>
-	<script src="http://use.typekit.net/axz4cgy.js"></script>
+	<script src="https://use.typekit.net/axz4cgy.js"></script>
 	<script>try{Typekit.load();}catch(e){}</script>
 
 	${self.for_head()}
