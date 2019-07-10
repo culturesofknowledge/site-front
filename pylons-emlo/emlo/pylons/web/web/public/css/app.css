@@ -54,6 +54,13 @@ textarea {
 	list-style:none;
 }
 
+.top-bar-section ul li > a {
+    color: #35495e !important;
+    font-family:"Arvo", serif;
+    font-weight: bold;
+    font-size:1em;
+}
+
 .worklegend .workicon {
   margin: 0 -3px 0 -11px;
 }

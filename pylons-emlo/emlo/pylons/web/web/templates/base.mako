@@ -16,6 +16,7 @@
 	<script src="/bower_components/modernizr/modernizr.min.mat.js"></script>
 	<script src="https://use.typekit.net/axz4cgy.js"></script>
 	<script>try{Typekit.load();}catch(e){}</script>
+    <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
 
 	${self.for_head()}
 
