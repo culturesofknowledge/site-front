@@ -45,3 +45,7 @@ Install the crontab_sudo file to crontab, (you may need to update the file posit
 - Put data in _data_ folder
 - Run `docker-compose exec pylons /emlo/workspace/indexing/src/index.sh`
 - Setup crontab
+
+## Acknowledgements
+
+EMLO has received funding from the Andrew W. Mellon Foundation, the UK Arts and Humanities Research Council, and the Unibersity of Oxford's John Fell Fund.
