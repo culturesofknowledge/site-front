@@ -1352,7 +1352,7 @@ def get_repository_name_list(): #{
 def get_max_relations_for_profile( object_type = '' ): #{
 
   if object_type == 'institution':
-    return 5000
+    return 10000
   else:
     return 10000
 #}
