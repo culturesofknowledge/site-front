@@ -23,14 +23,17 @@
 	##<script type="text/javascript" src="/js/d3.lettercount.js"></script>
 
 	%if c.profile.has_key( 'works_created_locations' ) or c.profile.has_key( 'works_received_locations' ) :
-		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>
-		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
+		<script src='https://api.tiles.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>       
+		<link href='https://api.tiles.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+
 
 		<script type="text/javascript">
 
-			L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
-			var map = L.mapbox.map('map', 'monicams.jpf4hpo5')
+			L.mapbox.accessToken = 'pk.eyJ1IjoiZW1sb3Byb2plY3QiLCJhIjoiY2tscWpkZWVzMWQ5aDJvbDZpeWVpd2h4aSJ9.zZq84qXCddwCQM729LE6dg'
+			var map = L.mapbox.map('map')
 					.setView([0,0], 7);
+			L.mapbox.styleLayer('mapbox://styles/emloproject/cklqjqd7t6c7q17quisc190eg')
+			    .addTo(map);
 
 			var greenIcon = L.icon({
 				iconUrl: '/img/marker-icon-green.png',

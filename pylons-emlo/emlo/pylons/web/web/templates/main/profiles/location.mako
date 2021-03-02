@@ -13,16 +13,19 @@
 
 <%def name="for_foot()">
 	%if h.get_latitude_fieldname() in c.profile and h.get_latitude_fieldname() in c.profile :
-		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>
-		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
+		<script src='https://api.tiles.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
 
 		<script type="text/javascript">
 
-			L.mapbox.accessToken = 'pk.eyJ1IjoibW9uaWNhbXMiLCJhIjoiNW4zbEtPRSJ9.9IfutzjZrHdm2ESZTmk8Sw';
-			var map = L.mapbox.map('map', 'monicams.jpf4hpo5')
+			L.mapbox.accessToken = 'pk.eyJ1IjoiZW1sb3Byb2plY3QiLCJhIjoiY2tscWpkZWVzMWQ5aDJvbDZpeWVpd2h4aSJ9.zZq84qXCddwCQM729LE6dg'
+			var map = L.mapbox.map('map')
 			    .setView([
 			        ${c.profile[ h.get_latitude_fieldname() ]},
 			        ${c.profile[ h.get_longitude_fieldname() ]}], 7);
+
+			L.mapbox.styleLayer('mapbox://styles/emloproject/cklqjqd7t6c7q17quisc190eg')
+			    .addTo(map);
 
 			L.mapbox.featureLayer({
 			    // this feature is in the GeoJSON format: see geojson.org
