@@ -51,7 +51,7 @@
 			<br/>
 			<h1>Welcome to Early Modern Letters Online</h1>
 
-			<p>Created by the Cultures of Knowledge Project with generous funding from The Andrew W. Mellon Foundation, Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence. </p>
+			<p>Created by the Cultures of Knowledge Project with generous funding from The Andrew W. Mellon Foundation, and now very generously funded by the Packard Humanities Institute, Early Modern Letters Online — EMLO — is a combined finding aid and editorial interface for basic descriptions of early modern correspondence. </p>
 
 			<%
 				warning = None

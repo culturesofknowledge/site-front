@@ -20,7 +20,7 @@ import AdditionalSolr
 import indexer
 import sourceconfig_base
 
-indexer_check_file = sourceconfig_base.base + "NEED_INDEX"
+indexer_check_file = sourceconfig_base.base + "need_index"
 
 def GetSelection():
 	print "CSV conversion to RDF and Solr"

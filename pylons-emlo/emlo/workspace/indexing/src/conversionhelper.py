@@ -79,6 +79,11 @@ def convert_to_local_url( value ) :
    value = value.replace( 'http://sers018.sers.ox.ac.uk/history/cofk/selden_end.php?iwork_id=', '/profile?iwork_id=' )
    
    return value
+
+def convert_photo_url( value ) :
+   value = value.replace( 'cofk2.bodleian.ox.ac.uk', 'emlo-edit.bodleian.ox.ac.uk' )
+
+   return value
   
 def convert_manifestation_type( value ):
    if value == 'Scribal copy' :
