@@ -166,7 +166,7 @@
             ##</div>
 
 
-          <div class="large-12 columns">
+          <div class="large-3 columns">
             <input class="button submit search-related" type="submit" name="submit-normal" value="Search" style="margin-top:13px" />
 
             <input type="hidden" id="search_type" name="search_type" value="normal" />
@@ -174,7 +174,7 @@
 
         </form>  <!-- End short version of form -->
 
-          <div class="large-12 hide-for-small columns" style="margin-top:-70px">
+          <div class="large-9 hide-for-small columns" style="margin-top:10px">
 						
             <p class="text-center" style="margin-bottom:0">Want a full set of fields? Try <a href="/advanced">Search+</a></p>
             <p class="text-center" style="">Prefer things at a glance? You can also <a href="/browse/people">Browse</a></p>
