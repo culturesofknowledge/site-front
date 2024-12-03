@@ -10,13 +10,13 @@
 FROM bdlss/pylons:0.1.4
 MAINTAINER matthew
 
-LABEL version="0.2.0"
+LABEL version="0.2.1"
 
 # Delete temp server
 RUN rm -rf /web/*
 
 # Install python packages
-RUN pip install solrpy==0.9.7 \
+RUN pip install --trusted-host pypi.python.org solrpy==0.9.7 \
 				redis==2.10.5 \
 				feedparser==4.1 \
 				httplib2==0.7.7 \

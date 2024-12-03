@@ -1,51 +1,52 @@
 # Docker Compose, file version 1
 # Development build settings: docker-compose -f "docker-compose-dev.yaml" up -d
-solr:
-  build: ./solr-emlo
-  #restart: no
-
-  environment:
-    - SOLR_LOG_LEVEL=WARN
-
-  ports:
-    - "8983:8983"
-
-  volumes:
-    - ./solr-emlo/solr/home:/opt/solr/server/solr/home
-    - ./data-solr/:/data-solr/
-
-redis:
-  image: redis:3.2
-  #restart: no
-
-  ports:
-    - "6379:6379"
-
-pylons:
-  build: ./pylons-emlo
-  #restart: no
-
-  links:
-    - solr
-    - redis
-
-  ports:
-    - "5000:5000"
-
-  volumes:
-   - ./pylons-emlo/emlo:/emlo
-   - ./data:/data
-   - ./cache:/emlo/pylons/web/cache
-
-  command: ["paster", "serve", "--reload", "development.ini"]
-
-nginx:
-  build: ./nginx-emlo
-  #restart: no
-
-  links:
-    - pylons
-    - solr
-
-  ports:
-    - "80:80"
+services:
+  solr:
+    build: ./solr-emlo
+    #restart: no
+  
+    environment:
+      - SOLR_LOG_LEVEL=WARN
+  
+    ports:
+      - "8983:8983"
+  
+    volumes:
+      - ./solr-emlo/solr/home:/opt/solr/server/solr/home
+      - ./data-solr/:/data-solr/
+  
+  redis:
+    image: redis:3.2
+    #restart: no
+  
+    ports:
+      - "6379:6379"
+  
+  pylons:
+    build: ./pylons-emlo
+    #restart: no
+  
+    links:
+      - solr
+      - redis
+  
+    ports:
+      - "5000:5000"
+  
+    volumes:
+     - ./pylons-emlo/emlo:/emlo
+     - ./data:/data
+     - ./cache:/emlo/pylons/web/cache
+  
+    command: ["paster", "serve", "--reload", "development.ini"]
+  
+  nginx:
+    build: ./nginx-emlo
+    #restart: no
+  
+    links:
+      - pylons
+      - solr
+  
+    ports:
+      - "80:80"

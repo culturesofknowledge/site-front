@@ -1,59 +1,76 @@
-# Docker Compose, file version 1
-solr:
-  build: ./solr-emlo
-  restart: always
 
-  environment:
-    - SOLR_LOG_LEVEL="SEVERE"
-
-  volumes:
-      - ./data-solr/:/data-solr/
-      - ./solr-emlo/solr/home:/opt/solr/server/solr/home
-
-  log_driver: "json-file"
-  log_opt:
-    max-size: "50m"
-    max-file: "5"
-
-redis:
-  image: redis:3.2
-  restart: always
-
-  log_driver: "json-file"
-  log_opt:
-    max-size: "100k"
-    max-file: "2"
-
-pylons:
-  build: ./pylons-emlo
-  restart: always
-
-  links:
-    - solr
-    - redis
-
-  volumes:
-   - ./data/:/data/
-   - ./cache:/emlo/pylons/web/cache
-
-
-  log_driver: "json-file"
-  log_opt:
-    max-size: "50m"
-    max-file: "5"
-
-nginx:
-  build: ./nginx-emlo
-  restart: always
-
-  links:
-    - pylons
-    - solr
-
-  ports:
-    - "80:80"
-
-  log_driver: "json-file"
-  log_opt:
-    max-size: "100m"
-    max-file: "10"
+services:
+  
+  solr:
+    build: ./solr-emlo
+    restart: always
+  
+    environment:
+      - SOLR_LOG_LEVEL="SEVERE"
+  
+    volumes:
+        - ./data-solr/:/data-solr/
+        - ./solr-emlo/solr/home:/opt/solr/server/solr/home
+  
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+  
+  redis:
+    image: redis:3.2
+    restart: always
+  
+    logging:
+      driver: json-file
+      options:
+        max-size: "100k"
+        max-file: "2"
+      #log_driver: "json-file"
+      #log_opt:
+      #max-size: "100k"
+      #max-file: "2"
+  
+  pylons:
+    build: ./pylons-emlo
+    restart: always
+  
+    links:
+      - solr
+      - redis
+  
+    volumes:
+     - ./data/:/data/
+     - ./cache:/emlo/pylons/web/cache
+  
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "5"
+       #log_driver: "json-file"
+       #log_opt:
+       #max-size: "50m"
+       #max-file: "5"
+  
+  nginx:
+    build: ./nginx-emlo
+    restart: always
+  
+    links:
+      - pylons
+      - solr
+  
+    ports:
+      - "80:80"
+  
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "10"
+        #log_driver: "json-file"
+        #log_opt:
+        #max-size: "100m"
+        #max-file: "10"
