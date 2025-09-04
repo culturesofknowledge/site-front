@@ -1,3 +1,4 @@
 #! /bin/bash
 cd /emlo/workspace/indexing/src/
-python ./index.py
+date -Is
+python -u ./index.py

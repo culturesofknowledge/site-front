@@ -62,6 +62,8 @@
 					or c.stats['works']['number'] == 0:
 					warning = "Please note that the EMLO records are currently unavailable. They will be back online shortly. Thank you."
 
+				warning = "We wish to advise that EMLO is experiencing intermittent technical issues at present. We apologize for any inconvenience caused."
+				#warning = "The EMLO site is currently undergoing maintenance.  EMLO records are currently unavailable but should be back later today. We apologise for the interruption."
 				#else :
 				#	warning = "Please note that, due to a technical issue beyond our control, transcriptions and some images of a number of letters normally available in EMLO are not online at present. Work is underway to restore access."
 			%>

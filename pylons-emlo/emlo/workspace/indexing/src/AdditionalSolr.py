@@ -128,7 +128,7 @@ def AdditionalWorksData( use_staging=True ) : #{
                           f.get_resource_title_fieldname() ]
 
   start = 0
-  batch = 200
+  batch = 100
 
   if use_staging :
     solr_works = solr.SolrConnection( solrconfig.solr_urls_stage['works'], persistent=True )
@@ -218,6 +218,9 @@ def AdditionalWorksData( use_staging=True ) : #{
 
     #---- Loop through details of one work skimming off the URIs of authors, destinations, etc.
     for result in works.results :
+      if 'uuid' in result:
+        #print str(start) + " Updating: ", result['uuid']
+        pass
 
       if fn_author_uri in result :
         
