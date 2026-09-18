@@ -1,5 +1,7 @@
 # EMLO Server
-A server to build emlo.bodleian.ox.ac.uk
+A server to build emlo.bodleian.ox.ac.uk.
+
+This has now been replaced with the new front site: https://github.com/culturesofknowledge/site-edit-2/ .
 
 ## Prerequisites
 You'll need Docker and Docker-compose installed. 
